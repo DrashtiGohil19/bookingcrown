@@ -18,13 +18,6 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cors());
 
-if (process.env.NODE_ENV === 'production') {
-    app.use(express.static(path.join(__dirname, '../client/build')));
-    app.get('*', (req, res) => {
-        res.sendFile(path.join(__dirname, '../client/build', 'index.html'));
-    });
-}
-
 const io = new Server(server, {
     cors: {
         origin: process.env.CLIENT_BASEURL,
@@ -53,6 +46,17 @@ io.on('connection', (socket) => {
         console.log('User disconnected');
     });
 });
+
+if (process.env.NODE_ENV === "production") {
+    app.use(express.static(path.join(__dirname, '../client/build')));
+    app.get('*', (req, res) => {
+        res.sendFile(path.join(__dirname, '/../', 'client', 'build', 'index.html'));
+    });
+} else {
+    app.get('/api', (req, res) => {
+        res.send("API running succesfully !")
+    })
+}
 
 server.listen(PORT, () => {
     console.log(`Server is running on http://localhost:${PORT}`);

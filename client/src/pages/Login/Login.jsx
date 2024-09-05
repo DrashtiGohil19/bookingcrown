@@ -14,17 +14,20 @@ function Login() {
         setLoading(true)
         try {
             const data = await login(values.email, values.password)
-            localStorage.setItem("token", data.token)
-            localStorage.setItem("role", data.role)
 
-            if (!data.access) {
-                navigate("/access-denied")
-            } else {
-                form.resetFields()
-                if (data.role === "user") {
-                    navigate("/user/dashboard")
-                } else if (data.role === "admin") {
-                    navigate("/admin/dashboard")
+            if (data.success) {
+                localStorage.setItem("token", data.token)
+                localStorage.setItem("role", data.role)
+
+                if (!data.access) {
+                    navigate("/access-denied")
+                } else {
+                    form.resetFields()
+                    if (data.role === "user") {
+                        navigate("/user/dashboard")
+                    } else if (data.role === "admin") {
+                        navigate("/admin/dashboard")
+                    }
                 }
             }
         } catch (error) {

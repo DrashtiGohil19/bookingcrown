@@ -44,7 +44,7 @@ const hourlyColumns = [
         responsive: ['xs', 'sm'],
     },
     {
-        title: 'Table/Turf',
+        title: 'Turf',
         dataIndex: 'item',
         key: 'item',
         align: 'center',
