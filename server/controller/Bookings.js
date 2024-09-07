@@ -4,14 +4,22 @@ const User = require("../model/User");
 exports.createBookings = async (req, res) => {
     try {
         const userId = req.user.id
-        const { customerName, mobilenu, date, time, totalHours, amount, advance, pending, bookingType, session, item } = req.body;
+        const { customerName, mobilenu, date, time, totalHours, amount, advance, pending, session, item } = req.body;
 
-        const existingBooking = await Bookings.findOne({
-            item: item,
-            date: date,
-            "time.start": { $lt: time.end },
-            "time.end": { $gt: time.start }
-        });
+        let existingBooking
+        if (time) {
+            existingBooking = await Bookings.findOne({
+                item: item,
+                date: date,
+                "time.start": { $lt: time.end },
+                "time.end": { $gt: time.start }
+            });
+        } else {
+            existingBooking = await Bookings.findOne({
+                item: item,
+                date: date
+            });
+        }
 
         if (existingBooking) {
             return res.status(400).json({ message: "Booking already exists for the given time and date", success: false });
@@ -27,7 +35,6 @@ exports.createBookings = async (req, res) => {
             amount,
             advance,
             pending,
-            bookingType,
             session,
             item
         });
@@ -35,6 +42,7 @@ exports.createBookings = async (req, res) => {
         await booking.save();
         res.status(200).json({ booking, message: "Booking created succesfully", success: true });
     } catch (error) {
+        console.log("error", error)
         res.status(400).json({ error: error.message });
     }
 }
@@ -42,15 +50,14 @@ exports.createBookings = async (req, res) => {
 exports.updateBookingDetails = async (req, res) => {
     try {
         const {
-            name,
-            phone,
+            customerName,
+            mobilenu,
             date,
             time,
             totalHours,
             amount,
             advance,
             pending,
-            bookingType,
             session,
             item,
             fullyPaid
@@ -60,15 +67,14 @@ exports.updateBookingDetails = async (req, res) => {
 
         if (!booking) return res.status(404).json({ error: 'Booking not found' });
 
-        if (name !== undefined) booking.name = name;
-        if (phone !== undefined) booking.phone = phone;
+        if (customerName !== undefined) booking.customerName = customerName;
+        if (mobilenu !== undefined) booking.mobilenu = mobilenu;
         if (date !== undefined) booking.date = date;
         if (time !== undefined) booking.time = time;
         if (totalHours !== undefined) booking.totalHours = totalHours;
         if (amount !== undefined) booking.amount = amount;
         if (advance !== undefined) booking.advance = advance;
         if (pending !== undefined) booking.pending = pending;
-        if (bookingType !== undefined) booking.bookingType = bookingType;
         if (session !== undefined) booking.session = session;
         if (item !== undefined) booking.item = item;
 

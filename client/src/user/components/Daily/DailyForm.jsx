@@ -52,7 +52,7 @@ function DailyForm({ isEditing, userId }) {
     const getBookingsData = async () => {
         try {
             const data = await getBookingById(userId)
-            const bookingDate = dayjs(data.date).format("YYYY-MM-DD");
+            const bookingDate = dayjs(data.date);
             if (data) {
                 form.setFieldsValue({
                     customerName: data.customerName,

@@ -79,7 +79,8 @@ const dailyColumns = [
         dataIndex: 'date',
         key: 'date',
         render: (text, record) => {
-            if (record.key === 'total') return "Total Hour";
+            if (record.key === 'total') return null;
+            return (new Date(text).toLocaleDateString("en-GB"))
         },
         align: 'center',
         responsive: ['xs', 'sm'],
