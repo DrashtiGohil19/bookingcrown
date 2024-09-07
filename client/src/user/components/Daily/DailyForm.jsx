@@ -1,6 +1,6 @@
 import { Button, Col, DatePicker, Form, Input, Row, Select } from 'antd'
 import React, { useEffect, useState } from 'react'
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { getUserData } from '../../../api/User';
 import moment from 'moment';
 import { CreateBooking, getBookingById, UpdateBooking } from '../../../api/Bookings';
@@ -14,6 +14,7 @@ const { Item } = Form;
 function DailyForm({ isEditing, userId }) {
     const [form] = Form.useForm();
     const [userData, setUserData] = useState({})
+    const { user } = useSelector((state) => state.user);
     const navigate = useNavigate()
     const dispatch = useDispatch()
 
@@ -40,7 +41,7 @@ function DailyForm({ isEditing, userId }) {
     }
     useEffect(() => {
         fetchUserData()
-    }, [])
+    }, [user])
 
     const validateFutureDate = (_, value) => {
         if (!value || value.isAfter(moment())) {

@@ -20,7 +20,7 @@ function EditBooking() {
                         </div>
                     </div>
                     <div className='p-6'>
-                        {user.data?.bookingType === "hourly" ?
+                        {user.data?.businessType === "Box Cricket" ?
                             (<HourlyForm isEditing={true} userId={params.id} />) :
                             (<DailyForm isEditing={true} userId={params.id} />)}
                     </div>
