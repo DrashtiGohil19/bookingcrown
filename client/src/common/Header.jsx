@@ -149,37 +149,6 @@ function Header() {
                         >
                             Contact
                         </Link>
-
-                        <div className='block border-t-[1px] border-gray-300 py-2 pl-3 pr-4 text-base font-medium hover:border-themeColor hover:bg-themeLight hover:text-themeColor'>
-                            <div className="flex items-center ml-auto space-x-2">
-                                {token && role ? (
-                                    <button
-                                        type="button"
-                                        onClick={() => navigate(`/${role}/dashboard`)}
-                                        className="rounded-lg bg-themeColor text-white focus:outline-none focus:ring-2 focus:ring-themeColor focus:ring-offset-2 p-[5px_9px]"
-                                    >
-                                        Dashboard
-                                    </button>
-                                ) : (
-                                    <>
-                                        <button
-                                            type="button"
-                                            onClick={() => navigate("/login")}
-                                            className="rounded-lg bg-themeColor text-white focus:outline-none focus:ring-2 focus:ring-themeColor focus:ring-offset-2 p-[5px_9px]"
-                                        >
-                                            Log in
-                                        </button>
-                                        <button
-                                            type="button"
-                                            onClick={() => navigate("/signup")}
-                                            className="rounded-lg bg-themeColor text-white focus:outline-none focus:ring-2 focus:ring-themeColor ms-1 md:ms-4 focus:ring-offset-2 p-[5px_9px]"
-                                        >
-                                            Sign up
-                                        </button>
-                                    </>
-                                )}
-                            </div>
-                        </div>
                     </div>
                 </DisclosurePanel>
             </Disclosure>

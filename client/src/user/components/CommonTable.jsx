@@ -239,7 +239,7 @@ function CommonTable({ filter }) {
     };
 
     const totalHoursPerPage = userState.user.data?.businessType === "Box Cricket"
-        ? getCurrentPageData().reduce((sum, booking) => sum + (booking.Hr || 0), 0)
+        ? getCurrentPageData().reduce((sum, booking) => sum + (parseFloat(booking.Hr) || 0), 0).toFixed(2)
         : null;
 
     const totalRow =
@@ -250,7 +250,7 @@ function CommonTable({ filter }) {
                     customerName: '',
                     mobilenu: '',
                     date: '',
-                    Hr: Math.round(totalHoursPerPage),
+                    Hr: totalHoursPerPage,
                     startTime: '',
                     endTime: '',
                     item: '',

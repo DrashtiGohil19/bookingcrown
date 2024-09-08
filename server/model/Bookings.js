@@ -9,7 +9,7 @@ const bookingSchema = new mongoose.Schema({
         start: { type: String },
         end: { type: String }
     },
-    totalHours: { type: Number },
+    totalHours: { type: String },
     item: { type: String, },
     amount: { type: Number, required: true },
     advance: { type: Number, default: 0 },

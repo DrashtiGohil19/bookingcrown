@@ -21,14 +21,20 @@ function HourlyForm({ isEditing, userId }) {
         if (endTime) {
             const startTime = form.getFieldValue('startTime');
             let duration;
+
             if (endTime.isBefore(startTime)) {
                 duration = moment.duration(endTime.add(1, 'day').diff(startTime));
             } else {
                 duration = moment.duration(endTime.diff(startTime));
             }
 
-            const hours = duration.asHours();
-            form.setFieldsValue({ totalHours: Math.round(hours) });
+            const hours = Math.floor(duration.asHours());
+            const minutes = duration.minutes();
+
+            const minutesAsDecimal = (minutes / 60) * 60;
+
+            const total = hours + (minutesAsDecimal / 100);
+            form.setFieldsValue({ totalHours: total.toFixed(2) });
         }
     };
 
@@ -97,13 +103,14 @@ function HourlyForm({ isEditing, userId }) {
             advance: values.advanceAmount || 0,
             pending: values.pendingAmount
         }
+
         if (isEditing) {
             response = await UpdateBooking(formData, userId)
         } else {
             response = await CreateBooking(formData)
         }
         await dispatch(fetchAllBookings())
-        if (response.success) navigate("/user/booking-list")
+        if (response.success) navigate("/user/dashboard")
     }
 
     return (

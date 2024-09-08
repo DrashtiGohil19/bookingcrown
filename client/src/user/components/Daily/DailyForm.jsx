@@ -90,7 +90,7 @@ function DailyForm({ isEditing, userId }) {
         }
 
         await dispatch(fetchAllBookings())
-        navigate("/user/booking-list")
+        navigate("/user/dashboard")
     }
 
     return (

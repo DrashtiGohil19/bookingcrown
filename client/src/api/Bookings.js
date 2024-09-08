@@ -12,6 +12,7 @@ export const CreateBooking = async (bookingData) => {
         }
         return response.data
     } catch (error) {
+        console.log(error)
         Notification.error(error.response.data.message)
         return error
     }
@@ -34,7 +35,7 @@ export const UpdateBooking = async (bookingData, id) => {
         }
         return response.data
     } catch (error) {
-        Notification.error(error.response.data.message)
+        Notification.error(error.response.data.message || error)
         return error
     }
 }

@@ -20,7 +20,7 @@ function Contact() {
                         <i className=' text-themeColor'><IoCall className='mb-2 text-[30px] mx-auto text-center' /></i>
                         <h4 className='font-semibold text-themeColor'>Phone</h4>
                         <p className="mt-3 text-[15px] text-slate-400">
-                            <a href="#" target='_blank'>+91 99988 83603</a>
+                            <a href="tel:+91 99988 83603" target='_blank'>+91 99988 83603</a>
                         </p>
                     </div>
                 </div>

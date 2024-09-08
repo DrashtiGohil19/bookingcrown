@@ -1,5 +1,8 @@
 const Bookings = require("../model/Bookings");
 const User = require("../model/User");
+const dayjs = require("dayjs")
+const customParseFormat = require('dayjs/plugin/customParseFormat');
+dayjs.extend(customParseFormat);
 
 exports.createBookings = async (req, res) => {
     try {
@@ -8,12 +11,26 @@ exports.createBookings = async (req, res) => {
 
         let existingBooking
         if (time) {
+            const parsedStartTime = dayjs(time.start, "h:mm A");
+            const parsedEndTime = dayjs(time.end, "h:mm A");
+
             existingBooking = await Bookings.findOne({
                 item: item,
                 date: date,
-                "time.start": { $lt: time.end },
-                "time.end": { $gt: time.start }
+                $or: [
+                    {
+                        $and: [
+                            { "time.start": { $lt: parsedEndTime.format("HH:mm") } },
+                            { "time.end": { $gt: parsedStartTime.format("HH:mm") } }
+                        ]
+                    },
+                    {
+                        "time.start": { $gte: parsedStartTime.format("HH:mm") },
+                        "time.end": { $lte: parsedEndTime.format("HH:mm") }
+                    }
+                ]
             });
+
         } else {
             existingBooking = await Bookings.findOne({
                 item: item,
