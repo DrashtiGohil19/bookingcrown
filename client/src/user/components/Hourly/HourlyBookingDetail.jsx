@@ -17,6 +17,12 @@ const HourlyBookingDetail = () => {
     const dispatch = useDispatch()
     const navigate = useNavigate()
     const params = useParams();
+    const bookingLink = `${process.env.REACT_APP_BASE_URL}/customer/booking-details/${booking?._id}`;
+
+    const handleCopy = (mobilenu) => {
+        Notification.success("Link copied to clipboard!");
+        window.open(`https://wa.me/${mobilenu}?text=${encodeURIComponent(bookingLink)}`, '_blank');
+    };
 
     const fetchBooking = async () => {
         try {
@@ -126,9 +132,15 @@ const HourlyBookingDetail = () => {
                             </Card>
 
                             <Card title="Copy this link and send to the customer" className='mt-3'>
-                                <CopyToClipboard onCopy={() => Notification.success("Link copied to clipboard!")} text={`${process.env.REACT_APP_BASE_URL}/customer/booking-details/${booking?._id}`}>
-                                    <Button type='primary' >Click here to copy link</Button>
-                                </CopyToClipboard>
+                                <div className='flex gap-6'>
+                                    {/* <CopyToClipboard onCopy={() => Notification.success("Link copied to clipboard!")} text={`${process.env.REACT_APP_BASE_URL}/customer/booking-details/${booking?._id}`}>
+                                        <Button type='primary' >Click here to copy link</Button>
+                                    </CopyToClipboard> */}
+
+                                    <CopyToClipboard onCopy={() => handleCopy(booking.mobilenu)} text={bookingLink}>
+                                        <Button type="primary">Click here to copy link and send on WhatsApp</Button>
+                                    </CopyToClipboard>
+                                </div>
                             </Card>
 
                             <Card title="Delete This Booking Details" className='mt-3'>

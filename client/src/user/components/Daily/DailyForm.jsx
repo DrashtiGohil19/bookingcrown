@@ -186,6 +186,7 @@ function DailyForm({ isEditing, userId }) {
                                     { value: 'Morning Session', label: 'Morning Session' },
                                     { value: 'Afternoon Session', label: 'Afternoon Session' },
                                     { value: 'Evening Session', label: 'Evening Session' },
+                                    { value: 'Full Day', label: 'Full Day' },
                                 ]}
                             />
                         </Item>

@@ -27,16 +27,13 @@ function Dashboard() {
             <main className="py-4 w-full lg:w-[calc(100%-16rem)] ms-auto">
                 <div className="px-4 sm:px-6 lg:px-6">
                     <div className="mb-3">
-                        <div className="w-full flex flex-col md:flex-row md:justify-between items-start md:items-center">
-                            <div className="mb-2 md:mb-0">
+                        <div className="w-full flex flex-row justify-between items-center mb-3">
+                            <div>
                                 <h1 className="text-xl font-semibold">Dashboard</h1>
                             </div>
-                            <div className="flex gap-2">
+                            <div>
                                 <Button type="primary" onClick={() => navigate("/user/add-booking")}>
                                     <FaPlus /> New Booking
-                                </Button>
-                                <Button type="primary" onClick={() => navigate("/user/booking-list")}>
-                                    <FaList />Booking List
                                 </Button>
                             </div>
                         </div>
@@ -50,6 +47,9 @@ function Dashboard() {
                         >
                             <TabPane tab="Upcoming Bookings" key="1">
                                 <CommonTable filter="upcoming" />
+                            </TabPane>
+                            <TabPane tab="All Bookings" key="2">
+                                <CommonTable filter="all" />
                             </TabPane>
                         </Tabs>
                     </div>

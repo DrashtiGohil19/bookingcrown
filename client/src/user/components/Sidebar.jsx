@@ -111,18 +111,6 @@ export default function Sidebar() {
                                                 ))}
                                             </ul>
                                         </li>
-
-                                        <button onClick={handleLogOut} className="mt-auto">
-                                            <p
-                                                className="group -mx-2 flex gap-x-3 rounded-md p-3 text-sm font-semibold leading-6 text-white hover:bg-[#029584] hover:text-white"
-                                            >
-                                                <MdLogout
-                                                    aria-hidden="true"
-                                                    className="h-6 w-6 shrink-0 text-white group-hover:text-white"
-                                                />
-                                                Log Out
-                                            </p>
-                                        </button>
                                     </ul>
                                 </nav>
                             </div>
@@ -170,18 +158,6 @@ export default function Sidebar() {
                                         ))}
                                     </ul>
                                 </li>
-
-                                <button onClick={handleLogOut} className="mt-auto">
-                                    <p
-                                        className="group -mx-2 flex gap-x-3 rounded-md p-3 text-sm font-semibold leading-6 text-white hover:bg-[#029584] hover:text-white"
-                                    >
-                                        <MdLogout
-                                            aria-hidden="true"
-                                            className="h-6 w-6 shrink-0 text-white group-hover:text-white"
-                                        />
-                                        Log Out
-                                    </p>
-                                </button>
                             </ul>
                         </nav>
                     </div>
@@ -226,7 +202,7 @@ export default function Sidebar() {
                                     </MenuButton>
                                     <MenuItems
                                         transition
-                                        className="absolute right-0 z-10 mt-2.5 w-40 origin-top-right rounded-md bg-white py-2 shadow-lg ring-1 ring-gray-900/5 transition focus:outline-none data-[closed]:scale-95 data-[closed]:transform data-[closed]:opacity-0 data-[enter]:duration-100 data-[leave]:duration-75 data-[enter]:ease-out data-[leave]:ease-in"
+                                        className="absolute right-0 z-10 mt-2.5 w-48 origin-top-right rounded-md bg-white py-3 shadow-lg ring-1 ring-gray-900/5 transition focus:outline-none data-[closed]:scale-95 data-[closed]:transform data-[closed]:opacity-0 data-[enter]:duration-100 data-[leave]:duration-75 data-[enter]:ease-out data-[leave]:ease-in"
                                     >
                                         {userNavigation.map((item) => (
                                             <MenuItem key={item.name}>
@@ -234,14 +210,14 @@ export default function Sidebar() {
                                                     <Link
                                                         to={item.href}
                                                         onClick={handleLogOut}
-                                                        className="block px-3 py-1 text-sm leading-6 text-gray-900 data-[focus]:bg-gray-50"
+                                                        className="block px-3 py-1 text-md leading-6 text-gray-900 data-[focus]:bg-gray-50"
                                                     >
                                                         {item.name}
                                                     </Link>
                                                 ) : (
                                                     <Link
                                                         to={item.href}
-                                                        className="block px-3 py-1 text-sm leading-6 text-gray-900 data-[focus]:bg-gray-50"
+                                                        className="block px-3 py-1 text-md leading-6 text-gray-900 data-[focus]:bg-gray-50"
                                                     >
                                                         {item.name}
                                                     </Link>

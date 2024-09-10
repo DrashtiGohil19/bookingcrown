@@ -21,19 +21,13 @@ const UserSchema = new mongoose.Schema({
     },
     businessType: {
         type: String,
-        required: true,
         enum: ["Box Cricket", "Cafe/Restuarant", "Hotel management", "Farm"]
     },
     businessName: {
         type: String,
-        require: true
-    },
-    bookingType: {
-        type: String,
     },
     address: {
         type: String,
-        required: true
     },
     role: {
         type: String,

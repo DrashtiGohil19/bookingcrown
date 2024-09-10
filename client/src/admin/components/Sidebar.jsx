@@ -47,7 +47,6 @@ export default function Sidebar() {
             dispatch(resetUserData());
             dispatch(resetBookingData());
             localStorage.clear();
-
             navigate("/");
         } catch (error) {
             console.error("Error during logout:", error);
@@ -115,18 +114,6 @@ export default function Sidebar() {
                                                 ))}
                                             </ul>
                                         </li>
-
-                                        <button onClick={handleLogOut} className="mt-auto">
-                                            <p
-                                                className="group -mx-2 flex gap-x-3 rounded-md p-3 text-sm font-semibold leading-6 text-white hover:bg-[#029584] hover:text-white"
-                                            >
-                                                <MdLogout
-                                                    aria-hidden="true"
-                                                    className="h-6 w-6 shrink-0 text-white group-hover:text-white"
-                                                />
-                                                Log Out
-                                            </p>
-                                        </button>
                                     </ul>
                                 </nav>
                             </div>
@@ -174,18 +161,6 @@ export default function Sidebar() {
                                         ))}
                                     </ul>
                                 </li>
-
-                                <button onClick={handleLogOut} className="mt-auto">
-                                    <p
-                                        className="group -mx-2 flex gap-x-3 rounded-md p-3 text-sm font-semibold leading-6 text-white hover:bg-[#029584] hover:text-white"
-                                    >
-                                        <MdLogout
-                                            aria-hidden="true"
-                                            className="h-6 w-6 shrink-0 text-white group-hover:text-white"
-                                        />
-                                        Log Out
-                                    </p>
-                                </button>
                             </ul>
                         </nav>
                     </div>
@@ -226,7 +201,7 @@ export default function Sidebar() {
                                                 <Link
                                                     to={item.href}
                                                     onClick={handleLogOut}
-                                                    className="block px-3 py-1 text-sm leading-6 text-gray-900 data-[focus]:bg-gray-50"
+                                                    className="block px-3 py-1 text-md leading-6 text-gray-900 data-[focus]:bg-gray-50"
                                                 >
                                                     {item.name}
                                                 </Link>

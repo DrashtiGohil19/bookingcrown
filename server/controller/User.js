@@ -82,7 +82,14 @@ exports.loginUser = async (req, res) => {
     const { email, password } = req.body;
 
     try {
-        const user = await User.findOne({ email });
+        const emailLowerFirst = email.charAt(0).toLowerCase() + email.slice(1);
+        const emailUpperFirst = email.charAt(0).toUpperCase() + email.slice(1);
+
+        let user = await User.findOne({ email: emailLowerFirst });
+        if (!user) {
+            user = await User.findOne({ email: emailUpperFirst });
+        }
+
         if (!user) {
             return res.status(400).json({ message: 'Invalid email or password. Please try again later' });
         }

@@ -12,8 +12,8 @@ function BookingList() {
             <Sidebar />
             <main className="py-4 w-full lg:w-[calc(100%-16rem)] ms-auto">
                 <div className="px-4 sm:px-6 lg:px-6">
-                    <div className="w-full mb-3 flex flex-col md:flex-row md:justify-between items-start md:items-center">
-                        <div className="mb-2 md:mb-0">
+                    <div className="w-full flex flex-row justify-between items-center mb-3">
+                        <div>
                             <h1 className="text-xl font-semibold">Booking List</h1>
                         </div>
                         <div>
@@ -25,6 +25,7 @@ function BookingList() {
                     <div>
                         <CommonTable filter={"all"} />
                     </div>
+
                 </div>
             </main>
         </div>

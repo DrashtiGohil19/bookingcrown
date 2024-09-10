@@ -225,7 +225,26 @@ function CommonTable({ filter }) {
         const startIndex = (currentPage - 1) * pageSize;
         const endIndex = startIndex + pageSize;
 
-        return filteredData.slice(startIndex, endIndex);
+        const currentPageData = filteredData.slice(startIndex, endIndex);
+
+        const totalHours = userState.user.data?.businessType === "Box Cricket" && filter === "all"
+            ? currentPageData?.reduce((sum, booking) => sum + (parseFloat(booking.Hr) || 0), 0).toFixed(2)
+            : null;
+        const totalRow =
+            userState.user.data?.bookingType === 'hourly' && filteredData.length > 0
+                ? {
+                    key: 'total',
+                    customerName: '',
+                    mobilenu: '',
+                    date: '',
+                    Hr: totalHours,
+                    startTime: '',
+                    endTime: '',
+                    item: '',
+                    session: '',
+                }
+                : null;
+        return totalRow ? [...currentPageData, totalRow] : currentPageData;
     };
 
     const showModal = (record) => {
@@ -237,29 +256,6 @@ function CommonTable({ filter }) {
         setOpen(false);
         dispatch(fetchAllBookings())
     };
-
-    const totalHoursPerPage = userState.user.data?.businessType === "Box Cricket"
-        ? getCurrentPageData().reduce((sum, booking) => sum + (parseFloat(booking.Hr) || 0), 0).toFixed(2)
-        : null;
-
-    const totalRow =
-        userState.user.data?.bookingType === 'hourly' && filteredData.length > 0
-            ? [
-                {
-                    key: 'total',
-                    customerName: '',
-                    mobilenu: '',
-                    date: '',
-                    Hr: totalHoursPerPage,
-                    startTime: '',
-                    endTime: '',
-                    item: '',
-                    session: '',
-                },
-            ]
-            : [];
-
-    const dataSourceWithTotalRow = [...filteredData, ...totalRow];
 
     const columns = [
         ...(userState.user.data?.businessType === "Box Cricket" ? hourlyColumns : dailyColumns),
@@ -307,8 +303,8 @@ function CommonTable({ filter }) {
             <div>
                 <Table
                     columns={columns}
-                    dataSource={dataSourceWithTotalRow}
-                    pagination={{ pageSize: 10, onChange: (page) => setCurrentPage(page) }}
+                    dataSource={getCurrentPageData()}
+                    pagination={{ pageSize: 11, onChange: (page) => setCurrentPage(page), total: filteredData.length + 1 }}
                     scroll={{ x: 'max-content' }}
                     loading={{
                         indicator: <Spin size="large" />,
