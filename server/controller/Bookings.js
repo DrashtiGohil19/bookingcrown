@@ -59,7 +59,7 @@ exports.createBookings = async (req, res) => {
         await booking.save();
         res.status(200).json({ booking, message: "Booking created succesfully", success: true });
     } catch (error) {
-        console.log("error", error)
+        console.log(error)
         res.status(400).json({ error: error.message });
     }
 }

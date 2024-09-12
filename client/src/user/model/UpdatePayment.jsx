@@ -1,11 +1,14 @@
 import React, { useEffect } from 'react';
 import { Button, Checkbox, Form, Input, Modal } from 'antd';
 import { UpdateBooking } from '../../api/Bookings';
+import { useDispatch } from 'react-redux';
+import { fetchIncomeAndExpenses } from '../../features/Expense/ExpenseSlice';
 
 const { Item } = Form;
 
 const UpdatePayment = ({ showModel, handleCancel, selectedRecord }) => {
     const [form] = Form.useForm();
+    const dispatch = useDispatch()
     const handleOk = () => {
         form.submit();
     };
@@ -31,6 +34,7 @@ const UpdatePayment = ({ showModel, handleCancel, selectedRecord }) => {
         const response = await UpdateBooking(formData, selectedRecord.key)
         if (response) {
             handleCancel()
+            dispatch(fetchIncomeAndExpenses({ month: null }));
         }
     }
 

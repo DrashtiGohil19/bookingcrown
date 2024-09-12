@@ -19,7 +19,7 @@ const bookingSchema = new mongoose.Schema({
         type: String,
         enum: ['Morning Session', 'Afternoon Session', 'Evening Session'],
     }
-});
+}, { timestamps: true });
 
 bookingSchema.pre('save', function (next) {
     if (this.advance === this.amount || this.pending === 0) {

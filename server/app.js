@@ -5,6 +5,7 @@ const path = require('path');
 const UserRouter = require('./routes/UserRouter');
 const BookingRouter = require('./routes/BookingRouter');
 const PlanRouter = require('./routes/PlanRouter');
+const ExpenseRouter = require('./routes/ExpenseRouter');
 const app = express();
 const PORT = process.env.PORT || 4000;
 const cors = require("cors");
@@ -29,6 +30,7 @@ const io = new Server(server, {
 app.use('/api', UserRouter);
 app.use('/api', BookingRouter);
 app.use('/api', PlanRouter);
+app.use('/api', ExpenseRouter);
 
 io.on('connection', (socket) => {
     console.log('A user connected');

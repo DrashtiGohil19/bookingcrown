@@ -4,7 +4,7 @@ import Sidebar from '../../components/Sidebar';
 import CommonTable from '../../components/CommonTable';
 import { fetchUserData } from '../../../features/user/UserSlice';
 import { useDispatch, useSelector } from 'react-redux';
-import { FaList, FaPlus } from 'react-icons/fa6';
+import { FaPlus } from 'react-icons/fa6';
 import { useNavigate } from 'react-router-dom';
 
 const { TabPane } = Tabs;

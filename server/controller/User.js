@@ -15,7 +15,7 @@ exports.createUser = async (req, res) => {
             return res.status(400).json({ message: 'name, email, business type, businessName, address all fields are required' });
         }
 
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        const emailRegex = /^[a-z][^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!emailRegex.test(email)) {
             return res.status(400).json({ message: 'Invalid email format' });
         }
@@ -83,13 +83,8 @@ exports.loginUser = async (req, res) => {
 
     try {
         const emailLowerFirst = email.charAt(0).toLowerCase() + email.slice(1);
-        const emailUpperFirst = email.charAt(0).toUpperCase() + email.slice(1);
 
         let user = await User.findOne({ email: emailLowerFirst });
-        if (!user) {
-            user = await User.findOne({ email: emailUpperFirst });
-        }
-
         if (!user) {
             return res.status(400).json({ message: 'Invalid email or password. Please try again later' });
         }

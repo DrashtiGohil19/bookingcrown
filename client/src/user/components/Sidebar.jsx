@@ -11,18 +11,20 @@ import {
 } from '@headlessui/react'
 import { FaAngleDown, FaBars } from "react-icons/fa6";
 import { IoClose, IoHome, IoListSharp } from "react-icons/io5";
-import { MdEditDocument, MdLogout } from 'react-icons/md';
+import { MdEditDocument } from 'react-icons/md';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { FaUserCheck } from 'react-icons/fa';
 import { useDispatch, useSelector } from 'react-redux';
 import { resetUserData } from '../../features/user/UserSlice';
 import { resetBookingData } from '../../features/bookings/BookingSlice';
+import { RiMoneyRupeeCircleFill } from "react-icons/ri";
 
 const navigation = [
     { name: 'Dashboard', href: '/user/dashboard', icon: IoHome },
     { name: 'Add Booking', href: '/user/add-booking', icon: MdEditDocument },
     { name: 'Booking List', href: '/user/booking-list', icon: IoListSharp },
     { name: 'Profile', href: '/user/profile', icon: FaUserCheck },
+    { name: 'Income/Expense', href: '/user/income-expense', icon: RiMoneyRupeeCircleFill },
 ]
 
 const userNavigation = [
@@ -41,8 +43,6 @@ export default function Sidebar() {
     const location = useLocation();
     const dispatch = useDispatch();
     const { user } = useSelector((state) => state.user);
-
-    useEffect(() => { }, [user])
 
     const handleLogOut = async () => {
         dispatch(resetUserData());

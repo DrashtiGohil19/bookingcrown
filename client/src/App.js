@@ -20,6 +20,7 @@ import HourlyBookingDetail from './user/components/Hourly/HourlyBookingDetail';
 import DailyBookingDetail from './user/components/Daily/DailyBookingDetail';
 import CustomerDetail from './user/pages/CustomerDetail/CustomerDetail';
 import ForgetPassword from './pages/ForgetPassword/ForgetPassword';
+import IncomeExpense from './user/pages/IncomeExpense/IncomeExpense';
 
 function App() {
   return (
@@ -44,6 +45,7 @@ function App() {
         <Route path="/user/profile" element={<ProtectedRoute element={Profile} requiredRole="user" />} />
         <Route path="/user/hourly-booking-details/:id" element={<ProtectedRoute element={HourlyBookingDetail} requiredRole="user" />} />
         <Route path="/user/daily-booking-details/:id" element={<ProtectedRoute element={DailyBookingDetail} requiredRole="user" />} />
+        <Route path="/user/income-expense" element={<ProtectedRoute element={IncomeExpense} requiredRole="user" />} />
 
         <Route path="/admin/dashboard" element={<ProtectedAdminRoute element={AdminDashboard} requiredRole="admin" />} />
 
