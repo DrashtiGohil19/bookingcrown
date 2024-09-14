@@ -11,10 +11,9 @@ import {
 } from '@headlessui/react'
 import { FaAngleDown, FaBars } from "react-icons/fa6";
 import { IoClose, IoHome } from "react-icons/io5";
-import { MdLogout } from 'react-icons/md';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { resetBookingData } from '../../features/bookings/BookingSlice';
-import { fetchUserData, resetUserData } from '../../features/user/UserSlice';
+import { fetchUserData, resetAllUserData } from '../../features/user/UserSlice';
 import { useDispatch, useSelector } from 'react-redux';
 
 const navigation = [
@@ -22,6 +21,7 @@ const navigation = [
 ]
 
 const userNavigation = [
+    { name: 'Change Password', href: '/change-password' },
     { name: 'Log out', href: '#' },
 ]
 
@@ -43,16 +43,11 @@ export default function Sidebar() {
     }, [dispatch, status])
 
     const handleLogOut = async () => {
-        try {
-            dispatch(resetUserData());
-            dispatch(resetBookingData());
-            localStorage.clear();
-            navigate("/");
-        } catch (error) {
-            console.error("Error during logout:", error);
-        }
-    };
-
+        dispatch(resetAllUserData());
+        dispatch(resetBookingData());
+        await localStorage.clear()
+        navigate("/")
+    }
 
     return (
         <>
@@ -167,11 +162,21 @@ export default function Sidebar() {
                 </div>
 
                 <div className="lg:pl-[15rem]">
-                    <div className="sticky top-0 z-40 flex md:justify-between lg:justify-end h-16 shrink-0 items-center gap-x-4 border-b border-gray-200 bg-white px-4 shadow-sm sm:gap-x-6 sm:px-6 lg:px-8">
+                    <div className="sticky top-0 z-40 flex justify-between lg:justify-end h-16 shrink-0 items-center gap-x-4 border-b border-gray-200 bg-white px-4 shadow-sm sm:gap-x-6 sm:px-6 lg:px-8">
                         <button type="button" onClick={() => setSidebarOpen(true)} className="-m-2.5 p-2.5 text-gray-700 lg:hidden">
                             <span className="sr-only">Open sidebar</span>
                             <FaBars aria-hidden="true" className="h-6 w-6" />
                         </button>
+                        <div className="flex items-center lg:hidden">
+                            <img
+                                src={require("../../assets/Logo.png")}
+                                alt="logo"
+                                className='h-10 w-10 sm:h-12 sm:w-12 md:h-16 md:w-16'
+                            />
+                            <h1 className='ml-2 sm:ml-3 cursor-pointer font-bold text-themeColor text-base sm:text-lg md:text-xl'>
+                                Booking Crown
+                            </h1>
+                        </div>
 
                         <div className="flex gap-x-4 self-stretch lg:gap-x-6">
                             <div className="flex items-center gap-x-4 lg:gap-x-6">
@@ -194,17 +199,26 @@ export default function Sidebar() {
                                     </MenuButton>
                                     <MenuItems
                                         transition
-                                        className="absolute right-0 z-10 mt-2.5 w-32 origin-top-right rounded-md bg-white py-2 shadow-lg ring-1 ring-gray-900/5 transition focus:outline-none data-[closed]:scale-95 data-[closed]:transform data-[closed]:opacity-0 data-[enter]:duration-100 data-[leave]:duration-75 data-[enter]:ease-out data-[leave]:ease-in"
+                                        className="absolute right-0 z-10 mt-2.5 w-48 origin-top-right rounded-md bg-white py-3 shadow-lg ring-1 ring-gray-900/5 transition focus:outline-none data-[closed]:scale-95 data-[closed]:transform data-[closed]:opacity-0 data-[enter]:duration-100 data-[leave]:duration-75 data-[enter]:ease-out data-[leave]:ease-in"
                                     >
                                         {userNavigation.map((item) => (
                                             <MenuItem key={item.name}>
-                                                <Link
-                                                    to={item.href}
-                                                    onClick={handleLogOut}
-                                                    className="block px-3 py-1 text-md leading-6 text-gray-900 data-[focus]:bg-gray-50"
-                                                >
-                                                    {item.name}
-                                                </Link>
+                                                {item.name === 'Log out' ? (
+                                                    <Link
+                                                        to={item.href}
+                                                        onClick={handleLogOut}
+                                                        className="block px-3 py-1 text-md leading-6 text-gray-900 data-[focus]:bg-gray-50"
+                                                    >
+                                                        {item.name}
+                                                    </Link>
+                                                ) : (
+                                                    <Link
+                                                        to={item.href}
+                                                        className="block px-3 py-1 text-md leading-6 text-gray-900 data-[focus]:bg-gray-50"
+                                                    >
+                                                        {item.name}
+                                                    </Link>
+                                                )}
                                             </MenuItem>
                                         ))}
                                     </MenuItems>
@@ -212,8 +226,8 @@ export default function Sidebar() {
                             </div>
                         </div>
                     </div>
-                </div>
-            </div>
+                </div >
+            </div >
         </>
     )
 }

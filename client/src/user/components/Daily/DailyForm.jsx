@@ -13,7 +13,6 @@ const { Item } = Form;
 
 function DailyForm({ isEditing, userId }) {
     const [form] = Form.useForm();
-    const [userData, setUserData] = useState({})
     const { user } = useSelector((state) => state.user);
     const navigate = useNavigate()
     const dispatch = useDispatch()
@@ -35,13 +34,6 @@ function DailyForm({ isEditing, userId }) {
             }
         }
     };
-    const fetchUserData = async () => {
-        const data = await getUserData()
-        setUserData(data)
-    }
-    useEffect(() => {
-        fetchUserData()
-    }, [user])
 
     const validateFutureDate = (_, value) => {
         if (!value || value.isAfter(moment())) {
@@ -147,7 +139,7 @@ function DailyForm({ isEditing, userId }) {
                                 className='h-10'
                                 showSearch={false}
                                 options={
-                                    userData.itemList?.map((item) => ({
+                                    user.data?.itemList?.map((item) => ({
                                         value: item,
                                         label: item,
                                     })) || []
@@ -182,12 +174,12 @@ function DailyForm({ isEditing, userId }) {
                                 placeholder="Select Session"
                                 className='h-10'
                                 showSearch={false}
-                                options={[
-                                    { value: 'Morning Session', label: 'Morning Session' },
-                                    { value: 'Afternoon Session', label: 'Afternoon Session' },
-                                    { value: 'Evening Session', label: 'Evening Session' },
-                                    { value: 'Full Day', label: 'Full Day' },
-                                ]}
+                                options={
+                                    user.data?.sessionList?.map((item) => ({
+                                        value: item,
+                                        label: item,
+                                    })) || []
+                                }
                             />
                         </Item>
                     </Col>

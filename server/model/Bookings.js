@@ -16,8 +16,7 @@ const bookingSchema = new mongoose.Schema({
     pending: { type: Number, default: function () { return this.amount - (this.advance || 0); } },
     payment: { type: String, required: true, default: "pending", enum: ["paid", "partial", "pending"] },
     session: {
-        type: String,
-        enum: ['Morning Session', 'Afternoon Session', 'Evening Session'],
+        type: String
     }
 }, { timestamps: true });
 

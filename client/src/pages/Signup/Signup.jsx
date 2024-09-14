@@ -106,7 +106,13 @@ function Signup() {
                                         <Form.Item
                                             label="Phone Number"
                                             name="mobilenu"
-                                            rules={[{ required: true, message: 'Please input your phone number!' }]}
+                                            rules={[
+                                                { required: true, message: 'Please input your mobile number!' },
+                                                {
+                                                    pattern: /^[0-9]{10}$/,
+                                                    message: 'Mobile number must be exactly 10 digits!'
+                                                }
+                                            ]}
                                         >
                                             <Input
                                                 type="number"

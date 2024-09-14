@@ -10,7 +10,6 @@ function ExpenseModel({ showModel, handleCancel }) {
     const [form] = Form.useForm();
     const handleOk = () => {
         form.submit();
-        form.resetFields()
     };
 
     const onFinish = async (values) => {
@@ -53,7 +52,6 @@ function ExpenseModel({ showModel, handleCancel }) {
                         placeholder="Select date"
                         format="DD-MM-YYYY"
                         inputReadOnly={true}
-                        disabledDate={currentDate => currentDate && currentDate.isBefore(moment().startOf('day'))}
                     />
                 </Item>
                 <Item

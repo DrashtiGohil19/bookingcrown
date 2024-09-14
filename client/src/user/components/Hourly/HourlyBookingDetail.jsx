@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Card, Col, Row, Typography, Skeleton, Button, Modal } from 'antd';
+import dayjs from 'dayjs'
 import { DeleteBooking, getBookingById } from '../../../api/Bookings';
 import Sidebar from '../Sidebar';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
@@ -21,7 +22,7 @@ const HourlyBookingDetail = () => {
 
     const handleCopy = (mobilenu) => {
         Notification.success("Link copied to clipboard!");
-        window.open(`https://wa.me/${mobilenu}?text=${encodeURIComponent(bookingLink)}`, '_blank');
+        window.open(`https://wa.me/91${mobilenu}?text=${encodeURIComponent(bookingLink)}`, '_blank');
     };
 
     const fetchBooking = async () => {
@@ -88,7 +89,7 @@ const HourlyBookingDetail = () => {
                                         <Col xs={24} sm={12} md={8} lg={8}>
                                             <div className="flex gap-4 mb-1 md:mb-5">
                                                 <Text className='font-semibold'>Booking Time:</Text>
-                                                <Text>{booking.time?.start} To {booking.time?.end}</Text>
+                                                <Text>{dayjs(booking.time?.start).format('h:mm A')} To {dayjs(booking.time?.end).format('h:mm A')}</Text>
                                             </div>
                                         </Col>
                                         <Col xs={24} sm={12} md={8} lg={8}>

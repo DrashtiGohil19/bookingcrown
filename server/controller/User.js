@@ -38,16 +38,16 @@ exports.createUser = async (req, res) => {
         res.status(200).json({ success: true, message: 'Your account has been successfully created.' });
     } catch (err) {
         console.error(err.message);
-        res.status(500).send(err);
+        res.status(500).send({ err: err.message, message: "An error occurred while creating the user" });
     }
 }
 
 exports.updateUser = async (req, res) => {
     const userId = req.user.id;
-    const { name, email, mobilenu, businessType, businessName, address, itemList } = req.body;
+    const { name, email, mobilenu, businessType, businessName, address, itemList, sessionList } = req.body;
 
     try {
-        if (!name || !email || !mobilenu || !businessType || !businessName || !address || !itemList) {
+        if (!name || !email || !mobilenu || !businessType || !businessName || !address || !itemList || !sessionList) {
             return res.status(400).json({ message: 'All fields are required' });
         }
 
@@ -68,13 +68,14 @@ exports.updateUser = async (req, res) => {
         user.businessName = businessName;
         user.address = address;
         user.itemList = itemList;
+        user.sessionList = sessionList
 
         await user.save();
 
         res.status(200).json({ success: true, message: 'Your details updated successfully!' });
     } catch (err) {
         console.error(err.message);
-        res.status(500).send('Server error');
+        res.status(500).send({ message: 'Server error' });
     }
 };
 
@@ -127,7 +128,7 @@ exports.loginUser = async (req, res) => {
 
     } catch (err) {
         console.error(err.message);
-        res.status(500).send('Server error');
+        res.status(500).send({ message: 'Server error' });
     }
 };
 
@@ -194,7 +195,7 @@ exports.changePassword = async (req, res) => {
 
         res.status(200).json({ success: true, message: 'Password updated successfully' });
     } catch (error) {
-        res.status(500).json({ error: error.message });
+        res.status(500).json({ error: error.message, message: "An error occurred while changing password" });
     }
 };
 
@@ -294,7 +295,7 @@ exports.updateUserByAdmin = async (req, res) => {
         res.status(200).json({ success: true, message: 'User details updated successfully!', user });
     } catch (error) {
         console.error(error.message);
-        res.status(500).send('Server error');
+        res.status(500).send({ message: 'Server error' });
     }
 }
 

@@ -1,7 +1,6 @@
 import { Button, Col, DatePicker, Form, Input, Row, Select, TimePicker } from 'antd'
-import React, { useEffect, useState } from 'react'
-import { useDispatch } from 'react-redux';
-import { getUserData } from '../../../api/User';
+import React, { useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux';
 import moment from 'moment';
 import { CreateBooking, getBookingById, UpdateBooking } from '../../../api/Bookings';
 import { fetchAllBookings } from '../../../features/bookings/BookingSlice';
@@ -13,7 +12,7 @@ const { Item } = Form;
 
 function HourlyForm({ isEditing, userId }) {
     const [form] = Form.useForm();
-    const [userData, setUserData] = useState({})
+    const { user } = useSelector((state) => state.user);
     const dispatch = useDispatch()
     const navigate = useNavigate()
 
@@ -49,14 +48,6 @@ function HourlyForm({ isEditing, userId }) {
             }
         }
     };
-
-    const fetchUserData = async () => {
-        const data = await getUserData()
-        setUserData(data)
-    }
-    useEffect(() => {
-        fetchUserData()
-    }, [])
 
     useEffect(() => {
         if (userId) {
@@ -167,7 +158,7 @@ function HourlyForm({ isEditing, userId }) {
                                 className='h-10'
                                 showSearch={false}
                                 options={
-                                    userData.itemList?.map((item) => ({
+                                    user.data.itemList?.map((item) => ({
                                         value: item,
                                         label: item,
                                     })) || []

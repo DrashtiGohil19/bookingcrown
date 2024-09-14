@@ -15,15 +15,47 @@ function Profile() {
     const { user, status } = useSelector((state) => state.user);
     const [isFormChanged, setIsFormChanged] = useState(false);
     const [initialValues, setInitialValues] = useState({});
+    const [itemList, setItemList] = useState([]);
+    const [session, setSession] = useState([])
     const [fields, setFields] = useState([{ key: Date.now(), value: '' }])
+    const [sessionFields, setSessionFields] = useState([{ key: Date.now(), value: '' }])
 
     const addField = () => {
         setFields([...fields, { key: Date.now(), value: '' }]);
     };
 
-    const removeField = (key) => {
-        setFields(fields.filter(field => field.key !== key));
+    const addSessionField = () => {
+        setSessionFields([...sessionFields, { key: Date.now(), value: '' }]);
     };
+
+    const removeField = (fieldItem) => {
+        const isFromItemList = itemList.some(itemKey => fieldItem.value === itemKey)
+
+        if (isFromItemList) {
+            setItemList(itemList.filter((item) => item !== fieldItem.value));
+        } else {
+            setFields(fields.filter(field => field.key !== fieldItem.key));
+        }
+        checkFormChanges()
+    };
+
+    const removeSessionField = (fieldItem) => {
+        const isFromSession = session.some(sessionItem => fieldItem.value === sessionItem);
+
+        if (isFromSession) {
+            setSession(session.filter(item => item !== fieldItem.value));
+        } else {
+            setSessionFields(sessionFields.filter(field => field.key !== fieldItem.key));
+        }
+        checkFormChanges();
+    };
+
+    const checkFormChanges = () => {
+        const currentValues = form.getFieldsValue();
+        const formValuesChanged = JSON.stringify(currentValues) !== JSON.stringify(initialValues);
+        const itemListChanged = JSON.stringify(itemList) !== JSON.stringify(user.data.itemList);
+        setIsFormChanged(formValuesChanged || itemListChanged);
+    }
 
     useEffect(() => {
         if (status === 'succeeded') {
@@ -36,6 +68,7 @@ function Profile() {
                 businessName: user.data.businessName,
                 tableTurfList: user.data.itemList.length
             };
+            setItemList(user.data.itemList)
             setInitialValues(userData);
             form.setFieldsValue(userData);
             setIsFormChanged(false);
@@ -59,9 +92,8 @@ function Profile() {
             console.warn("Form is missing required fields");
             setIsFormChanged(false);
         } else {
-            setIsFormChanged(JSON.stringify(currentValues) !== JSON.stringify(initialValues));
+            checkFormChanges()
         }
-
     };
 
     useEffect(() => {
@@ -72,6 +104,7 @@ function Profile() {
 
     const onFinish = async (values) => {
         let itemList = [];
+        let sessionList = [];
         if (values.tableTurfList) {
             const parsedTableNumber = parseFloat(values.tableTurfList);
             itemList = Array.from({ length: parsedTableNumber }, (_, i) => i + 1);
@@ -81,6 +114,12 @@ function Profile() {
                 .map(key => values[key]);
             itemList = farmHotelList || [];;
         }
+
+        const sessionListKeys = Object.keys(values)
+            .filter(key => key.startsWith('sessionList_'))
+            .map(key => values[key]);
+
+        sessionList = sessionListKeys || [];
         const formData = {
             name: values.name,
             email: values.email,
@@ -88,10 +127,12 @@ function Profile() {
             businessType: values.businessType,
             businessName: values.businessName,
             address: values.address,
-            itemList: itemList
+            itemList: itemList,
+            sessionList: sessionList
         };
         try {
             await updateUserData(formData);
+            dispatch(fetchUserData())
             navigate("/user/dashboard")
         } catch (error) {
             console.error("Update error:", error);
@@ -99,60 +140,108 @@ function Profile() {
     };
 
     const renderItemList = () => {
-        if (user?.data?.bookingType === "daily") {
-            const existingFields = user?.data?.itemList?.map((item, i) => ({ key: i, value: item })) || [];
-            const allCurrentFields = [...existingFields, ...fields];
-            const fieldsToRender = allCurrentFields.length > 0 ? allCurrentFields : [{ key: 0, value: '' }];
-            const shouldShowRemoveButton = fieldsToRender.length > 1;
-            return (
-                <>
-                    <Col xs={24} sm={24} md={18} lg={16} className="mb-[10px]">
-                        <Form.Item
-                            label="Farms/Hotels"
-                            className="mb-0"
-                        >
-                            {fieldsToRender.map(field => (
-                                <div key={field.key} className="flex gap-2 items-center mb-[10px]">
-                                    <Form.Item
-                                        name={`farmHotelList_${field.key}`}
-                                        initialValue={field.value}
-                                        rules={[
-                                            { required: true, message: 'Please input your Farm/Hotel name!' },
-                                        ]}
-                                        noStyle
+        const existingFields = itemList.map((item, i) => ({ key: i, value: item })) || [];
+        const allCurrentFields = [...existingFields, ...fields];
+        const fieldsToRender = allCurrentFields.length > 0 ? allCurrentFields : [{ key: 0, value: '' }];
+        const shouldShowRemoveButton = fieldsToRender.length > 1;
+        return (
+            <>
+                <Col xs={24} sm={24} md={18} lg={16} className="mb-[10px]">
+                    <Form.Item
+                        label="Farms/Hotels"
+                        className="mb-0"
+                    >
+                        {fieldsToRender.map(field => (
+                            <div key={field.key} className="flex gap-2 items-center mb-[10px]">
+                                <Form.Item
+                                    name={`farmHotelList_${field.key}`}
+                                    initialValue={field.value}
+                                    rules={[
+                                        { required: true, message: 'Please input your Farm/Hotel name!' },
+                                    ]}
+                                    noStyle
+                                >
+                                    <Input
+                                        type="text"
+                                        placeholder="Farm/Table"
+                                        className="h-10"
+                                        onChange={(e) => {
+                                            const newFields = fields.map(f =>
+                                                f.key === field.key ? { ...f, value: e.target.value } : f
+                                            );
+                                            setFields(newFields);
+                                        }}
+                                    />
+                                </Form.Item>
+                                {shouldShowRemoveButton && (
+                                    <Button
+                                        type="primary"
+                                        className="h-10"
+                                        onClick={() => removeField(field)}
                                     >
-                                        <Input
-                                            type="text"
-                                            placeholder="Farm/Table"
-                                            className="h-10"
-                                            onChange={(e) => {
-                                                const newFields = fields.map(f =>
-                                                    f.key === field.key ? { ...f, value: e.target.value } : f
-                                                );
-                                                setFields(newFields);
-                                            }}
-                                        />
-                                    </Form.Item>
-                                    {shouldShowRemoveButton && !existingFields.some(f => f.key === field.key) && (
-                                        <Button
-                                            type="primary"
-                                            className="h-10"
-                                            onClick={() => removeField(field.key)}
-                                        >
-                                            X
-                                        </Button>
-                                    )}
-                                </div>
-                            ))}
-                        </Form.Item>
-                    </Col>
-                    <Button type="primary" className="ml-[7px] md:mt-[30px] h-10" onClick={addField}>
-                        Add More
-                    </Button>
-                </>
-            );
-        }
-        return null;
+                                        X
+                                    </Button>
+                                )}
+                            </div>
+                        ))}
+                    </Form.Item>
+                </Col>
+                <Button type="primary" className="ml-[7px] md:mt-[30px] h-10" onClick={addField}>
+                    Add More
+                </Button>
+            </>
+        );
+    };
+
+    const renderSessionList = () => {
+        const existingFields = session.map((item, i) => ({ key: i, value: item })) || [];
+        const allCurrentFields = [...existingFields, ...sessionFields];
+        const fieldsToRender = allCurrentFields.length > 0 ? allCurrentFields : [{ key: 0, value: '' }];
+        const shouldShowRemoveButton = fieldsToRender.length > 1;
+
+        return (
+            <>
+                <Col xs={24} sm={24} md={18} lg={16} className="mb-[10px]">
+                    <Form.Item label="Session List" className="mb-0">
+                        {fieldsToRender.map(field => (
+                            <div key={field.key} className="flex gap-2 items-center mb-[10px]">
+                                <Form.Item
+                                    name={`sessionList_${field.key}`}
+                                    initialValue={field.value}
+                                    rules={[{ required: true, message: 'Please input your session!' }]}
+                                    noStyle
+                                >
+                                    <Input
+                                        type="text"
+                                        placeholder="Session List"
+                                        className="h-10"
+                                        value={field.value}
+                                        onChange={(e) => {
+                                            const newFields = sessionFields.map(f =>
+                                                f.key === field.key ? { ...f, value: e.target.value } : f
+                                            );
+                                            setSessionFields(newFields);
+                                        }}
+                                    />
+                                </Form.Item>
+                                {shouldShowRemoveButton && (
+                                    <Button
+                                        type="primary"
+                                        className="h-10"
+                                        onClick={() => removeSessionField(field)}
+                                    >
+                                        X
+                                    </Button>
+                                )}
+                            </div>
+                        ))}
+                    </Form.Item>
+                </Col>
+                <Button type="primary" className="ml-[7px] sm:mb-[25px] md:mt-[30px] h-10" onClick={addSessionField}>
+                    Add More
+                </Button>
+            </>
+        );
     };
 
     return (
@@ -276,7 +365,9 @@ function Profile() {
                                         </Item>
                                     </Col>
 
-                                    {user?.data?.bookingType === "hourly" ? (
+                                    {renderSessionList()}
+
+                                    {user?.data?.businessType === "Box Cricket" ? (
                                         <Col xs={12} sm={12} lg={8}>
                                             <Item
                                                 name="tableTurfList"

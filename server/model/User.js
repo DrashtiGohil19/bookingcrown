@@ -29,14 +29,17 @@ const UserSchema = new mongoose.Schema({
     address: {
         type: String,
     },
+    sessionList: {
+        type: [String]
+    },
+    itemList: {
+        type: [String]
+    },
     role: {
         type: String,
         enum: ['user', 'admin'],
         default: 'user',
     },
-    itemList: {
-        type: [String]
-    }
 }, { timestamps: true });
 
 // Hash the password before saving the user

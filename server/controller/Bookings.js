@@ -3,66 +3,91 @@ const User = require("../model/User");
 const dayjs = require("dayjs")
 const customParseFormat = require('dayjs/plugin/customParseFormat');
 dayjs.extend(customParseFormat);
+const utc = require('dayjs/plugin/utc');
+dayjs.extend(utc);
 
 exports.createBookings = async (req, res) => {
     try {
-        const userId = req.user.id
+        const userId = req.user.id;
         const { customerName, mobilenu, date, time, totalHours, amount, advance, pending, session, item } = req.body;
 
-        let existingBooking
+        let query
         if (time) {
-            const parsedStartTime = dayjs(time.start, "h:mm A");
+            const parsedStartTime = dayjs(time.start, "h:mm A")
             const parsedEndTime = dayjs(time.end, "h:mm A");
-
-            existingBooking = await Bookings.findOne({
-                item: item,
-                date: date,
+            query = {
+                item,
+                date,
                 $or: [
                     {
                         $and: [
-                            { "time.start": { $lt: parsedEndTime.format("HH:mm") } },
-                            { "time.end": { $gt: parsedStartTime.format("HH:mm") } }
+                            { "time.start": { $lt: parsedEndTime } },
+                            { "time.end": { $gt: parsedStartTime } }
                         ]
                     },
                     {
-                        "time.start": { $gte: parsedStartTime.format("HH:mm") },
-                        "time.end": { $lte: parsedEndTime.format("HH:mm") }
+                        "time.start": { $gte: parsedStartTime },
+                        "time.end": { $lte: parsedEndTime }
                     }
                 ]
-            });
-
+            };
         } else {
-            existingBooking = await Bookings.findOne({
+            query = {
                 item: item,
-                date: date
-            });
+                date: date,
+                session: session
+            };
         }
+
+        const existingBooking = await Bookings.findOne(query);
 
         if (existingBooking) {
             return res.status(400).json({ message: "Booking already exists for the given time and date", success: false });
         }
 
-        const booking = new Bookings({
+        const bookingData = {
             userId,
             customerName,
             mobilenu,
             date,
-            time,
-            totalHours,
-            amount,
-            advance,
-            pending,
-            session,
-            item
-        });
+            item,
+        };
 
+        if (time && time.start && time.end) {
+            bookingData.time = {
+                start: dayjs(time.start, "h:mm A"),
+                end: dayjs(time.end, "h:mm A")
+            };
+        }
+
+        if (session) {
+            bookingData.session = session;
+        }
+
+        if (totalHours) {
+            bookingData.totalHours = totalHours;
+        }
+
+        if (amount) {
+            bookingData.amount = amount;
+        }
+
+        if (advance) {
+            bookingData.advance = advance;
+        }
+
+        if (pending) {
+            bookingData.pending = pending;
+        }
+
+        const booking = new Bookings(bookingData);
         await booking.save();
         res.status(200).json({ booking, message: "Booking created succesfully", success: true });
     } catch (error) {
-        console.log(error)
-        res.status(400).json({ error: error.message });
+        console.error(error);
+        res.status(500).json({ message: "An error occurred while creating the booking", error: error.message });
     }
-}
+};
 
 exports.updateBookingDetails = async (req, res) => {
     try {
@@ -84,16 +109,65 @@ exports.updateBookingDetails = async (req, res) => {
 
         if (!booking) return res.status(404).json({ error: 'Booking not found' });
 
+        let checkForConflict = false;
+        let query;
+
+        if (time || date || item || session) {
+            checkForConflict = true;
+
+            if (time) {
+                const parsedStartTime = dayjs(time.start, "h:mm A");
+                const parsedEndTime = dayjs(time.end, "h:mm A");
+
+                query = {
+                    item: item || booking.item,
+                    date: date || booking.date,
+                    $or: [
+                        {
+                            $and: [
+                                { "time.start": { $lt: parsedEndTime } },
+                                { "time.end": { $gt: parsedStartTime } }
+                            ]
+                        },
+                        {
+                            "time.start": { $gte: parsedStartTime },
+                            "time.end": { $lte: parsedEndTime }
+                        }
+                    ]
+                };
+            } else {
+                query = {
+                    item: item || booking.item,
+                    date: date || booking.date,
+                    session: session || booking.session
+                };
+            }
+
+            const existingBooking = await Bookings.findOne(query);
+
+            if (existingBooking) {
+                return res.status(400).json({ message: "Booking already exists for the given time and date", success: false });
+            }
+        }
+
         if (customerName !== undefined) booking.customerName = customerName;
         if (mobilenu !== undefined) booking.mobilenu = mobilenu;
-        if (date !== undefined) booking.date = date;
-        if (time !== undefined) booking.time = time;
         if (totalHours !== undefined) booking.totalHours = totalHours;
         if (amount !== undefined) booking.amount = amount;
         if (advance !== undefined) booking.advance = advance;
         if (pending !== undefined) booking.pending = pending;
-        if (session !== undefined) booking.session = session;
-        if (item !== undefined) booking.item = item;
+
+        if (checkForConflict) {
+            if (time) {
+                booking.time = {
+                    start: dayjs(time.start, "h:mm A"),
+                    end: dayjs(time.end, "h:mm A")
+                };
+            }
+            if (date !== undefined) booking.date = date;
+            if (session !== undefined) booking.session = session;
+            if (item !== undefined) booking.item = item;
+        }
 
         if (fullyPaid) {
             booking.payment = 'paid';
@@ -112,7 +186,7 @@ exports.updateBookingDetails = async (req, res) => {
 
         res.status(200).json({ booking, message: "Booking updated successfully", success: true });
     } catch (error) {
-        res.status(400).json({ error: error.message });
+        res.status(400).json({ error: error.message, message: "An error occurred while updating the booking" });
     }
 };
 
@@ -122,7 +196,7 @@ exports.deleteBookings = async (req, res) => {
         if (!booking) return res.status(404).json({ error: 'Booking not found' });
         res.status(200).json({ message: 'Booking deleted successfully', success: true });
     } catch (error) {
-        res.status(400).json({ error: error.message });
+        res.status(400).json({ error: error.message, message: "An error occurred while deleting the booking" });
     }
 }
 
@@ -159,6 +233,6 @@ exports.getSingleBooking = async (req, res) => {
             bookings
         });
     } catch (error) {
-        res.status(400).json({ error: error.message });
+        res.status(400).json({ error: error.message, message: "An error occurred while retriving the data" });
     }
 }

@@ -72,35 +72,6 @@ exports.updateExpense = async (req, res) => {
     }
 };
 
-// exports.getAllIncomeAndExpenses = async (req, res) => {
-//     try {
-//         const userId = req.user.id;
-//         const allBooking = await Bookings.find({ userId: userId, payment: "paid" });
-//         const totalIncome = allBooking.reduce((total, booking) => total + booking.amount, 0);
-//         const allExpenses = await Expense.find({ userId });
-//         const totalExpense = allExpenses.reduce((total, expense) => total + expense.amount, 0);
-//         const profitOrLoss = totalIncome - totalExpense;
-//         res.status(200).json({
-//             success: true,
-//             message: 'Income and Expense data retrieved successfully.',
-//             incomeData: {
-//                 data: allBooking,
-//                 totalIncome: totalIncome,
-//             },
-//             expenseData: {
-//                 data: allExpenses,
-//                 totalExpense: totalExpense,
-//             },
-//             profitOrLoss: profitOrLoss,
-//         });
-
-//     } catch (error) {
-//         console.error(error.message);
-//         res.status(500).send({ message: 'Server error', error: error });
-//     }
-// };
-
-
 exports.getAllIncomeAndExpenses = async (req, res) => {
     try {
         const userId = req.user.id;
@@ -142,6 +113,6 @@ exports.getAllIncomeAndExpenses = async (req, res) => {
 
     } catch (error) {
         console.error(error.message);
-        res.status(500).send({ message: 'Server error', error: error });
+        res.status(500).send({ message: "An error occurred while creating expense data", error: error });
     }
 };

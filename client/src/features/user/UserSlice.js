@@ -27,8 +27,12 @@ const UserSlice = createSlice({
         error: null,
     },
     reducers: {
-        resetUserData: (state) => {
+        resetAllUserData: (state) => {
             state.allUsers = [];
+            state.status = 'idle';
+            state.error = null;
+        },
+        resetUserData: (state) => {
             state.user = {};
             state.status = 'idle';
             state.error = null;
@@ -64,5 +68,5 @@ const UserSlice = createSlice({
     },
 });
 
-export const { resetUserData } = UserSlice.actions;
+export const { resetUserData, resetAllUserData } = UserSlice.actions;
 export default UserSlice.reducer;
