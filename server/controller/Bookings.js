@@ -26,8 +26,10 @@ exports.createBookings = async (req, res) => {
                         ]
                     },
                     {
-                        "time.start": { $gte: parsedStartTime },
-                        "time.end": { $lte: parsedEndTime }
+                        $and: [
+                            { "time.start": { $gte: parsedStartTime } },
+                            { "time.end": { $lte: parsedEndTime } }
+                        ]
                     }
                 ]
             };
@@ -42,7 +44,7 @@ exports.createBookings = async (req, res) => {
         const existingBooking = await Bookings.findOne(query);
 
         if (existingBooking) {
-            return res.status(400).json({ message: "Booking already exists for the given time and date", success: false });
+            return res.status(400).json({ message: "Unable to add booking, Booking already exists for the specified time and date.", success: false });
         }
 
         const bookingData = {
@@ -106,13 +108,19 @@ exports.updateBookingDetails = async (req, res) => {
         } = req.body;
 
         let booking = await Bookings.findById(req.params.id);
-
         if (!booking) return res.status(404).json({ error: 'Booking not found' });
 
-        let checkForConflict = false;
-        let query;
+        let checkForConflict = false
+        let query
 
-        if (time || date || item || session) {
+        const formattedDate = date ? dayjs(date).format('YYYY-MM-DD') : null;
+        const bookingFormattedDate = dayjs(booking.date).format('YYYY-MM-DD');
+        const isDateDifferent = formattedDate && !dayjs(formattedDate).isSame(bookingFormattedDate, 'day');
+        const isTimeDifferent = time && (time.start !== booking.time.start || time.end !== booking.time.end);
+        const isSessionDifferent = session && session !== booking.session;
+        const isItemDifferent = item && item !== booking.item;
+
+        if (isDateDifferent || isTimeDifferent || isSessionDifferent || isItemDifferent) {
             checkForConflict = true;
 
             if (time) {
@@ -130,8 +138,10 @@ exports.updateBookingDetails = async (req, res) => {
                             ]
                         },
                         {
-                            "time.start": { $gte: parsedStartTime },
-                            "time.end": { $lte: parsedEndTime }
+                            $and: [
+                                { "time.start": { $gte: parsedStartTime } },
+                                { "time.end": { $lte: parsedEndTime } }
+                            ]
                         }
                     ]
                 };
@@ -146,7 +156,7 @@ exports.updateBookingDetails = async (req, res) => {
             const existingBooking = await Bookings.findOne(query);
 
             if (existingBooking) {
-                return res.status(400).json({ message: "Booking already exists for the given time and date", success: false });
+                return res.status(400).json({ message: "Unable to update booking, Booking already exists for the specified time and date.", success: false });
             }
         }
 

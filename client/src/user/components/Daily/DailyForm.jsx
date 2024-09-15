@@ -1,8 +1,6 @@
 import { Button, Col, DatePicker, Form, Input, Row, Select } from 'antd'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
-import { getUserData } from '../../../api/User';
-import moment from 'moment';
 import { CreateBooking, getBookingById, UpdateBooking } from '../../../api/Bookings';
 import { fetchAllBookings } from '../../../features/bookings/BookingSlice';
 import { useNavigate } from 'react-router-dom';
@@ -35,13 +33,6 @@ function DailyForm({ isEditing, userId }) {
         }
     };
 
-    const validateFutureDate = (_, value) => {
-        if (!value || value.isAfter(moment())) {
-            return Promise.resolve();
-        }
-        return Promise.reject('The booking date must be in the future!');
-    };
-
     const getBookingsData = async () => {
         try {
             const data = await getBookingById(userId)
@@ -65,6 +56,7 @@ function DailyForm({ isEditing, userId }) {
     }
 
     const onFinish = async (values) => {
+        let response = null
         const formData = {
             customerName: values.customerName,
             mobilenu: values.mobileNumber,
@@ -76,13 +68,13 @@ function DailyForm({ isEditing, userId }) {
             pending: values.pendingAmount
         }
         if (isEditing) {
-            await UpdateBooking(formData, userId)
+            response = await UpdateBooking(formData, userId)
         } else {
-            await CreateBooking(formData)
+            response = await CreateBooking(formData)
         }
 
         await dispatch(fetchAllBookings())
-        navigate("/user/dashboard")
+        if (response.success) navigate("/user/dashboard")
     }
 
     return (
@@ -152,7 +144,7 @@ function DailyForm({ isEditing, userId }) {
                         <Item
                             name="date"
                             label="Booking Date"
-                            rules={[{ required: true, message: 'Please select a date!' }, { validator: validateFutureDate }]}
+                            rules={[{ required: true, message: 'Please select a date!' }]}
                         >
                             <DatePicker
                                 className="h-10 w-full"
@@ -202,9 +194,6 @@ function DailyForm({ isEditing, userId }) {
                         <Item
                             name="advanceAmount"
                             label="Advance Amount"
-                        // rules={[
-                        //     { required: true, message: 'Please input advance amount!' },
-                        // ]}
                         >
                             <Input
                                 type='number'

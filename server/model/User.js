@@ -21,7 +21,7 @@ const UserSchema = new mongoose.Schema({
     },
     businessType: {
         type: String,
-        enum: ["Box Cricket", "Cafe/Restuarant", "Hotel management", "Farm"]
+        // enum: ["Box Cricket", "Cafe/Restuarant", "Hotel management", "Farm"]
     },
     businessName: {
         type: String,

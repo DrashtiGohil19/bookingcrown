@@ -17,8 +17,8 @@ function Profile() {
     const [initialValues, setInitialValues] = useState({});
     const [itemList, setItemList] = useState([]);
     const [session, setSession] = useState([])
-    const [fields, setFields] = useState([{ key: Date.now(), value: '' }])
-    const [sessionFields, setSessionFields] = useState([{ key: Date.now(), value: '' }])
+    const [fields, setFields] = useState([])
+    const [sessionFields, setSessionFields] = useState([])
 
     const addField = () => {
         setFields([...fields, { key: Date.now(), value: '' }]);
@@ -69,6 +69,7 @@ function Profile() {
                 tableTurfList: user.data.itemList.length
             };
             setItemList(user.data.itemList)
+            setSession(user.data.sessionList)
             setInitialValues(userData);
             form.setFieldsValue(userData);
             setIsFormChanged(false);
@@ -142,8 +143,7 @@ function Profile() {
     const renderItemList = () => {
         const existingFields = itemList.map((item, i) => ({ key: i, value: item })) || [];
         const allCurrentFields = [...existingFields, ...fields];
-        const fieldsToRender = allCurrentFields.length > 0 ? allCurrentFields : [{ key: 0, value: '' }];
-        const shouldShowRemoveButton = fieldsToRender.length > 1;
+        const shouldShowRemoveButton = allCurrentFields.length > 0;
         return (
             <>
                 <Col xs={24} sm={24} md={18} lg={16} className="mb-[10px]">
@@ -151,7 +151,7 @@ function Profile() {
                         label="Farms/Hotels"
                         className="mb-0"
                     >
-                        {fieldsToRender.map(field => (
+                        {allCurrentFields.map(field => (
                             <div key={field.key} className="flex gap-2 items-center mb-[10px]">
                                 <Form.Item
                                     name={`farmHotelList_${field.key}`}
@@ -163,7 +163,7 @@ function Profile() {
                                 >
                                     <Input
                                         type="text"
-                                        placeholder="Farm/Table"
+                                        placeholder="Farm/Hotel"
                                         className="h-10"
                                         onChange={(e) => {
                                             const newFields = fields.map(f =>
@@ -186,7 +186,12 @@ function Profile() {
                         ))}
                     </Form.Item>
                 </Col>
-                <Button type="primary" className="ml-[7px] md:mt-[30px] h-10" onClick={addField}>
+
+                <Button
+                    type="primary"
+                    className="ml-[7px] md:mt-[30px] h-10"
+                    onClick={addField}
+                >
                     Add More
                 </Button>
             </>
@@ -196,14 +201,12 @@ function Profile() {
     const renderSessionList = () => {
         const existingFields = session.map((item, i) => ({ key: i, value: item })) || [];
         const allCurrentFields = [...existingFields, ...sessionFields];
-        const fieldsToRender = allCurrentFields.length > 0 ? allCurrentFields : [{ key: 0, value: '' }];
-        const shouldShowRemoveButton = fieldsToRender.length > 1;
-
+        const shouldShowRemoveButton = allCurrentFields.length > 0;
         return (
             <>
                 <Col xs={24} sm={24} md={18} lg={16} className="mb-[10px]">
                     <Form.Item label="Session List" className="mb-0">
-                        {fieldsToRender.map(field => (
+                        {allCurrentFields.map(field => (
                             <div key={field.key} className="flex gap-2 items-center mb-[10px]">
                                 <Form.Item
                                     name={`sessionList_${field.key}`}
@@ -237,7 +240,12 @@ function Profile() {
                         ))}
                     </Form.Item>
                 </Col>
-                <Button type="primary" className="ml-[7px] sm:mb-[25px] md:mt-[30px] h-10" onClick={addSessionField}>
+
+                <Button
+                    type="primary"
+                    className="ml-[7px] sm:mb-[25px] md:mt-[30px] h-10"
+                    onClick={addSessionField}
+                >
                     Add More
                 </Button>
             </>
@@ -365,7 +373,7 @@ function Profile() {
                                         </Item>
                                     </Col>
 
-                                    {renderSessionList()}
+                                    {user?.data?.businessType !== "Box Cricket" && renderSessionList()}
 
                                     {user?.data?.businessType === "Box Cricket" ? (
                                         <Col xs={12} sm={12} lg={8}>

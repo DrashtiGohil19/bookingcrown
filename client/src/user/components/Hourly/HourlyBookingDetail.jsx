@@ -134,10 +134,6 @@ const HourlyBookingDetail = () => {
 
                             <Card title="Copy this link and send to the customer" className='mt-3'>
                                 <div className='flex gap-6'>
-                                    {/* <CopyToClipboard onCopy={() => Notification.success("Link copied to clipboard!")} text={`${process.env.REACT_APP_BASE_URL}/customer/booking-details/${booking?._id}`}>
-                                        <Button type='primary' >Click here to copy link</Button>
-                                    </CopyToClipboard> */}
-
                                     <CopyToClipboard onCopy={() => handleCopy(booking.mobilenu)} text={bookingLink}>
                                         <Button type="primary">Click here to copy link and send on WhatsApp</Button>
                                     </CopyToClipboard>
