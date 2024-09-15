@@ -34,11 +34,22 @@ exports.createBookings = async (req, res) => {
                 ]
             };
         } else {
-            query = {
-                item: item,
-                date: date,
-                session: session
-            };
+            if (session === "Full Day") {
+                query = {
+                    item: item,
+                    date: date,
+                    $or: [
+                        { session: "Morning Session" },
+                        { session: "Afternoon Session" }
+                    ]
+                }
+            } else {
+                query = {
+                    item: item,
+                    date: date,
+                    session: session
+                };
+            }
         }
 
         const existingBooking = await Bookings.findOne(query);
@@ -146,14 +157,27 @@ exports.updateBookingDetails = async (req, res) => {
                     ]
                 };
             } else {
-                query = {
-                    item: item || booking.item,
-                    date: date || booking.date,
-                    session: session || booking.session
-                };
+                if (session === "Full Day") {
+                    query = {
+                        item: item || booking.item,
+                        date: date || booking.date,
+                        $or: [
+                            { session: "Morning Session" },
+                            { session: "Afternoon Session" }
+                        ],
+                        _id: { $ne: req.params.id }
+                    }
+                } else {
+                    query = {
+                        item: item || booking.item,
+                        date: date || booking.date,
+                        session: session || booking.session
+                    };
+                }
             }
 
             const existingBooking = await Bookings.findOne(query);
+            console.log("existing booking", existingBooking)
 
             if (existingBooking) {
                 return res.status(400).json({ message: "Unable to update booking, Booking already exists for the specified time and date.", success: false });

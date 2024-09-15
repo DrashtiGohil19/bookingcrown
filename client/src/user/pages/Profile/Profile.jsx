@@ -105,7 +105,7 @@ function Profile() {
 
     const onFinish = async (values) => {
         let itemList = [];
-        let sessionList = [];
+        // let sessionList = [];
         if (values.tableTurfList) {
             const parsedTableNumber = parseFloat(values.tableTurfList);
             itemList = Array.from({ length: parsedTableNumber }, (_, i) => i + 1);
@@ -116,11 +116,11 @@ function Profile() {
             itemList = farmHotelList || [];;
         }
 
-        const sessionListKeys = Object.keys(values)
-            .filter(key => key.startsWith('sessionList_'))
-            .map(key => values[key]);
+        // const sessionListKeys = Object.keys(values)
+        //     .filter(key => key.startsWith('sessionList_'))
+        //     .map(key => values[key]);
 
-        sessionList = sessionListKeys || [];
+        // sessionList = sessionListKeys || [];
         const formData = {
             name: values.name,
             email: values.email,
@@ -129,7 +129,7 @@ function Profile() {
             businessName: values.businessName,
             address: values.address,
             itemList: itemList,
-            sessionList: sessionList
+            // sessionList: sessionList
         };
         try {
             await updateUserData(formData);
@@ -373,7 +373,7 @@ function Profile() {
                                         </Item>
                                     </Col>
 
-                                    {user?.data?.businessType !== "Box Cricket" && renderSessionList()}
+                                    {/* {user?.data?.businessType !== "Box Cricket" && renderSessionList()} */}
 
                                     {user?.data?.businessType === "Box Cricket" ? (
                                         <Col xs={12} sm={12} lg={8}>

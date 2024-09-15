@@ -58,7 +58,7 @@ function Login() {
                                     Welcome back! Please sign in to access your account.
                                 </p>
                             </div>
-                            <div className="bg-white rounded-md p-6">
+                            <div className="bg-white rounded-md md:p-6">
                                 <Form
                                     name="login"
                                     layout="vertical"

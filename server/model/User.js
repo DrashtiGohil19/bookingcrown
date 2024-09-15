@@ -29,9 +29,9 @@ const UserSchema = new mongoose.Schema({
     address: {
         type: String,
     },
-    sessionList: {
-        type: [String]
-    },
+    // sessionList: {
+    //     type: [String]
+    // },
     itemList: {
         type: [String]
     },

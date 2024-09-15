@@ -4,11 +4,22 @@ import { IoClose } from 'react-icons/io5'
 import { useNavigate } from 'react-router-dom'
 import { Link } from 'react-scroll'
 import { getToken, getUserRole } from '../services/authService/AuthService'
+import { resetUserData } from '../features/user/UserSlice'
+import { resetBookingData } from '../features/bookings/BookingSlice'
+import { useDispatch } from 'react-redux'
 
 function Header() {
     const navigate = useNavigate()
+    const dispatch = useDispatch();
     const token = getToken()
     const role = getUserRole()
+
+    const handleLogOut = async () => {
+        dispatch(resetUserData());
+        dispatch(resetBookingData());
+        localStorage.clear()
+        navigate("/")
+    }
     return (
         <div className="fixed top-0 left-0 right-0 bg-white shadow z-50">
             <Disclosure as="nav" className="bg-white shadow-xl">
@@ -17,8 +28,8 @@ function Header() {
 
 
                         <div className="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
-                            <div className="flex gap-4 flex-shrink-0 items-center">
-                                <div className=" inset-y-0 left-0 flex items-center sm:hidden">
+                            <div className="flex gap-2 flex-shrink-0 items-center">
+                                <div className="inset-y-0 left-0 flex items-center sm:hidden">
                                     {/* Mobile menu button */}
                                     <DisclosureButton className="group relative inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-gray-100 hover:text-themeLight0 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-themeColor">
                                         <span className="sr-only">Open main menu</span>
@@ -76,13 +87,22 @@ function Header() {
                             </div>
                             <div className="flex items-center ml-auto space-x-2">
                                 {token && role ? (
-                                    <button
-                                        type="button"
-                                        onClick={() => navigate(`/${role}/dashboard`)}
-                                        className="rounded-lg bg-themeColor text-white focus:outline-none focus:ring-2 focus:ring-themeColor focus:ring-offset-2 p-[5px_9px]"
-                                    >
-                                        Dashboard
-                                    </button>
+                                    <>
+                                        <button
+                                            type="button"
+                                            onClick={() => navigate(`/${role}/dashboard`)}
+                                            className="rounded-lg bg-themeColor text-white focus:outline-none focus:ring-2 focus:ring-themeColor focus:ring-offset-2 p-[5px_9px]"
+                                        >
+                                            Dashboard
+                                        </button>
+                                        <button
+                                            type="button"
+                                            onClick={handleLogOut}
+                                            className="rounded-lg bg-themeColor text-white focus:outline-none focus:ring-2 focus:ring-themeColor ms-1 md:ms-4 focus:ring-offset-2 p-[5px_9px]"
+                                        >
+                                            Log Out
+                                        </button>
+                                    </>
                                 ) : (
                                     <>
 

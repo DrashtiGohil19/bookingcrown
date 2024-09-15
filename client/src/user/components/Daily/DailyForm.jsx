@@ -166,12 +166,11 @@ function DailyForm({ isEditing, userId }) {
                                 placeholder="Select Session"
                                 className='h-10'
                                 showSearch={false}
-                                options={
-                                    user.data?.sessionList?.map((item) => ({
-                                        value: item,
-                                        label: item,
-                                    })) || []
-                                }
+                                options={[
+                                    { value: 'Morning Session', label: 'Morning Session' },
+                                    { value: 'Afternoon Session', label: 'Afternoon Session' },
+                                    { value: 'Full Day', label: 'Full Day' }
+                                ]}
                             />
                         </Item>
                     </Col>

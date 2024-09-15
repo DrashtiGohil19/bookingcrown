@@ -3,9 +3,20 @@ import { Button } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import Contact from '../../../common/Contact';
 import Footer from '../../../common/Footer';
+import { resetUserData } from '../../../features/user/UserSlice';
+import { resetBookingData } from '../../../features/bookings/BookingSlice';
+import { useDispatch } from 'react-redux';
 
 function AccessDenied() {
     const navigate = useNavigate();
+    const dispatch = useDispatch();
+
+    const handleLogOut = async () => {
+        dispatch(resetUserData());
+        dispatch(resetBookingData());
+        localStorage.clear()
+        navigate("/")
+    }
     return (
         <section className='bg-[#f1fafb]'>
             <main className='min-h-screen flex flex-col justify-center items-center py-8 px-4'>
@@ -21,9 +32,14 @@ function AccessDenied() {
                     <div className='text-center mt-6 text-slate-400'>
                         <p>Thank you for your understanding and cooperation.</p>
                     </div>
-                    <Button type='primary' className='h-10 mt-5' onClick={() => navigate("/")}>
-                        Go Back To Home
-                    </Button>
+                    <div className='flex justify-center gap-4'>
+                        <Button type='primary' className='h-10 mt-5' onClick={() => navigate("/")}>
+                            Go Back To Home
+                        </Button>
+                        <Button type='primary' className='h-10 mt-5' onClick={handleLogOut}>
+                            Log Out
+                        </Button>
+                    </div>
                 </div>
             </main>
 

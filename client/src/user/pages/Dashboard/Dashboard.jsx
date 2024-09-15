@@ -16,7 +16,7 @@ function Dashboard() {
     const navigate = useNavigate()
 
     useEffect(() => {
-        if (status === "idle") {
+        if (status !== "succeeded") {
             dispatch(fetchUserData())
         }
     }, [dispatch, status])
