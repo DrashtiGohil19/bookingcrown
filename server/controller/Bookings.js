@@ -167,21 +167,49 @@ exports.updateBookingDetails = async (req, res) => {
                     ]
                 };
             } else {
+                // if (session === "Full Day") {
+                //     query = {
+                //         item: item || booking.item,
+                //         date: date || booking.date,
+                //         $or: [
+                //             { session: "Morning Session" },
+                //             { session: "Afternoon Session" }
+                //         ],
+                //         _id: { $ne: req.params.id }
+                //     }
+                // } else {
+                //     query = {
+                //         item: item || booking.item,
+                //         date: date || booking.date,
+                //         session: session || booking.session
+                //     };
+                // }
                 if (session === "Full Day") {
                     query = {
                         item: item || booking.item,
                         date: date || booking.date,
                         $or: [
                             { session: "Morning Session" },
-                            { session: "Afternoon Session" }
+                            { session: "Evening Session" },
+                            { session: "Full Day" }
                         ],
                         _id: { $ne: req.params.id }
-                    }
-                } else {
+                    };
+                } else if (session === "Morning Session" || session === "Evening Session") {
                     query = {
                         item: item || booking.item,
                         date: date || booking.date,
-                        session: session || booking.session
+                        $or: [
+                            { session: "Full Day" },
+                            { session: session }
+                        ],
+                        _id: { $ne: req.params.id }
+                    };
+                } else {
+                    query = {
+                        item: item,
+                        date: date,
+                        session: session
                     };
                 }
             }
