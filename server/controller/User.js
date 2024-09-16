@@ -44,10 +44,10 @@ exports.createUser = async (req, res) => {
 
 exports.updateUser = async (req, res) => {
     const userId = req.user.id;
-    const { name, email, mobilenu, businessType, businessName, address, itemList, sessionList } = req.body;
+    const { name, email, mobilenu, businessType, businessName, address, itemList } = req.body;
 
     try {
-        if (!name || !email || !mobilenu || !businessType || !businessName || !address || !itemList || !sessionList) {
+        if (!name || !email || !mobilenu || !businessType || !businessName || !address) {
             return res.status(400).json({ message: 'All fields are required' });
         }
 
@@ -68,7 +68,6 @@ exports.updateUser = async (req, res) => {
         user.businessName = businessName;
         user.address = address;
         user.itemList = itemList;
-        user.sessionList = sessionList
 
         await user.save();
 

@@ -151,7 +151,7 @@ function DailyForm({ isEditing, userId }) {
                                 format="DD-MM-YYYY"
                                 inputReadOnly={true}
                                 value={(date) => date ? date.formate('DD-MM-YYYY') : null}
-                                disabledDate={currentDate => currentDate && currentDate.isBefore(dayjs().startOf('day'))}
+                            // disabledDate={currentDate => currentDate && currentDate.isBefore(dayjs().startOf('day'))}
                             />
                         </Item>
                     </Col>
@@ -168,7 +168,7 @@ function DailyForm({ isEditing, userId }) {
                                 showSearch={false}
                                 options={[
                                     { value: 'Morning Session', label: 'Morning Session' },
-                                    { value: 'Afternoon Session', label: 'Afternoon Session' },
+                                    { value: 'Evening Session', label: 'Evening Session' },
                                     { value: 'Full Day', label: 'Full Day' }
                                 ]}
                             />

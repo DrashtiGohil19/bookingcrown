@@ -17,7 +17,7 @@ function Profile() {
     const [initialValues, setInitialValues] = useState({});
     const [itemList, setItemList] = useState([]);
     const [session, setSession] = useState([])
-    const [fields, setFields] = useState([])
+    const [fields, setFields] = useState([{ key: Date.now(), value: '' }])
     const [sessionFields, setSessionFields] = useState([])
 
     const addField = () => {
@@ -112,6 +112,7 @@ function Profile() {
         } else {
             const farmHotelList = Object.keys(values)
                 .filter(key => key.startsWith('farmHotelList_'))
+                .filter(key => values[key] !== '')
                 .map(key => values[key]);
             itemList = farmHotelList || [];;
         }
@@ -143,7 +144,8 @@ function Profile() {
     const renderItemList = () => {
         const existingFields = itemList.map((item, i) => ({ key: i, value: item })) || [];
         const allCurrentFields = [...existingFields, ...fields];
-        const shouldShowRemoveButton = allCurrentFields.length > 0;
+        const fieldsToRender = allCurrentFields.length > 0 ? allCurrentFields : [{ key: 0, value: '' }];
+        const shouldShowRemoveButton = fieldsToRender.length > 1;
         return (
             <>
                 <Col xs={24} sm={24} md={18} lg={16} className="mb-[10px]">
@@ -151,19 +153,16 @@ function Profile() {
                         label="Farms/Hotels"
                         className="mb-0"
                     >
-                        {allCurrentFields.map(field => (
+                        {fieldsToRender.map(field => (
                             <div key={field.key} className="flex gap-2 items-center mb-[10px]">
                                 <Form.Item
                                     name={`farmHotelList_${field.key}`}
                                     initialValue={field.value}
-                                    rules={[
-                                        { required: true, message: 'Please input your Farm/Hotel name!' },
-                                    ]}
                                     noStyle
                                 >
                                     <Input
                                         type="text"
-                                        placeholder="Farm/Hotel"
+                                        placeholder="Farm/Table"
                                         className="h-10"
                                         onChange={(e) => {
                                             const newFields = fields.map(f =>
@@ -186,12 +185,7 @@ function Profile() {
                         ))}
                     </Form.Item>
                 </Col>
-
-                <Button
-                    type="primary"
-                    className="ml-[7px] md:mt-[30px] h-10"
-                    onClick={addField}
-                >
+                <Button type="primary" className="ml-[7px] md:mt-[30px] h-10" onClick={addField}>
                     Add More
                 </Button>
             </>

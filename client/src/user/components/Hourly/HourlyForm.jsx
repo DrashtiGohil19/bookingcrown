@@ -177,7 +177,7 @@ function HourlyForm({ isEditing, userId }) {
                                 className="h-10 w-full"
                                 format="DD-MM-YYYY"
                                 inputReadOnly={true}
-                                disabledDate={currentDate => currentDate && currentDate.isBefore(moment().startOf('day'))}
+                            // disabledDate={currentDate => currentDate && currentDate.isBefore(moment().startOf('day'))}
                             />
                         </Item>
                     </Col>
