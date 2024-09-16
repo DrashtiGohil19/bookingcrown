@@ -36,13 +36,23 @@ exports.createBookings = async (req, res) => {
         } else {
             if (session === "Full Day") {
                 query = {
-                    item: item,
-                    date: date,
+                    item,
+                    date,
                     $or: [
                         { session: "Morning Session" },
-                        { session: "Afternoon Session" }
+                        { session: "Evening Session" },
+                        { session: "Full Day" }
                     ]
-                }
+                };
+            } else if (session === "Morning Session" || session === "Evening Session") {
+                query = {
+                    item,
+                    date,
+                    $or: [
+                        { session: "Full Day" },
+                        { session: session }
+                    ]
+                };
             } else {
                 query = {
                     item: item,
@@ -177,7 +187,6 @@ exports.updateBookingDetails = async (req, res) => {
             }
 
             const existingBooking = await Bookings.findOne(query);
-            console.log("existing booking", existingBooking)
 
             if (existingBooking) {
                 return res.status(400).json({ message: "Unable to update booking, Booking already exists for the specified time and date.", success: false });
