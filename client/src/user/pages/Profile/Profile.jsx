@@ -162,7 +162,7 @@ function Profile() {
                                 >
                                     <Input
                                         type="text"
-                                        placeholder="Farm/Table"
+                                        placeholder="Booking Items"
                                         className="h-10"
                                         onChange={(e) => {
                                             const newFields = fields.map(f =>
