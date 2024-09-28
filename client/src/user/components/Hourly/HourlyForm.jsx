@@ -150,11 +150,11 @@ function HourlyForm({ isEditing, userId }) {
                     <Col xs={12} sm={12} lg={8}>
                         <Item
                             name="item"
-                            label="Select Table/Turf"
-                            rules={[{ required: true, message: 'Please select a table!' }]}
+                            label="Select Turf"
+                            rules={[{ required: true, message: 'Please select a Turf!' }]}
                         >
                             <Select
-                                placeholder="Select Table/Turf"
+                                placeholder="Select Turf"
                                 className='h-10'
                                 showSearch={false}
                                 options={

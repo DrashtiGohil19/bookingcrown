@@ -87,13 +87,13 @@ const DailyBookingDetail = () => {
                                         </Col>
                                         <Col xs={24} sm={12} md={8} lg={8}>
                                             <div className="flex gap-4 mb-1 md:mb-5">
-                                                <Text className='font-semibold'>Booking Session:</Text>
+                                                <Text className='font-semibold'>Booking For:</Text>
                                                 <Text>{booking.session}</Text>
                                             </div>
                                         </Col>
                                         <Col xs={24} sm={12} md={8} lg={8}>
                                             <div className="flex gap-4 mb-1 md:mb-5">
-                                                <Text className='font-semibold'>Farm/Hotel:</Text>
+                                                <Text className='font-semibold'>Booking Item:</Text>
                                                 <Text>{booking.item}</Text>
                                             </div>
                                         </Col>

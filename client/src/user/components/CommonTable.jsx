@@ -86,14 +86,14 @@ const dailyColumns = [
         responsive: ['xs', 'sm'],
     },
     {
-        title: 'Farm/Hotel',
+        title: 'Booking Item',
         dataIndex: 'item',
         key: 'item',
         align: 'center',
         responsive: ['xs', 'sm'],
     },
     {
-        title: 'Session',
+        title: 'Booking For',
         dataIndex: 'session',
         key: 'session',
         align: 'center',

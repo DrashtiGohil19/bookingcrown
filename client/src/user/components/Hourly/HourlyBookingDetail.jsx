@@ -100,7 +100,7 @@ const HourlyBookingDetail = () => {
                                         </Col>
                                         <Col xs={24} sm={12} md={8} lg={8}>
                                             <div className="flex gap-4 mb-1 md:mb-5">
-                                                <Text className='font-semibold'>Table/Turf:</Text>
+                                                <Text className='font-semibold'>Turf:</Text>
                                                 <Text>{booking.item}</Text>
                                             </div>
                                         </Col>

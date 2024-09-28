@@ -150,7 +150,7 @@ function Profile() {
             <>
                 <Col xs={24} sm={24} md={18} lg={16} className="mb-[10px]">
                     <Form.Item
-                        label="Farms/Hotels"
+                        label="Booking Items"
                         className="mb-0"
                     >
                         {fieldsToRender.map(field => (

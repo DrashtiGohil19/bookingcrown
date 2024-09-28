@@ -123,11 +123,11 @@ function DailyForm({ isEditing, userId }) {
                     <Col xs={12} sm={12} lg={8}>
                         <Item
                             name="item"
-                            label="Select Farm/Table"
-                            rules={[{ required: true, message: 'Please select a table!' }]}
+                            label="Select Booking Item"
+                            rules={[{ required: true, message: 'Please select a Booking Item!' }]}
                         >
                             <Select
-                                placeholder="Select Farm/Hotel"
+                                placeholder="Select Booking Item"
                                 className='h-10'
                                 showSearch={false}
                                 options={

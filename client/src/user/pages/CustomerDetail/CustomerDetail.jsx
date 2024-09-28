@@ -27,8 +27,8 @@ function CustomerDetail() {
 
     const itemTypeMapping = {
         "Box Cricket": "Turf",
-        "Cafe/Restaurant": "Table",
-        "Hotel management": "Table",
+        "Cafe/Restaurant": "Booking Item",
+        "Hotel management": "Booking Item",
         "Farm": "Farm",
     };
 
@@ -101,7 +101,7 @@ function CustomerDetail() {
                                                     <Col xs={24} sm={12} md={8} lg={8}>
                                                         <div className="flex gap-4 mb-1 md:mb-3">
                                                             <Text className="font-semibold">Booking Time:</Text>
-                                                            <Text>{booking.time.start} To {booking.time.end}</Text>
+                                                            <Text>{dayjs(booking.time?.start).format('h:mm A')} To {dayjs(booking.time?.end).format('h:mm A')}</Text>
                                                         </div>
                                                     </Col>
                                                     <Col xs={24} sm={12} md={8} lg={8}>
@@ -115,7 +115,7 @@ function CustomerDetail() {
                                             {booking.session && (
                                                 <Col xs={24} sm={12} md={8} lg={8}>
                                                     <div className="flex gap-4 mb-1 md:mb-3">
-                                                        <Text className="font-semibold">Session:</Text>
+                                                        <Text className="font-semibold">Booking For:</Text>
                                                         <Text>{booking.session}</Text>
                                                     </div>
                                                 </Col>
