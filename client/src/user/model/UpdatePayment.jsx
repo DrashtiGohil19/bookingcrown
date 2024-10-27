@@ -1,35 +1,75 @@
-import React, { useEffect } from 'react';
-import { Button, Checkbox, Form, Input, Modal } from 'antd';
+import React, { useEffect, useState } from 'react';
+import { Button, Checkbox, Col, Form, Input, Modal, Row } from 'antd';
 import { UpdateBooking } from '../../api/Bookings';
 import { useDispatch } from 'react-redux';
 import { fetchIncomeAndExpenses } from '../../features/Expense/ExpenseSlice';
+import PaymentForm from '../components/PaymentForm';
+import dayjs from 'dayjs';
 
 const { Item } = Form;
 
 const UpdatePayment = ({ showModel, handleCancel, selectedRecord }) => {
     const [form] = Form.useForm();
+    const [paymentType, setPaymentType] = useState();
+    const [installmentGroups, setInstallmentGroups] = useState([{ id: Date.now() + Math.random(), amount: '', date: '' }])
+    const [paymentAmount, setPaymentAmount] = useState({
+        amount: '',
+        pending: '',
+        advance: ''
+    });
     const dispatch = useDispatch()
     const handleOk = () => {
         form.submit();
     };
 
     useEffect(() => {
+        if (!showModel) {
+            setInstallmentGroups([{ id: Date.now() + Math.random(), amount: '', date: '' }]);
+        }
+    }, [showModel]);
+
+    const addInstallmentGroup = () => {
+        setInstallmentGroups([
+            ...installmentGroups,
+            { id: Date.now() + Math.random(), amount: '', date: '' }
+        ]);
+    };
+
+    const removeInstallmentGroup = (id) => {
+        const updatedGroups = installmentGroups.filter((group) => group.id !== id);
+        setInstallmentGroups(updatedGroups);
+    };
+
+    useEffect(() => {
         if (selectedRecord) {
-            form.setFieldsValue({
-                amount: selectedRecord.amount,
-                advance: selectedRecord.advance,
-                pending: selectedRecord.pending,
-            });
+            setPaymentType(selectedRecord.paymentType)
+            if (selectedRecord.paymentType === "one-time") {
+                setPaymentAmount({
+                    amount: selectedRecord.amount,
+                    pending: selectedRecord.pending,
+                    advance: selectedRecord.advance
+                })
+            }
         }
     }, [selectedRecord, form]);
 
     const onFinish = async (values) => {
+        let installment = [];
+        if (selectedRecord.paymentType === "installment") {
+            installment = installmentGroups.map(group => ({
+                amount: group.amount,
+                date: dayjs(group.date, "DD-MM-YYYY").toDate(),
+                status: group.status,
+            }));
+        }
+
         const formData = {
+            amount: values.amount,
             advance: values.advance,
             pending: values.pending,
-            amount: values.amount,
-            fullyPaid: values.fullyPaid
-        }
+            fullyPaid: values.fullyPaid,
+            ...(selectedRecord.paymentType === "installment" ? { installment } : {}),
+        };
 
         const response = await UpdateBooking(formData, selectedRecord.key)
         if (response) {
@@ -63,48 +103,37 @@ const UpdatePayment = ({ showModel, handleCancel, selectedRecord }) => {
                     className='w-full'
                     onFinish={onFinish}
                     onValuesChange={handleValuesChange}
+                    width={600}
                 >
-                    <Item
-                        name="amount"
-                        label="Total Amount"
-                        rules={[{ required: true, message: 'Please input total amount!' }]}
-                    >
-                        <Input
-                            type="number"
-                            placeholder="Enter amount"
-                        />
-                    </Item>
-                    <Item
-                        name="advance"
-                        label="Advance Amount"
-                        rules={[{ required: true, message: 'Please input advance amount!' }]}
-                    >
-                        <Input
-                            type="number"
-                            placeholder="Enter amount"
-                        />
-                    </Item>
-                    <Item
-                        name="pending"
-                        label="Pending Amount"
-                        rules={[{ required: true, message: 'Please input pending amount!' }]}
-                    >
-                        <Input
-                            type="number"
-                            placeholder="Enter amount"
-                        />
-                    </Item>
-                    <Item
-                        name="fullyPaid"
-                        label="Fully Paid"
-                        className='mb-0'
-                        layout='horizontal'
-                        labelCol={{ span: 4 }}
-                        wrapperCol={{ span: 8 }}
-                        valuePropName="checked"
-                    >
-                        <Checkbox />
-                    </Item>
+                    <Row gutter={[16, 16]}>
+                        <Col xs={24} md={24}>
+                            <PaymentForm
+                                paymentType={paymentType}
+                                setPaymentType={setPaymentType}
+                                installmentGroups={installmentGroups}
+                                setInstallmentGroups={setInstallmentGroups}
+                                addInstallmentGroup={addInstallmentGroup}
+                                removeInstallmentGroup={removeInstallmentGroup}
+                                mode="update"
+                                initialValues={selectedRecord}
+                                paymentAmount={paymentAmount}
+                                setPaymentAmount={setPaymentAmount}
+                            />
+                        </Col>
+                        <Col xs={24}>
+                            <Item
+                                name="fullyPaid"
+                                label="Fully Paid"
+                                className='mb-0'
+                                layout='horizontal'
+                                labelCol={{ span: 4 }}
+                                wrapperCol={{ span: 8 }}
+                                valuePropName="checked"
+                            >
+                                <Checkbox />
+                            </Item>
+                        </Col>
+                    </Row>
                 </Form>
             </Modal>
         </>

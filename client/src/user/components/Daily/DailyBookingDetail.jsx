@@ -82,7 +82,13 @@ const DailyBookingDetail = () => {
                                         <Col xs={24} sm={12} md={8} lg={8}>
                                             <div className="flex gap-4 mb-1 md:mb-5">
                                                 <Text className='font-semibold'>Booking Date:</Text>
-                                                <Text>{new Date(booking.date).toLocaleDateString("en-GB")}</Text>
+                                                <Text>
+                                                    {Array.isArray(booking.dateRange)
+                                                        ? booking.dateRange[0] === booking.dateRange[1]
+                                                            ? new Date(booking.dateRange[0]).toLocaleDateString("en-GB")
+                                                            : `${new Date(booking.dateRange[0]).toLocaleDateString("en-GB")} to ${new Date(booking.dateRange[1]).toLocaleDateString("en-GB")}`
+                                                        : new Date(booking.date).toLocaleDateString("en-GB")}
+                                                </Text>
                                             </div>
                                         </Col>
                                         <Col xs={24} sm={12} md={8} lg={8}>
@@ -94,7 +100,7 @@ const DailyBookingDetail = () => {
                                         <Col xs={24} sm={12} md={8} lg={8}>
                                             <div className="flex gap-4 mb-1 md:mb-5">
                                                 <Text className='font-semibold'>Booking Item:</Text>
-                                                <Text>{booking.item}</Text>
+                                                <Text>{booking.item.join(", ")}</Text>
                                             </div>
                                         </Col>
                                         <Col xs={24} sm={12} md={8} lg={8}>

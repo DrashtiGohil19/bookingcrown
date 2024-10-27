@@ -10,6 +10,9 @@ import UpdatePayment from '../model/UpdatePayment';
 import "../../App.css"
 import dayjs from 'dayjs';
 import isSameOrAfter from 'dayjs/plugin/isSameOrAfter';
+import isBetween from 'dayjs/plugin/isBetween';
+
+dayjs.extend(isBetween);
 dayjs.extend(isSameOrAfter);
 
 const { Option } = Select;
@@ -78,10 +81,6 @@ const dailyColumns = [
         title: 'Booking Date',
         dataIndex: 'date',
         key: 'date',
-        render: (text, record) => {
-            if (record.key === 'total') return null;
-            return (new Date(text).toLocaleDateString("en-GB"))
-        },
         align: 'center',
         responsive: ['xs', 'sm'],
     },
@@ -169,6 +168,9 @@ function CommonTable({ filter }) {
             switch (filter) {
                 case 'upcoming':
                     const today = dayjs().startOf('day');
+                    if (Array.isArray(booking.dateRange)) {
+                        return dayjs(booking.dateRange[0]).isSameOrAfter(today, 'day');
+                    }
                     return dayjs(booking.date).isSameOrAfter(today, 'day');
                 default:
                     return true;
@@ -183,30 +185,68 @@ function CommonTable({ filter }) {
         })
         .filter((booking) => {
             if (selectedMonth === null) return true;
-            const bookingDate = new Date(booking.date);
-            return moment(bookingDate).format('MMMM') === selectedMonth;
+            let bookingDate;
+            if (Array.isArray(booking.dateRange) && booking.dateRange.length !== 0) {
+                bookingDate = dayjs(booking.dateRange[0]);
+            } else {
+                bookingDate = dayjs(booking.date);
+            }
+            return bookingDate.format('MMMM') === selectedMonth;
         })
         .filter((booking) => {
             if (selectedDate === null) return true;
-            const bookingDate = moment(booking.date).format('DD-MM-YYYY');
-            return bookingDate === selectedDate;
+
+            let bookingDateFormatted;
+            if (Array.isArray(booking.dateRange) && booking.dateRange.length !== 0) {
+                const startDate = dayjs(booking.dateRange[0]);
+                const endDate = dayjs(booking.dateRange[1]);
+                const searchDate = dayjs(selectedDate, 'DD-MM-YYYY');
+
+                return searchDate.isBetween(startDate, endDate, null, '[]');
+            } else {
+                bookingDateFormatted = dayjs(booking.date).format('DD-MM-YYYY');
+                return bookingDateFormatted === selectedDate;
+            }
         })
-        .map((booking) => ({
-            key: booking._id,
-            customerName: booking.customerName,
-            mobilenu: booking.mobilenu,
-            date: booking.date,
-            startTime: dayjs(booking.time?.start).format('h:mm A'),
-            endTime: dayjs(booking.time?.end).format('h:mm A'),
-            item: booking.item,
-            Hr: booking.totalHours,
-            session: booking.session,
-            payment: booking.payment,
-            amount: booking.amount,
-            advance: booking.advance,
-            pending: booking.pending
-        }))
-        .sort((a, b) => new Date(a.date) - new Date(b.date));
+        .map((booking) => {
+            let formattedDate;
+            if (Array.isArray(booking.dateRange) && booking.dateRange.length !== 0) {
+                formattedDate = booking.dateRange[0] === booking.dateRange[1]
+                    ? dayjs(booking.dateRange[0]).format('DD/MM/YYYY')
+                    : `${dayjs(booking.dateRange[0]).format('DD/MM/YYYY')} to ${dayjs(booking.dateRange[1]).format('DD/MM/YYYY')}`; // Format as range
+            } else {
+                formattedDate = dayjs(booking.date);
+            }
+            return {
+                key: booking._id,
+                customerName: booking.customerName,
+                mobilenu: booking.mobilenu,
+                date: formattedDate,
+                startTime: dayjs(booking.time?.start).format('h:mm A'),
+                endTime: dayjs(booking.time?.end).format('h:mm A'),
+                item: booking.item.join(", "),
+                Hr: booking.totalHours,
+                session: booking.session,
+                payment: booking.payment,
+                amount: booking.amount,
+                advance: booking.advance,
+                pending: booking.pending,
+                paymentType: booking.paymentType || "one-time",
+                installment: booking.installment
+            };
+        })
+        .sort((a, b) => {
+            const getDateForSorting = (dateStr) => {
+                if (typeof dateStr === 'string' && dateStr.includes("to")) {
+                    return dayjs(dateStr.split(" to ")[0], 'DD/MM/YYYY').toDate();
+                }
+                return dayjs(dateStr, 'DD/MM/YYYY').toDate();
+            };
+            const dateA = getDateForSorting(a.date);
+            const dateB = getDateForSorting(b.date);
+            return dateA - dateB;
+        });
+
 
     const handleEdit = (id) => {
         navigate(`/user/edit-booking/${id}`);

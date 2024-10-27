@@ -16,7 +16,7 @@ exports.addExpense = async (req, res) => {
         res.status(200).json({ success: true, message: 'Expense detail added successfully.' });
     } catch (err) {
         console.error(err.message);
-        res.status(500).send({ message: 'Server error', error: err });
+        res.status(500).json({ message: 'Server error', error: err });
     }
 };
 
@@ -116,3 +116,17 @@ exports.getAllIncomeAndExpenses = async (req, res) => {
         res.status(500).send({ message: "An error occurred while creating expense data", error: error });
     }
 };
+
+exports.deleteExpense = async (req, res) => {
+    try {
+        const { expenseId } = req.params
+        const expense = await Expense.findByIdAndDelete(expenseId)
+        if (!expense) {
+            return res.status(404).json({ success: false, message: 'Expense not found.' });
+        }
+        res.status(200).json({ success: true, message: 'Expense detail deleted successfully.' });
+    } catch (error) {
+        console.error(err.message);
+        res.status(500).json({ message: 'Server error', error: err, success: false, });
+    }
+}

@@ -1,11 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import Sidebar from '../../components/Sidebar';
-import { Button, Table, Row, Col, DatePicker } from 'antd';
+import { Button, Table, Row, Col, DatePicker, Modal } from 'antd';
 import { FaPlus } from 'react-icons/fa6';
+import { AiFillDelete } from "react-icons/ai";
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchIncomeAndExpenses } from '../../../features/Expense/ExpenseSlice';
 import ExpenseModel from '../../model/ExpenseModel';
 import dayjs from 'dayjs';
+import { FaEdit } from 'react-icons/fa';
+import { deleteExpenses } from '../../../api/Expenses';
+
+const { confirm } = Modal
 
 const incomeColumns = [
     {
@@ -26,7 +31,7 @@ const incomeColumns = [
     }
 ];
 
-const expenseColumns = [
+const expenseColumns = (handleEditExpense, handleDeleteExpense) => [
     {
         title: 'Date',
         dataIndex: 'date',
@@ -43,13 +48,25 @@ const expenseColumns = [
         dataIndex: 'amount',
         key: 'amount',
     },
+    {
+        title: 'Action',
+        key: 'action',
+        render: (_, record) => (
+            <div className='flex'>
+                <FaEdit className='text-[20px] text-themeColor m-auto' onClick={() => handleEditExpense(record)} />
+                <AiFillDelete className='text-[20px] text-red-600 m-auto' onClick={() => handleDeleteExpense(record._id)} />
+            </div >
+        ),
+    },
 ];
 
 function IncomeExpense() {
     const [open, setOpen] = useState(false);
     const [selectedMonth, setSelectedMonth] = useState(null);
+    const [isEditing, setIsEditing] = useState(false);
+    const [selectedExpense, setSelectedExpense] = useState(null);
     const dispatch = useDispatch();
-    const { incomeData, expenseData, totalIncome, totalExpense, profitOrLoss, status, error } = useSelector(state => state.expenses);
+    const { incomeData, expenseData, totalIncome, totalExpense, profitOrLoss, status } = useSelector(state => state.expenses);
 
     useEffect(() => {
         if (status === "idle") {
@@ -59,8 +76,30 @@ function IncomeExpense() {
 
     const handleCancel = () => {
         setOpen(false);
+        setSelectedExpense(null);
         dispatch(fetchIncomeAndExpenses({ month: selectedMonth }));
     };
+
+    const handleEditExpense = (record) => {
+        setSelectedExpense(record);
+        setIsEditing(true);
+        setOpen(true);
+    }
+
+    const handleDeleteExpense = async (id) => {
+        confirm({
+            title: 'Are you sure you want to delete this expense data?',
+            okText: 'Yes',
+            okType: 'danger',
+            cancelText: 'No',
+            async onOk() {
+                const data = await deleteExpenses(id);
+                if (data.success) {
+                    dispatch(fetchIncomeAndExpenses({ month: selectedMonth }));
+                }
+            }
+        });
+    }
 
     const onMonthChange = (date) => {
         if (date) {
@@ -126,7 +165,7 @@ function IncomeExpense() {
                         <Col lg={12} md={12} sm={24} xs={24}>
                             <h2 className="mb-2">Expenses</h2>
                             <Table
-                                columns={expenseColumns}
+                                columns={expenseColumns(handleEditExpense, handleDeleteExpense)}
                                 dataSource={expenseData}
                                 pagination={false}
                                 bordered
@@ -145,7 +184,12 @@ function IncomeExpense() {
                     </div>
                 </div>
             </main>
-            <ExpenseModel showModel={open} handleCancel={handleCancel} />
+            <ExpenseModel
+                showModel={open}
+                handleCancel={handleCancel}
+                isEditing={isEditing}
+                expenseData={selectedExpense}
+            />
         </div>
     );
 }

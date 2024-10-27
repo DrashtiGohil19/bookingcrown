@@ -1,16 +1,27 @@
 import React, { useEffect } from 'react';
 import { Button, Checkbox, DatePicker, Form, Input, Modal } from 'antd';
-import moment from 'moment';
 import dayjs from 'dayjs';
-import { AddExpenses } from '../../api/Expenses';
+import { AddExpenses, UpdateExpenses } from '../../api/Expenses';
 
 const { Item } = Form;
 
-function ExpenseModel({ showModel, handleCancel }) {
+function ExpenseModel({ showModel, handleCancel, isEditing, expenseData }) {
     const [form] = Form.useForm();
     const handleOk = () => {
         form.submit();
     };
+
+    useEffect(() => {
+        if (isEditing && expenseData) {
+            form.setFieldsValue({
+                date: dayjs(expenseData.date),
+                description: expenseData.description,
+                amount: expenseData.amount,
+            });
+        } else {
+            form.resetFields();
+        }
+    }, [isEditing, expenseData, form]);
 
     const onFinish = async (values) => {
         const formData = {
@@ -18,10 +29,18 @@ function ExpenseModel({ showModel, handleCancel }) {
             description: values.description,
             date: dayjs(values.date).format('YYYY-MM-DD')
         }
-        const response = await AddExpenses(formData)
-        if (response) {
-            handleCancel()
-            form.resetFields()
+        if (isEditing) {
+            const response = await UpdateExpenses(formData, expenseData._id);
+            if (response) {
+                handleCancel();
+                form.resetFields();
+            }
+        } else {
+            const response = await AddExpenses(formData);
+            if (response) {
+                handleCancel();
+                form.resetFields();
+            }
         }
     }
 

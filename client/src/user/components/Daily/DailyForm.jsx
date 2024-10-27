@@ -1,17 +1,28 @@
-import { Button, Col, DatePicker, Form, Input, Row, Select } from 'antd'
-import React, { useEffect } from 'react'
+import { Button, Col, DatePicker, Form, Input, Radio, Row, Select } from 'antd'
+import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { CreateBooking, getBookingById, UpdateBooking } from '../../../api/Bookings';
 import { fetchAllBookings } from '../../../features/bookings/BookingSlice';
 import { useNavigate } from 'react-router-dom';
 import dayjs from 'dayjs';
 import "../../../App.css"
+import PaymentForm from '../PaymentForm';
 
 const { Item } = Form;
+const { RangePicker } = DatePicker;
 
 function DailyForm({ isEditing, userId }) {
     const [form] = Form.useForm();
     const { user } = useSelector((state) => state.user);
+    const [paymentType, setPaymentType] = useState('one-time');
+    const [mode, setMode] = useState("create")
+    const [initialValue, setInitialValue] = useState({})
+    const [installmentGroups, setInstallmentGroups] = useState([{ id: Date.now() + Math.random(), amount: '', date: '' }])
+    const [paymentAmount, setPaymentAmount] = useState({
+        amount: '',
+        pending: '',
+        advance: ''
+    });
     const navigate = useNavigate()
     const dispatch = useDispatch()
 
@@ -21,14 +32,26 @@ function DailyForm({ isEditing, userId }) {
         }
     }, [userId])
 
+    const addInstallmentGroup = () => {
+        setInstallmentGroups([
+            ...installmentGroups,
+            { id: Date.now() + Math.random(), amount: '', date: '' }
+        ]);
+    };
+
+    const removeInstallmentGroup = (id) => {
+        const newGroups = installmentGroups.filter((group) => group.id !== id);
+        setInstallmentGroups(newGroups);
+    };
+
     const handleAmountChange = () => {
-        const { totalAmount, advanceAmount } = form.getFieldsValue();
-        if (totalAmount !== undefined || advanceAmount !== undefined) {
-            if (totalAmount !== undefined) {
-                const pendingAmount = advanceAmount !== undefined
-                    ? totalAmount - advanceAmount
-                    : totalAmount;
-                form.setFieldsValue({ pendingAmount: pendingAmount });
+        const { total, advance } = form.getFieldsValue();
+        if (total !== undefined || advance !== undefined) {
+            if (total !== undefined) {
+                const pending = advance !== undefined
+                    ? total - advance
+                    : total;
+                form.setFieldsValue({ pending: pending });
             }
         }
     };
@@ -36,18 +59,35 @@ function DailyForm({ isEditing, userId }) {
     const getBookingsData = async () => {
         try {
             const data = await getBookingById(userId)
-            const bookingDate = dayjs(data.date);
+            setInitialValue(data)
+            setMode("update")
+            if (data.paymentType === "one-time") {
+                setPaymentAmount({
+                    amount: data.amount,
+                    pending: data.pending,
+                    advance: data.advance
+                })
+            }
+            const [firstDate, secondDate] = data.dateRange;
+            const bookingDates =
+                firstDate === secondDate
+                    ? [dayjs(firstDate), null]
+                    : [dayjs(firstDate), dayjs(secondDate)];
+            setPaymentType(data.paymentType)
             if (data) {
                 form.setFieldsValue({
                     customerName: data.customerName,
                     mobileNumber: data.mobilenu,
-                    date: bookingDate,
+                    date: bookingDates,
                     item: data.item,
                     totalHours: data.totalHours,
-                    totalAmount: data.amount,
-                    advanceAmount: data.advance,
-                    pendingAmount: data.pending,
+                    amount: paymentAmount.amount,
+                    advance: paymentAmount.advance || 0,
+                    pending: paymentAmount.pending,
                     session: data.session,
+                    paymentType: paymentType,
+                    description: data.description,
+                    note: data.note
                 });
             }
         } catch (error) {
@@ -56,16 +96,29 @@ function DailyForm({ isEditing, userId }) {
     }
 
     const onFinish = async (values) => {
+        const date = [values.date[0], values.date[1] || values.date[0]];
+        let installments = [];
+        if (values.paymentType === "installment") {
+            installments = installmentGroups.map(group => ({
+                amount: group.amount,
+                date: dayjs(group.date, "DD-MM-YYYY").toDate(),
+                status: group.status
+            }));
+        }
         let response = null
         const formData = {
             customerName: values.customerName,
             mobilenu: values.mobileNumber,
             item: values.item,
-            date: dayjs(values.date).format('YYYY-MM-DD'),
+            date: date,
             session: values.session,
-            amount: values.totalAmount,
-            advance: values.advanceAmount || 0,
-            pending: values.pendingAmount
+            amount: paymentAmount.amount,
+            advance: paymentAmount.advance || 0,
+            pending: paymentAmount.pending,
+            description: values.description,
+            note: values.note,
+            paymentType: values.paymentType,
+            installment: installments
         }
         if (isEditing) {
             response = await UpdateBooking(formData, userId)
@@ -84,6 +137,9 @@ function DailyForm({ isEditing, userId }) {
                 layout="vertical"
                 onFinish={onFinish}
                 onValuesChange={handleAmountChange}
+                initialValues={{
+                    paymentType: 'one-time'
+                }}
             >
                 <Row gutter={16}>
                     <Col xs={12} sm={12} lg={8}>
@@ -127,6 +183,7 @@ function DailyForm({ isEditing, userId }) {
                             rules={[{ required: true, message: 'Please select a Booking Item!' }]}
                         >
                             <Select
+                                mode='multiple'
                                 placeholder="Select Booking Item"
                                 className='h-10'
                                 showSearch={false}
@@ -141,19 +198,29 @@ function DailyForm({ isEditing, userId }) {
                     </Col>
 
                     <Col xs={12} sm={12} lg={8}>
-                        <Item
+                        <Form.Item
                             name="date"
                             label="Booking Date"
-                            rules={[{ required: true, message: 'Please select a date!' }]}
+                            rules={[
+                                {
+                                    required: true,
+                                    message: 'Please select at least the start date!',
+                                    validator: (_, value) => {
+                                        if (value && value[0]) {
+                                            return Promise.resolve();
+                                        }
+                                        return Promise.reject(new Error('Please select at least the start date!'));
+                                    },
+                                },
+                            ]}
                         >
-                            <DatePicker
+                            <RangePicker
+                                placeholder={['From Date', 'To Date']}
                                 className="h-10 w-full"
                                 format="DD-MM-YYYY"
-                                inputReadOnly={true}
-                                value={(date) => date ? date.formate('DD-MM-YYYY') : null}
-                            // disabledDate={currentDate => currentDate && currentDate.isBefore(dayjs().startOf('day'))}
+                                allowEmpty={[false, true]}
                             />
-                        </Item>
+                        </Form.Item>
                     </Col>
 
                     <Col xs={12} sm={12} lg={8}>
@@ -168,6 +235,7 @@ function DailyForm({ isEditing, userId }) {
                                 showSearch={false}
                                 options={[
                                     { value: 'Morning Session', label: 'Morning Session' },
+                                    { value: 'Afternoon Session', label: 'Afternoon Session' },
                                     { value: 'Evening Session', label: 'Evening Session' },
                                     { value: 'Full Day', label: 'Full Day' }
                                 ]}
@@ -175,48 +243,47 @@ function DailyForm({ isEditing, userId }) {
                         </Item>
                     </Col>
 
-                    <Col xs={12} sm={12} lg={8}>
-                        <Item
-                            name="totalAmount"
-                            label="Total Amount"
-                            rules={[{ required: true, message: 'Please input total amount!' }]}
-                        >
-                            <Input
-                                type='number'
-                                placeholder='Amount'
-                                className="h-10"
-                            />
+                    <Col xs={24}>
+                        <Item label="Payment Type" name='paymentType' rules={[{ required: true, message: 'Please select a payment type!' }]}>
+                            <Radio.Group value={paymentType} onChange={(e) => setPaymentType(e.target.value)}>
+                                <Radio value="one-time">One-Time Payment</Radio>
+                                <Radio value="installment">Installment Payment</Radio>
+                            </Radio.Group>
                         </Item>
                     </Col>
 
-                    <Col xs={12} sm={12} lg={8}>
+                    <Col xs={24}>
+                        <PaymentForm
+                            paymentType={paymentType}
+                            setPaymentType={setPaymentType}
+                            installmentGroups={installmentGroups}
+                            setInstallmentGroups={setInstallmentGroups}
+                            addInstallmentGroup={addInstallmentGroup}
+                            removeInstallmentGroup={removeInstallmentGroup}
+                            initialValues={initialValue}
+                            mode={mode}
+                            paymentAmount={paymentAmount}
+                            setPaymentAmount={setPaymentAmount}
+                        />
+                    </Col>
+                </Row>
+                <Row gutter={16}>
+                    <Col xs={24} sm={12} md={12}>
                         <Item
-                            name="advanceAmount"
-                            label="Advance Amount"
+                            name="description"
+                            label="Description"
                         >
-                            <Input
-                                type='number'
-                                placeholder='Advance Amount'
-                                className="h-10"
-                            />
+                            <Input.TextArea placeholder="Enter description" rows={3} />
                         </Item>
                     </Col>
-
-                    <Col xs={12} sm={12} lg={8}>
+                    <Col xs={24} sm={12} md={12}>
                         <Item
-                            name="pendingAmount"
-                            label="Pending Amount"
+                            name='note'
+                            label="Extra Notes"
                         >
-                            <Input
-                                type='number'
-                                readOnly
-                                placeholder='Pending Amount'
-                                initialValues="0"
-                                className="h-10"
-                            />
+                            <Input.TextArea placeholder="Enter notes" rows={3} />
                         </Item>
                     </Col>
-
                 </Row>
                 <Button
                     type="primary"

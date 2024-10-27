@@ -175,6 +175,7 @@ function Profile() {
                                 {shouldShowRemoveButton && (
                                     <Button
                                         type="primary"
+                                        danger
                                         className="h-10"
                                         onClick={() => removeField(field)}
                                     >
