@@ -59,20 +59,19 @@ const PaymentForm = ({
 
     useEffect(() => {
         if (paymentType === "installment") {
-            if (mode === 'update' && initialValues.installment) {
+            if (mode === 'update' && initialValues.installment.length > 0) {
                 const transformedInstallments = initialValues.installment.map((item) => ({
                     id: item._id,
                     amount: item.amount,
                     date: item.date,
                     status: item.status
                 }));
-
                 setInstallmentGroups(transformedInstallments);
             } else {
                 setInstallmentGroups([{ id: Date.now() + Math.random(), amount: '', date: '' }]);
             }
         }
-    }, [mode, initialValues]);
+    }, [paymentType, mode, initialValues]);
 
     return (
         <>
@@ -160,6 +159,7 @@ const PaymentForm = ({
                                     <DatePicker
                                         placeholder="Select Due Date"
                                         className="h-10 w-full"
+                                        inputReadOnly
                                         format="DD-MM-YYYY"
                                         value={group.date ? dayjs(group.date) : null}
                                         onChange={(date) => handleDateChange(group.id, date)}

@@ -75,12 +75,15 @@ exports.createBookings = async (req, res) => {
             bookingData.amount = amount;
             bookingData.advance = advance;
             bookingData.pending = pending;
+            bookingData.payment = pending === 0 ? "paid" : "pending";
         } else if (paymentType === "installment" && Array.isArray(installment)) {
             bookingData.installment = installment.map(inst => ({
                 amount: inst.amount,
                 date: inst.date,
                 status: inst.status || "pending"
             }));
+            const allComplete = installment.every(inst => inst.status === "complete");
+            bookingData.payment = allComplete ? "paid" : "pending";
         }
 
         if (time && time.start && time.end) {
@@ -284,6 +287,7 @@ exports.updateBookingDetails = async (req, res) => {
             note
         } = req.body;
 
+
         const booking = await Bookings.findById(req.params.id);
         if (!booking) return res.status(404).json({ message: 'Booking not found', success: false });
 
@@ -365,12 +369,21 @@ exports.updateBookingDetails = async (req, res) => {
         if (note !== undefined) booking.note = note;
 
         if (paymentType === "installment" && Array.isArray(installment)) {
-            booking.installment = installment.map(inst => ({
-                amount: inst.amount,
-                date: dayjs(inst.date).toDate(),
-                status: inst.status || "pending"
-            }));
-        } else if (paymentType === "one-time") {
+            booking.installment = installment.map(inst => {
+                const parsedDate = dayjs(inst.date);
+
+                if (!parsedDate.isValid()) {
+                    throw new Error(`Invalid date format for installment date: ${inst.date}`);
+                }
+
+                return {
+                    amount: inst.amount,
+                    date: parsedDate.toDate(),
+                    status: inst.status || "pending"
+                };
+            });
+        }
+        else if (paymentType === "one-time") {
             booking.amount = amount;
             booking.advance = advance;
             booking.pending = pending;
@@ -397,20 +410,22 @@ exports.updateBookingDetails = async (req, res) => {
         // }
         if (fullyPaid) {
             booking.payment = 'paid';
-            booking.pending = 0;
 
             if (paymentType === "installment" && Array.isArray(booking.installment)) {
                 booking.installment = booking.installment.map(inst => ({
                     ...inst,
                     status: "complete"
                 }));
+            } else if (paymentType === "one-time") {
+                if (fullyPaid) {
+                    booking.pending = 0;
+                } else {
+                    booking.payment = booking.advance >= booking.amount ? 'paid' : (booking.advance > 0 ? 'partial' : 'pending');
+                }
             }
-        } else {
-            booking.payment = booking.advance >= booking.amount ? 'paid' : (booking.advance > 0 ? 'partial' : 'pending');
         }
 
         await booking.save();
-
         res.status(200).json({ booking, message: "Booking updated successfully", success: true });
     } catch (error) {
         console.error(error);

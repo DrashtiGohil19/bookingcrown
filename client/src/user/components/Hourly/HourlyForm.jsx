@@ -103,6 +103,7 @@ function HourlyForm({ isEditing, userId }) {
                     startTime: dayjs(data.time.start),
                     endTime: dayjs(data.time.end),
                     totalHours: data.totalHours,
+                    paymentType: data.paymentType,
                     description: data.description,
                     note: data.note
                 });
@@ -115,11 +116,22 @@ function HourlyForm({ isEditing, userId }) {
     const onFinish = async (values) => {
         let installments = [];
         if (values.paymentType === "installment") {
-            installments = installmentGroups.map(group => ({
-                amount: group.amount,
-                date: dayjs(group.date, "DD-MM-YYYY").toDate(),
-                status: group.status
-            }));
+            installments = installmentGroups.map(group => {
+                let parsedDate;
+
+                if (group.date) {
+                    parsedDate = dayjs(group.date, ["DD-MM-YYYY", dayjs.ISO_8601], true);
+
+                    if (!parsedDate.isValid()) {
+                        throw new Error(`Invalid date format for installment date: ${group.date}`);
+                    }
+                }
+                return {
+                    amount: group.amount,
+                    date: parsedDate ? parsedDate.toDate() : null,
+                    status: group.status
+                };
+            });
         }
         let response = null
         const formData = {

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Card, Col, Row, Typography, Skeleton, Button, Modal } from 'antd';
+import { Card, Col, Row, Typography, Skeleton, Button, Modal, Table } from 'antd';
 import { DeleteBooking, getBookingById } from '../../../api/Bookings';
 import Sidebar from '../../components/Sidebar';
 import CopyToClipboard from 'react-copy-to-clipboard';
@@ -57,6 +57,31 @@ const DailyBookingDetail = () => {
         }
     }, [params.id]);
 
+    const installmentColumns = [
+        {
+            title: 'Installment No.',
+            dataIndex: 'index',
+            key: 'index',
+            render: (_, __, index) => `Installment ${index + 1}`,
+        },
+        {
+            title: 'Date',
+            dataIndex: 'date',
+            key: 'date',
+            render: (date) => new Date(date).toLocaleDateString("en-GB"),
+        },
+        {
+            title: 'Amount (₹)',
+            dataIndex: 'amount',
+            key: 'amount',
+        },
+        {
+            title: 'Status',
+            dataIndex: 'status',
+            key: 'status',
+        },
+    ];
+
     return (
         <div className='h-[100vh]'>
             <Sidebar />
@@ -103,24 +128,41 @@ const DailyBookingDetail = () => {
                                                 <Text>{booking.item.join(", ")}</Text>
                                             </div>
                                         </Col>
-                                        <Col xs={24} sm={12} md={8} lg={8}>
-                                            <div className="flex gap-4 mb-1 md:mb-5">
-                                                <Text className='font-semibold'>Amount:</Text>
-                                                <Text>₹ {booking.amount}</Text>
-                                            </div>
-                                        </Col>
-                                        <Col xs={24} sm={12} md={8} lg={8}>
-                                            <div className="flex gap-4 mb-1 md:mb-5">
-                                                <Text className='font-semibold'>Advance Amount:</Text>
-                                                <Text>₹ {booking.advance}</Text>
-                                            </div>
-                                        </Col>
-                                        <Col xs={24} sm={12} md={8} lg={8}>
-                                            <div className="flex gap-4 mb-1 md:mb-5">
-                                                <Text className='font-semibold'>Pending Amount:</Text>
-                                                <Text>₹ {booking.pending}</Text>
-                                            </div>
-                                        </Col>
+                                        {booking.paymentType === "one-time" && (
+                                            <>
+                                                <Col xs={24} sm={12} md={8} lg={8}>
+                                                    <div className="flex gap-4 mb-1 md:mb-5">
+                                                        <Text className='font-semibold'>Amount:</Text>
+                                                        <Text>₹ {booking.amount}</Text>
+                                                    </div>
+                                                </Col>
+                                                <Col xs={24} sm={12} md={8} lg={8}>
+                                                    <div className="flex gap-4 mb-1 md:mb-5">
+                                                        <Text className='font-semibold'>Advance Amount:</Text>
+                                                        <Text>₹ {booking.advance}</Text>
+                                                    </div>
+                                                </Col>
+                                                <Col xs={24} sm={12} md={8} lg={8}>
+                                                    <div className="flex gap-4 mb-1 md:mb-5">
+                                                        <Text className='font-semibold'>Pending Amount:</Text>
+                                                        <Text>₹ {booking.pending}</Text>
+                                                    </div>
+                                                </Col>
+                                            </>
+                                        )}
+                                        {booking.paymentType === "installment" && (
+                                            <Col xs={24}>
+                                                <Text className='font-semibold'>Installment Details:</Text>
+                                                <Table
+                                                    columns={installmentColumns}
+                                                    dataSource={booking.installment}
+                                                    pagination={false}
+                                                    scroll={{ x: 'max-content' }}
+                                                    rowKey="_id"
+                                                    className='border mt-4 border-gray-300 rounded-lg'
+                                                />
+                                            </Col>
+                                        )}
                                         <Col xs={24} sm={12} md={8} lg={8}>
                                             <div className="flex gap-4 mb-1 md:mb-5">
                                                 <Text className='font-semibold'>Payment Status:</Text>

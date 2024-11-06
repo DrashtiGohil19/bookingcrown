@@ -53,30 +53,48 @@ const UpdatePayment = ({ showModel, handleCancel, selectedRecord }) => {
         }
     }, [selectedRecord, form]);
 
+    const parseInstallmentDate = (date) => {
+        if (!date) return null;
+
+        const parsedDate = dayjs(date, ["DD-MM-YYYY", dayjs.ISO_8601], true);
+
+        if (!parsedDate.isValid()) {
+            throw new Error(`Invalid date format for installment date: ${date}`);
+        }
+
+        return parsedDate.toDate();
+    };
+
     const onFinish = async (values) => {
         let installment = [];
-        if (selectedRecord.paymentType === "installment") {
+        if (paymentType === "installment") {
             installment = installmentGroups.map(group => ({
                 amount: group.amount,
-                date: dayjs(group.date, "DD-MM-YYYY").toDate(),
-                status: group.status,
+                date: parseInstallmentDate(group.date),
+                status: group.status
             }));
         }
 
         const formData = {
-            amount: values.amount,
-            advance: values.advance,
-            pending: values.pending,
             fullyPaid: values.fullyPaid,
-            ...(selectedRecord.paymentType === "installment" ? { installment } : {}),
+            paymentType: paymentType,
+            ...(paymentType === "installment" && { installment }),
+            ...(paymentType === "one-time" && {
+                amount: paymentAmount.amount,
+                advance: paymentAmount.advance,
+                pending: paymentAmount.pending
+            })
         };
-
-        const response = await UpdateBooking(formData, selectedRecord.key)
-        if (response) {
-            handleCancel()
-            dispatch(fetchIncomeAndExpenses({ month: null }));
+        try {
+            const response = await UpdateBooking(formData, selectedRecord.key);
+            if (response) {
+                handleCancel();
+                dispatch(fetchIncomeAndExpenses({ month: null }));
+            }
+        } catch (error) {
+            console.error("Error updating booking:", error);
         }
-    }
+    };
 
     const handleValuesChange = (changedValues, allValues) => {
         const { amount = 0, advance = 0 } = allValues;

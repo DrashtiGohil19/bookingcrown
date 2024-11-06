@@ -29,15 +29,15 @@ const bookingSchema = new mongoose.Schema({
     note: { type: String },
 }, { timestamps: true });
 
-bookingSchema.pre('save', function (next) {
-    if (this.advance === this.amount || this.pending === 0) {
-        this.payment = 'paid';
-    } else if (this.advance > 0) {
-        this.payment = 'partial';
-    } else {
-        this.payment = 'pending';
-    }
-    next();
-});
+// bookingSchema.pre('save', function (next) {
+//     if (this.advance === this.amount || this.pending === 0) {
+//         this.payment = 'paid';
+//     } else if (this.advance > 0) {
+//         this.payment = 'partial';
+//     } else {
+//         this.payment = 'pending';
+//     }
+//     next();
+// });
 
 module.exports = mongoose.model('Booking', bookingSchema);

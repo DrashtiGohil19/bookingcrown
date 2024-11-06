@@ -1,4 +1,4 @@
-import { Card, Col, Row, Skeleton, Typography } from 'antd'
+import { Card, Col, Row, Skeleton, Table, Typography } from 'antd'
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { getBookingById } from '../../../api/Bookings';
@@ -30,7 +30,33 @@ function CustomerDetail() {
         "Cafe/Restaurant": "Booking Item",
         "Hotel management": "Booking Item",
         "Farm": "Farm",
+        // "Others": "Booking Item"
     };
+
+    const installmentColumns = [
+        {
+            title: 'Installment No.',
+            dataIndex: 'index',
+            key: 'index',
+            render: (_, __, index) => `Installment ${index + 1}`,
+        },
+        {
+            title: 'Date',
+            dataIndex: 'date',
+            key: 'date',
+            render: (date) => new Date(date).toLocaleDateString("en-GB"),
+        },
+        {
+            title: 'Amount (₹)',
+            dataIndex: 'amount',
+            key: 'amount',
+        },
+        {
+            title: 'Status',
+            dataIndex: 'status',
+            key: 'status',
+        },
+    ];
 
     const itemName = itemTypeMapping[booking?.ownerData?.businessType];
 
@@ -122,28 +148,45 @@ function CustomerDetail() {
                                             )}
                                             <Col xs={24} sm={12} md={8} lg={8}>
                                                 <div className="flex gap-4 mb-1 md:mb-5">
-                                                    <Text className="font-semibold">{itemName}:</Text>
+                                                    <Text className="font-semibold">Booking Item:</Text>
                                                     <Text>{booking.item}</Text>
                                                 </div>
                                             </Col>
-                                            <Col xs={24} sm={12} md={8} lg={8}>
-                                                <div className="flex gap-4 mb-1 md:mb-3">
-                                                    <Text className="font-semibold">Amount:</Text>
-                                                    <Text>₹ {booking.amount}</Text>
-                                                </div>
-                                            </Col>
-                                            <Col xs={24} sm={12} md={8} lg={8}>
-                                                <div className="flex gap-4 mb-1 md:mb-3">
-                                                    <Text className="font-semibold">Advance Amount:</Text>
-                                                    <Text>₹ {booking.advance}</Text>
-                                                </div>
-                                            </Col>
-                                            <Col xs={24} sm={12} md={8} lg={8}>
-                                                <div className="flex gap-4 mb-1 md:mb-3">
-                                                    <Text className="font-semibold">Pending Amount:</Text>
-                                                    <Text>₹ {booking.pending}</Text>
-                                                </div>
-                                            </Col>
+                                            {booking.paymentType === "one-time" && (
+                                                <>
+                                                    <Col xs={24} sm={12} md={8} lg={8}>
+                                                        <div className="flex gap-4 mb-1 md:mb-5">
+                                                            <Text className='font-semibold'>Amount:</Text>
+                                                            <Text>₹ {booking.amount}</Text>
+                                                        </div>
+                                                    </Col>
+                                                    <Col xs={24} sm={12} md={8} lg={8}>
+                                                        <div className="flex gap-4 mb-1 md:mb-5">
+                                                            <Text className='font-semibold'>Advance Amount:</Text>
+                                                            <Text>₹ {booking.advance}</Text>
+                                                        </div>
+                                                    </Col>
+                                                    <Col xs={24} sm={12} md={8} lg={8}>
+                                                        <div className="flex gap-4 mb-1 md:mb-5">
+                                                            <Text className='font-semibold'>Pending Amount:</Text>
+                                                            <Text>₹ {booking.pending}</Text>
+                                                        </div>
+                                                    </Col>
+                                                </>
+                                            )}
+                                            {booking.paymentType === "installment" && (
+                                                <Col xs={24}>
+                                                    <Text className='font-semibold'>Installment Details:</Text>
+                                                    <Table
+                                                        columns={installmentColumns}
+                                                        dataSource={booking.installment}
+                                                        pagination={false}
+                                                        scroll={{ x: 'max-content' }}
+                                                        rowKey="_id"
+                                                        className='border mt-4 border-gray-300 rounded-lg'
+                                                    />
+                                                </Col>
+                                            )}
                                         </Row>
                                     </Card>
 

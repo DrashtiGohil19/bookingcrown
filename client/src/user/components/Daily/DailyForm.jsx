@@ -20,7 +20,7 @@ function DailyForm({ isEditing, userId }) {
     const [installmentGroups, setInstallmentGroups] = useState([{ id: Date.now() + Math.random(), amount: '', date: '' }])
     const [paymentAmount, setPaymentAmount] = useState({
         amount: '',
-        pending: '',
+        pending: 0,
         advance: ''
     });
     const navigate = useNavigate()
@@ -68,12 +68,12 @@ function DailyForm({ isEditing, userId }) {
                     advance: data.advance
                 })
             }
+            setPaymentType(data.paymentType)
             const [firstDate, secondDate] = data.dateRange;
             const bookingDates =
                 firstDate === secondDate
                     ? [dayjs(firstDate), null]
                     : [dayjs(firstDate), dayjs(secondDate)];
-            setPaymentType(data.paymentType)
             if (data) {
                 form.setFieldsValue({
                     customerName: data.customerName,
@@ -85,7 +85,7 @@ function DailyForm({ isEditing, userId }) {
                     advance: paymentAmount.advance || 0,
                     pending: paymentAmount.pending,
                     session: data.session,
-                    paymentType: paymentType,
+                    paymentType: data.paymentType,
                     description: data.description,
                     note: data.note
                 });
@@ -99,11 +99,22 @@ function DailyForm({ isEditing, userId }) {
         const date = [values.date[0], values.date[1] || values.date[0]];
         let installments = [];
         if (values.paymentType === "installment") {
-            installments = installmentGroups.map(group => ({
-                amount: group.amount,
-                date: dayjs(group.date, "DD-MM-YYYY").toDate(),
-                status: group.status
-            }));
+            installments = installmentGroups.map(group => {
+                let parsedDate;
+
+                if (group.date) {
+                    parsedDate = dayjs(group.date, ["DD-MM-YYYY", dayjs.ISO_8601], true);
+
+                    if (!parsedDate.isValid()) {
+                        throw new Error(`Invalid date format for installment date: ${group.date}`);
+                    }
+                }
+                return {
+                    amount: group.amount,
+                    date: parsedDate ? parsedDate.toDate() : null,
+                    status: group.status
+                };
+            });
         }
         let response = null
         const formData = {
