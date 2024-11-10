@@ -148,7 +148,7 @@ function CommonTable({ filter }) {
     const months = Array.from({ length: 12 }, (_, i) => moment().month(i).format('MMMM'));
 
     useEffect(() => {
-        if (status === 'idle') {
+        if (status !== 'succeeded') {
             dispatch(fetchAllBookings());
         }
     }, [status, dispatch]);

@@ -6,14 +6,17 @@ import Footer from '../../../common/Footer';
 import { resetUserData } from '../../../features/user/UserSlice';
 import { resetBookingData } from '../../../features/bookings/BookingSlice';
 import { useDispatch } from 'react-redux';
+import { useUserAccess } from '../../../services/userAccessContext/UserAccessContext';
 
 function AccessDenied() {
     const navigate = useNavigate();
     const dispatch = useDispatch();
+    const { resetUserAccess } = useUserAccess();
 
     const handleLogOut = async () => {
         dispatch(resetUserData());
         dispatch(resetBookingData());
+        resetUserAccess();
         localStorage.clear()
         navigate("/")
     }

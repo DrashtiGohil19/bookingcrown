@@ -15,6 +15,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { resetBookingData } from '../../features/bookings/BookingSlice';
 import { fetchUserData, resetAllUserData } from '../../features/user/UserSlice';
 import { useDispatch, useSelector } from 'react-redux';
+import { useUserAccess } from '../../services/userAccessContext/UserAccessContext';
 
 const navigation = [
     { name: 'Dashboard', href: '/admin/dashboard', icon: IoHome },
@@ -35,6 +36,7 @@ export default function Sidebar() {
     const navigate = useNavigate()
     const location = useLocation();
     const dispatch = useDispatch();
+    const { resetUserAccess } = useUserAccess();
 
     useEffect(() => {
         if (status === "idle") {
@@ -45,6 +47,7 @@ export default function Sidebar() {
     const handleLogOut = async () => {
         dispatch(resetAllUserData());
         dispatch(resetBookingData());
+        resetUserAccess();
         await localStorage.clear()
         navigate("/")
     }

@@ -16,6 +16,7 @@ const business = [
     { id: 3, name: 'Cafe/Restuarant' },
     { id: 4, name: 'Hotel management' },
     { id: 3, name: 'Farm' },
+    { id: 4, name: 'Other' },
 ]
 
 function Signup() {

@@ -8,8 +8,15 @@ export const UserAccessProvider = ({ children }) => {
         isLoading: true
     });
 
+    const resetUserAccess = () => {
+        setUserAccess({
+            hasAccess: null,
+            isLoading: true
+        });
+    };
+
     return (
-        <UserAccessContext.Provider value={{ userAccess, setUserAccess }}>
+        <UserAccessContext.Provider value={{ userAccess, setUserAccess, resetUserAccess }}>
             {children}
         </UserAccessContext.Provider>
     );

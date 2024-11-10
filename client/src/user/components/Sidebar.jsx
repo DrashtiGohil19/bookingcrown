@@ -18,6 +18,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { resetUserData } from '../../features/user/UserSlice';
 import { resetBookingData } from '../../features/bookings/BookingSlice';
 import { RiMoneyRupeeCircleFill } from "react-icons/ri";
+import { useUserAccess } from '../../services/userAccessContext/UserAccessContext';
 
 const navigation = [
     { name: 'Dashboard', href: '/user/dashboard', icon: IoHome },
@@ -43,10 +44,12 @@ export default function Sidebar() {
     const location = useLocation();
     const dispatch = useDispatch();
     const { user } = useSelector((state) => state.user);
+    const { resetUserAccess } = useUserAccess();
 
     const handleLogOut = async () => {
         dispatch(resetUserData());
         dispatch(resetBookingData());
+        resetUserAccess();
         await localStorage.clear()
         navigate("/")
     }
