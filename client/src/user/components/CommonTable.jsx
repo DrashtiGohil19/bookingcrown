@@ -1,7 +1,6 @@
 import { Col, DatePicker, Input, Row, Select, Spin, Table, Tag } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import moment from 'moment';
 import { useNavigate } from 'react-router-dom';
 import { FaEdit, FaInfoCircle } from "react-icons/fa";
 import { fetchAllBookings } from '../../features/bookings/BookingSlice';
@@ -9,7 +8,12 @@ import { fetchUserData } from '../../features/user/UserSlice';
 import UpdatePayment from '../model/UpdatePayment';
 import "../../App.css"
 import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
+import timezone from 'dayjs/plugin/timezone';
 import isSameOrAfter from 'dayjs/plugin/isSameOrAfter';
+
+dayjs.extend(utc);
+dayjs.extend(timezone);
 dayjs.extend(isSameOrAfter);
 
 const { Option } = Select;
@@ -146,7 +150,7 @@ function CommonTable({ filter }) {
     const navigate = useNavigate();
     const { bookings, status } = useSelector((state) => state.bookings);
     const userState = useSelector((state) => state.user);
-    const months = Array.from({ length: 12 }, (_, i) => moment().month(i).format('MMMM'));
+    const months = Array.from({ length: 12 }, (_, i) => dayjs().month(i).format('MMMM'));
 
     useEffect(() => {
         if (status === 'idle') {
@@ -184,11 +188,11 @@ function CommonTable({ filter }) {
         .filter((booking) => {
             if (selectedMonth === null) return true;
             const bookingDate = new Date(booking.date);
-            return moment(bookingDate).format('MMMM') === selectedMonth;
+            return dayjs(bookingDate).format('MMMM') === selectedMonth;
         })
         .filter((booking) => {
             if (selectedDate === null) return true;
-            const bookingDate = moment(booking.date).format('DD-MM-YYYY');
+            const bookingDate = dayjs(booking.date).format('DD-MM-YYYY');
             return bookingDate === selectedDate;
         })
         .map((booking) => ({
@@ -196,8 +200,8 @@ function CommonTable({ filter }) {
             customerName: booking.customerName,
             mobilenu: booking.mobilenu,
             date: booking.date,
-            startTime: dayjs(booking.time?.start).format('h:mm A'),
-            endTime: dayjs(booking.time?.end).format('h:mm A'),
+            startTime: dayjs(booking.time?.start).local().format('h:mm A'),
+            endTime: dayjs(booking.time?.end).local().format('h:mm A'),
             item: booking.item,
             Hr: booking.totalHours,
             session: booking.session,
