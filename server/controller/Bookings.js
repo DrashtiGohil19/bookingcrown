@@ -164,7 +164,8 @@ exports.updateBookingDetails = async (req, res) => {
                                 { "time.end": { $lte: parsedEndTime } }
                             ]
                         }
-                    ]
+                    ],
+                    _id: { $ne: req.params.id }
                 };
             } else {
                 // if (session === "Full Day") {
