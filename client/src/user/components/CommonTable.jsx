@@ -2,7 +2,7 @@ import { Col, DatePicker, Input, Row, Select, Spin, Table, Tag } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { FaEdit, FaInfoCircle } from "react-icons/fa";
+import { FaEdit, FaInfoCircle, FaWhatsapp } from "react-icons/fa";
 import { fetchAllBookings } from '../../features/bookings/BookingSlice';
 import { fetchUserData } from '../../features/user/UserSlice';
 import UpdatePayment from '../model/UpdatePayment';
@@ -11,6 +11,7 @@ import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
 import isSameOrAfter from 'dayjs/plugin/isSameOrAfter';
+import { handleCopy } from '../../utilities/utils';
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -129,9 +130,14 @@ const actionColumns = (handleEdit, navigateDetailPage, showModal) => [
         render: (text, record) => {
             if (record.key === 'total') return null;
             return (
-                <div className='flex'>
-                    <FaInfoCircle onClick={() => navigateDetailPage(record)} type="link" className='text-[20px] text-themeColor m-auto' />
-                    <FaEdit onClick={() => handleEdit(record.key)} type="link" className="ml-4 text-[20px] text-themeColor" />
+                <div className='flex justify-between'>
+                    <FaInfoCircle onClick={() => navigateDetailPage(record)} type="link" className='text-[20px] text-themeColor' />
+                    <FaEdit onClick={() => handleEdit(record.key)} type="link" className="text-[20px] text-themeColor" />
+                    <FaWhatsapp
+                        onClick={() => handleCopy(record.mobilenu, record.key)} 
+                        className='text-[20px] text-green-500 cursor-pointer'
+                        title="Send WhatsApp Link"
+                    />
                 </div>
             );
         },
