@@ -191,6 +191,7 @@ function HourlyForm({ isEditing, userId }) {
                             <TimePicker
                                 format="hh:mm A"
                                 className='h-10 w-full'
+                                onChange={handleRangeChange}
                                 inputReadOnly={true}
                                 needConfirm={false}
                             />
