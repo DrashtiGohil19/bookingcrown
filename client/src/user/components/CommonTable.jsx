@@ -130,13 +130,21 @@ const actionColumns = (handleEdit, navigateDetailPage, showModal) => [
         render: (text, record) => {
             if (record.key === 'total') return null;
             return (
-                <div className='flex justify-between'>
-                    <FaInfoCircle onClick={() => navigateDetailPage(record)} type="link" className='text-[20px] text-themeColor' />
-                    <FaEdit onClick={() => handleEdit(record.key)} type="link" className="text-[20px] text-themeColor" />
+                <div className="flex justify-center gap-4 items-center">
                     <FaWhatsapp
-                        onClick={() => handleCopy(record.mobilenu, record.key)} 
-                        className='text-[20px] text-green-500 cursor-pointer'
+                        onClick={() => handleCopy(record.mobilenu, record.key)}
+                        className="text-[20px] text-green-500 cursor-pointer"
                         title="Send WhatsApp Link"
+                    />
+                    <FaInfoCircle
+                        onClick={() => navigateDetailPage(record)}
+                        className="text-[20px] text-themeColor cursor-pointer"
+                        title="View Details"
+                    />
+                    <FaEdit
+                        onClick={() => handleEdit(record.key)}
+                        className="text-[20px] text-themeColor cursor-pointer"
+                        title="Edit Booking"
                     />
                 </div>
             );
