@@ -1,0 +1,8 @@
+npm error code ENOENT
+npm error syscall open
+npm error path /Users/aagamfashion/Documents/Projects/BookingCrown/bookingcrown/package.json
+npm error errno -2
+npm error enoent Could not read package.json: Error: ENOENT: no such file or directory, open '/Users/aagamfashion/Documents/Projects/BookingCrown/bookingcrown/package.json'
+npm error enoent This is related to npm not being able to find a file.
+npm error enoent
+npm error A complete log of this run can be found in: /Users/aagamfashion/.npm/_logs/2025-11-17T18_12_36_968Z-debug-0.log
