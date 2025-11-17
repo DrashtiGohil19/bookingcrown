@@ -1,7 +1,8 @@
 import axiosInstance from "../services/axiosInstance/AxiosInstance"
 import Notification from "../utilities/Notification"
+import getApiBaseUrl from "../services/axiosInstance/getApiBaseUrl"
 
-const baseUrl = process.env.REACT_APP_BACKEND_URL + "/api"
+const baseUrl = getApiBaseUrl()
 
 export const getUserData = async () => {
     try {

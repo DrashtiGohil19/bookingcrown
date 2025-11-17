@@ -1,7 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axiosInstance from '../../services/axiosInstance/AxiosInstance';
-
-const baseUrl = process.env.REACT_APP_BACKEND_URL + "/api"
 export const fetchUserData = createAsyncThunk(
     'user/fetchUserData',
     async () => {
@@ -13,7 +11,7 @@ export const fetchUserData = createAsyncThunk(
 export const fetchAllUsers = createAsyncThunk(
     'user/fetchAllUsers',
     async () => {
-        const response = await axiosInstance.get(baseUrl + '/getAllUsers');
+        const response = await axiosInstance.get('/getAllUsers');
         return response.data.allUsers;
     }
 );

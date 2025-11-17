@@ -1,8 +1,9 @@
 import axios from "axios"
 import Notification from "../utilities/Notification"
 import axiosInstance from "../services/axiosInstance/AxiosInstance"
+import getApiBaseUrl from "../services/axiosInstance/getApiBaseUrl"
 
-const baseUrl = process.env.REACT_APP_BACKEND_URL + "/api"
+const baseUrl = getApiBaseUrl()
 export const signup = async (name, mobilenu, email, businessType, businessName, address) => {
     try {
         const response = await axios.post(baseUrl + "/signup", {

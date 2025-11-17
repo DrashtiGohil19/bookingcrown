@@ -9,6 +9,7 @@ import BookingList from './user/pages/BookingList/BookingList';
 import EditBooking from './user/pages/EditBooking/EditBooking';
 import ChangePassword from './pages/ChangePassword/ChangePassword';
 import AdminDashboard from './admin/pages/Dashboard/Dashboard';
+import Leads from './admin/pages/Leads/Leads';
 import ProtectedRoute from './services/protectedRoute/ProtectedRoute';
 import Profile from './user/pages/Profile/Profile';
 import ThankYou from './user/pages/ThankYou/ThankYou';
@@ -48,6 +49,7 @@ function App() {
         <Route path="/user/income-expense" element={<ProtectedRoute element={IncomeExpense} requiredRole="user" />} />
 
         <Route path="/admin/dashboard" element={<ProtectedAdminRoute element={AdminDashboard} requiredRole="admin" />} />
+        <Route path="/admin/leads" element={<ProtectedAdminRoute element={Leads} requiredRole="admin" />} />
 
       </Routes>
     </div>

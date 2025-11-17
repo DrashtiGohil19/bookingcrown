@@ -1,13 +1,11 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axiosInstance from '../../services/axiosInstance/AxiosInstance';
 
-const baseUrl = process.env.REACT_APP_BACKEND_URL + "/api";
-
 export const fetchIncomeAndExpenses = createAsyncThunk(
     'expense/fetchIncomeAndExpenses',
     async ({ month = null }) => {
         const queryParam = month ? `?month=${month}` : '';
-        const response = await axiosInstance.get(`${baseUrl}/all-income-expense${queryParam}`);
+        const response = await axiosInstance.get(`/all-income-expense${queryParam}`);
         return response.data;
     }
 );

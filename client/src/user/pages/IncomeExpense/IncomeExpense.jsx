@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Sidebar from '../../components/Sidebar';
 import { Button, Table, Row, Col, DatePicker } from 'antd';
-import { FaPlus } from 'react-icons/fa6';
+import { FaPlus } from 'react-icons/fa';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchIncomeAndExpenses } from '../../../features/Expense/ExpenseSlice';
 import ExpenseModel from '../../model/ExpenseModel';

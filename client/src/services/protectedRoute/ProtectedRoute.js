@@ -5,8 +5,6 @@ import Loader from '../../common/Loader';
 import { useUserAccess } from '../userAccessContext/UserAccessContext';
 import axiosInstance from '../axiosInstance/AxiosInstance';
 
-const baseUrl = process.env.REACT_APP_BACKEND_URL + "/api"
-
 const ProtectedRoute = ({ element: Component, requiredRole, ...rest }) => {
     const token = getToken();
     const { userAccess, setUserAccess } = useUserAccess();
@@ -19,8 +17,8 @@ const ProtectedRoute = ({ element: Component, requiredRole, ...rest }) => {
             }
 
             if (userAccess.hasAccess === null) {
-                try {
-                    const response = await axiosInstance.get(baseUrl + '/check-access');
+                    try {
+                    const response = await axiosInstance.get('/check-access');
 
                     if (response.status === 200 && response.data.message === 'Access granted') {
                         setUserAccess({ hasAccess: true, isLoading: false });

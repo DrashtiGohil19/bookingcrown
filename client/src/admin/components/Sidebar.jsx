@@ -9,8 +9,9 @@ import {
     MenuItems,
     TransitionChild,
 } from '@headlessui/react'
-import { FaAngleDown, FaBars } from "react-icons/fa6";
+import { FaAngleDown, FaBars } from "react-icons/fa";
 import { IoClose, IoHome } from "react-icons/io5";
+import { MdContactMail } from "react-icons/md";
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { resetBookingData } from '../../features/bookings/BookingSlice';
 import { fetchUserData, resetAllUserData } from '../../features/user/UserSlice';
@@ -18,6 +19,7 @@ import { useDispatch, useSelector } from 'react-redux';
 
 const navigation = [
     { name: 'Dashboard', href: '/admin/dashboard', icon: IoHome },
+    { name: 'Leads', href: '/admin/leads', icon: MdContactMail },
 ]
 
 const userNavigation = [
@@ -82,9 +84,9 @@ export default function Sidebar() {
                                     <h1 className='ms-3 cursor-pointer font-bold text-white text-[20px]'>Booking Crown</h1>
                                 </div>
                                 <nav className="flex flex-1 flex-col">
-                                    <ul role="list" className="flex flex-1 flex-col gap-y-7">
+                                    <ul className="flex flex-1 flex-col gap-y-7">
                                         <li>
-                                            <ul role="list" className="-mx-2 space-y-1">
+                                            <ul className="-mx-2 space-y-1">
                                                 {navigation.map((item) => (
                                                     <li key={item.name}>
                                                         <Link
@@ -129,9 +131,9 @@ export default function Sidebar() {
                             <h1 className='ms-3 cursor-pointer font-bold text-white text-[20px]'>Booking Crown</h1>
                         </div>
                         <nav className="flex flex-1 flex-col">
-                            <ul role="list" className="flex flex-1 flex-col gap-y-7">
+                            <ul className="flex flex-1 flex-col gap-y-7">
                                 <li>
-                                    <ul role="list" className="-mx-2 space-y-2">
+                                    <ul className="-mx-2 space-y-2">
                                         {navigation.map((item) => (
                                             <li key={item.name}>
                                                 <Link

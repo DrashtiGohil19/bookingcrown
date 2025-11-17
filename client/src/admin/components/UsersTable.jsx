@@ -6,7 +6,7 @@ import { FaInfoCircle } from 'react-icons/fa';
 import CreatePlan from '../model/CreatePlan';
 import moment from 'moment';
 import dayjs from 'dayjs';
-import { RiExpandUpDownFill } from 'react-icons/ri';
+import { RiArrowUpDownFill } from 'react-icons/ri';
 import { updateUserBType } from '../../api/User';
 
 const { Option } = Select;
@@ -39,7 +39,7 @@ const columns = (activeKey, showModal, editRecord, handleSaveEdit, setEditRecord
                     <Select
                         className='w-full'
                         placeholder="Select Business Type"
-                        suffixIcon={<RiExpandUpDownFill className="text-gray-400" />}
+                        suffixIcon={<RiArrowUpDownFill className="text-gray-400" />}
                         onChange={(value) => setEditRecord({ ...editRecord, bussinessType: value })}
                         value={editRecord.bussinessType}
                     >

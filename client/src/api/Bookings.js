@@ -1,8 +1,9 @@
 import Notification from "../utilities/Notification"
 import axiosInstance from "../services/axiosInstance/AxiosInstance"
 import axios from "axios"
+import getApiBaseUrl from "../services/axiosInstance/getApiBaseUrl"
 
-const baseUrl = process.env.REACT_APP_BACKEND_URL + "/api"
+const baseUrl = getApiBaseUrl()
 
 export const CreateBooking = async (bookingData) => {
     try {

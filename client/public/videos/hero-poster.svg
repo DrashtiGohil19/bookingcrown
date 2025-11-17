@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900">
+  <defs>
+    <linearGradient id="g" x1="0" x2="1">
+      <stop offset="0%" stop-color="#7C3AED"/>
+      <stop offset="100%" stop-color="#06B6D4"/>
+    </linearGradient>
+    <style>
+      .title { font-family: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial; fill: #fff; font-weight:700; font-size:48px }
+      .sub { font-family: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial; fill: rgba(255,255,255,0.9); font-size:20px }
+    </style>
+  </defs>
+  <rect width="100%" height="100%" fill="url(#g)" />
+  <g transform="translate(80,140)">
+    <text class="title">BookingCrown — where bookings click</text>
+    <text class="sub" y="64">Fast. Reliable. Built for small businesses in India.</text>
+  </g>
+  <g transform="translate(1100,520) scale(1.6)">
+    <circle cx="0" cy="0" r="48" fill="#fff" opacity="0.08" />
+    <g transform="translate(-14,-8)">
+      <rect x="0" y="0" width="84" height="52" rx="8" fill="#fff" opacity="0.14" />
+      <rect x="6" y="8" width="72" height="8" rx="3" fill="#fff" />
+      <rect x="6" y="26" width="40" height="6" rx="3" fill="#fff" />
+    </g>
+  </g>
+</svg>

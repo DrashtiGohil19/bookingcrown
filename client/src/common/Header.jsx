@@ -21,8 +21,8 @@ function Header() {
         navigate("/")
     }
     return (
-        <div className="fixed top-0 left-0 right-0 bg-white shadow z-50">
-            <Disclosure as="nav" className="bg-white shadow-xl">
+        <div className="fixed top-0 left-0 right-0 bg-white/95 backdrop-blur-sm shadow-lg z-50">
+            <Disclosure as="nav" className="bg-white/95 backdrop-blur-sm shadow-lg">
                 <div className="mx-auto max-w-7xl py-1 px-4 sm:px-6 lg:px-8">
                     <div className="relative flex h-16 justify-between">
 
@@ -91,14 +91,14 @@ function Header() {
                                         <button
                                             type="button"
                                             onClick={() => navigate(`/${role}/dashboard`)}
-                                            className="rounded-lg bg-themeColor text-white focus:outline-none focus:ring-2 focus:ring-themeColor focus:ring-offset-2 p-[5px_9px]"
+                                            className="rounded-lg bg-gradient-to-r from-primaryPurple to-primaryCyan text-white focus:outline-none focus:ring-2 focus:ring-themeColor focus:ring-offset-2 p-[5px_9px] hover:shadow-lg transform hover:scale-105 transition-all"
                                         >
                                             Dashboard
                                         </button>
                                         <button
                                             type="button"
                                             onClick={handleLogOut}
-                                            className="rounded-lg bg-themeColor text-white focus:outline-none focus:ring-2 focus:ring-themeColor ms-1 md:ms-4 focus:ring-offset-2 p-[5px_9px]"
+                                            className="rounded-lg bg-gradient-to-r from-primaryPurple to-primaryCyan text-white focus:outline-none focus:ring-2 focus:ring-themeColor ms-1 md:ms-4 focus:ring-offset-2 p-[5px_9px] hover:shadow-lg transform hover:scale-105 transition-all"
                                         >
                                             Log Out
                                         </button>
@@ -109,14 +109,14 @@ function Header() {
                                         <button
                                             type="button"
                                             onClick={() => navigate("/login")}
-                                            className="rounded-lg bg-themeColor text-white focus:outline-none focus:ring-2 focus:ring-themeColor focus:ring-offset-2 p-[5px_9px]"
+                                            className="rounded-lg bg-gradient-to-r from-primaryPurple to-primaryCyan text-white focus:outline-none focus:ring-2 focus:ring-themeColor focus:ring-offset-2 p-[5px_9px] hover:shadow-lg transform hover:scale-105 transition-all"
                                         >
                                             Log in
                                         </button>
                                         <button
                                             type="button"
                                             onClick={() => navigate("/signup")}
-                                            className="rounded-lg bg-themeColor text-white focus:outline-none focus:ring-2 focus:ring-themeColor ms-1 md:ms-4 focus:ring-offset-2 p-[5px_9px]"
+                                            className="rounded-lg bg-gradient-to-r from-primaryPurple to-primaryCyan text-white focus:outline-none focus:ring-2 focus:ring-themeColor ms-1 md:ms-4 focus:ring-offset-2 p-[5px_9px] hover:shadow-lg transform hover:scale-105 transition-all"
                                         >
                                             Sign up
                                         </button>

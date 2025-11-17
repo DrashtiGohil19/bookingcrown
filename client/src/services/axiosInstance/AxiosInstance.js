@@ -1,7 +1,8 @@
 import axios from 'axios';
 import { getToken } from '../authService/AuthService';
+import getApiBaseUrl from './getApiBaseUrl';
 
-const baseUrl = process.env.REACT_APP_BACKEND_URL + "/api"
+const baseUrl = getApiBaseUrl();
 
 const axiosInstance = axios.create({
     baseURL: baseUrl,

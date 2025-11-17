@@ -1,7 +1,8 @@
 import axios from "axios"
 import Notification from "../utilities/Notification"
+import getApiBaseUrl from "../services/axiosInstance/getApiBaseUrl"
 
-const baseUrl = process.env.REACT_APP_BACKEND_URL + "/api"
+const baseUrl = getApiBaseUrl()
 
 export const createPlanData = async (values, id) => {
     try {
@@ -11,7 +12,7 @@ export const createPlanData = async (values, id) => {
         }
         return response.data.plan
     } catch (error) {
-        Notification.error(error.response.data.error)
+        Notification.error(error.response?.data?.error || error.message)
         return error
     }
 }
