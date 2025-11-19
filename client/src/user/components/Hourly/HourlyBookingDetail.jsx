@@ -5,11 +5,11 @@ import dayjs from 'dayjs'
 import { DeleteBooking, getBookingById } from '../../../api/Bookings';
 import Sidebar from '../Sidebar';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
-import Notification from '../../../utilities/Notification';
 import { fetchAllBookings } from '../../../features/bookings/BookingSlice';
 import { useDispatch } from 'react-redux';
 import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
+import { handleCopy } from '../../../utilities/utils';
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -24,11 +24,6 @@ const HourlyBookingDetail = () => {
     const navigate = useNavigate()
     const params = useParams();
     const bookingLink = `${process.env.REACT_APP_BASE_URL}/customer/booking-details/${booking?._id}`;
-
-    const handleCopy = (mobilenu) => {
-        Notification.success("Link copied to clipboard!");
-        window.open(`https://wa.me/91${mobilenu}?text=${encodeURIComponent(bookingLink)}`, '_blank');
-    };
 
     const fetchBooking = async () => {
         try {
@@ -139,7 +134,7 @@ const HourlyBookingDetail = () => {
 
                             <Card title="Copy this link and send to the customer" className='mt-3'>
                                 <div className='flex gap-6'>
-                                    <CopyToClipboard onCopy={() => handleCopy(booking.mobilenu)} text={bookingLink}>
+                                    <CopyToClipboard onCopy={() => handleCopy(booking.mobilenu, booking?._id)} text={bookingLink}>
                                         <Button type="primary">Click here to copy link and send on WhatsApp</Button>
                                     </CopyToClipboard>
                                 </div>
