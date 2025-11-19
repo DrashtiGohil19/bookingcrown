@@ -1,11 +1,16 @@
 import { Card, Col, Row, Skeleton, Typography } from 'antd'
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { getBookingById } from '../../../api/Bookings';
 import { FaCheckCircle } from 'react-icons/fa';
 import dayjs from 'dayjs';
+import timezone from "dayjs/plugin/timezone";
+import utc from "dayjs/plugin/utc";
 import { Disclosure } from '@headlessui/react'
 import Footer from '../../../common/Footer';
+
+dayjs.extend(timezone);
+dayjs.extend(utc);
 
 const { Text } = Typography;
 
@@ -80,7 +85,7 @@ function CustomerDetail() {
                                             </div>
                                             <div className="flex-1 bg-teal-600 rounded-lg p-3 mt-4">
                                                 <h4 className="text-center text-[14px] md:text-[16px]">
-                                                    Booked for {dayjs(booking?.date).format('D MMMM, YYYY')}
+                                                    Booked for {dayjs(booking?.date).tz("Asia/Kolkata").format("D MMMM, YYYY")}
                                                 </h4>
                                             </div>
                                         </div>
@@ -101,7 +106,7 @@ function CustomerDetail() {
                                                     <Col xs={24} sm={12} md={8} lg={8}>
                                                         <div className="flex gap-4 mb-1 md:mb-3">
                                                             <Text className="font-semibold">Booking Time:</Text>
-                                                            <Text>{dayjs(booking.time?.start).format('h:mm A')} To {dayjs(booking.time?.end).format('h:mm A')}</Text>
+                                                            <Text>{dayjs(booking.time?.start).tz("Asia/Kolkata").format('h:mm A')} To {dayjs(booking.time?.end).tz("Asia/Kolkata").format('h:mm A')}</Text>
                                                         </div>
                                                     </Col>
                                                     <Col xs={24} sm={12} md={8} lg={8}>

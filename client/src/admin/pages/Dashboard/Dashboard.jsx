@@ -7,6 +7,11 @@ import { fetchAllUsers } from '../../../features/user/UserSlice';
 import moment from 'moment';
 import io from 'socket.io-client';
 import dayjs from 'dayjs';
+import timezone from "dayjs/plugin/timezone";
+import utc from "dayjs/plugin/utc";
+
+dayjs.extend(timezone);
+dayjs.extend(utc);
 
 const socket = io(process.env.REACT_APP_BACKEND_URL);
 

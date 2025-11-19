@@ -6,8 +6,13 @@ import { FaInfoCircle } from 'react-icons/fa';
 import CreatePlan from '../model/CreatePlan';
 import moment from 'moment';
 import dayjs from 'dayjs';
+import timezone from "dayjs/plugin/timezone";
+import utc from "dayjs/plugin/utc";
 import { RiExpandUpDownFill } from 'react-icons/ri';
 import { updateUserBType } from '../../api/User';
+
+dayjs.extend(timezone);
+dayjs.extend(utc);
 
 const { Option } = Select;
 
@@ -63,7 +68,7 @@ const columns = (activeKey, showModal, editRecord, handleSaveEdit, setEditRecord
         title: 'Joining Date',
         dataIndex: 'createdAt',
         align: "center",
-        render: (text) => moment(text).format('DD-MM-YYYY'),
+        render: (text) => dayjs(text).format('DD-MM-YYYY'),
     },
     ...(activeKey === "1" ? [
         {
@@ -80,13 +85,13 @@ const columns = (activeKey, showModal, editRecord, handleSaveEdit, setEditRecord
             title: 'Starting Date',
             dataIndex: 'startDate',
             align: "center",
-            render: (text) => moment(text).format('DD-MM-YYYY'),
+            render: (text) => dayjs(text).format('DD-MM-YYYY'),
         },
         {
             title: 'Ending Date',
             dataIndex: 'endDate',
             align: "center",
-            render: (text) => moment(text).format('DD-MM-YYYY'),
+            render: (text) => dayjs(text).format('DD-MM-YYYY'),
         },
         {
             title: 'Actions',

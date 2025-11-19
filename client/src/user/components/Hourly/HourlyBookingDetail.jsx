@@ -8,6 +8,11 @@ import { CopyToClipboard } from 'react-copy-to-clipboard';
 import Notification from '../../../utilities/Notification';
 import { fetchAllBookings } from '../../../features/bookings/BookingSlice';
 import { useDispatch } from 'react-redux';
+import utc from "dayjs/plugin/utc";
+import timezone from "dayjs/plugin/timezone";
+
+dayjs.extend(utc);
+dayjs.extend(timezone);
 
 const { Text } = Typography;
 const { confirm } = Modal
@@ -89,7 +94,7 @@ const HourlyBookingDetail = () => {
                                         <Col xs={24} sm={12} md={8} lg={8}>
                                             <div className="flex gap-4 mb-1 md:mb-5">
                                                 <Text className='font-semibold'>Booking Time:</Text>
-                                                <Text>{dayjs(booking.time?.start).format('h:mm A')} To {dayjs(booking.time?.end).format('h:mm A')}</Text>
+                                                <Text>{dayjs(booking.time?.start).tz("Asia/Kolkata").format('h:mm A')} To {dayjs(booking.time?.end).tz("Asia/Kolkata").format('h:mm A')}</Text>
                                             </div>
                                         </Col>
                                         <Col xs={24} sm={12} md={8} lg={8}>
