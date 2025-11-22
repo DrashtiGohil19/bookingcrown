@@ -78,8 +78,19 @@ exports.createBookings = async (req, res) => {
                 return res.status(400).json({ message: "End time must be after start time.", success: false });
             }
             
+            // Normalize date for comparison (ignore time component)
+            const normalizedDate = dayjs(date).startOf('day').toDate();
+            
             // Find bookings with overlapping times by comparing time strings
-            const allBookings = await Bookings.find({ item, date });
+            // Use a date range query to catch all bookings on the same date regardless of time stored
+            const startOfDay = dayjs(date).startOf('day').toDate();
+            const endOfDay = dayjs(date).endOf('day').toDate();
+            
+            const allBookings = await Bookings.find({ 
+                item, 
+                date: { $gte: startOfDay, $lte: endOfDay }
+            });
+            
             const conflictingBookings = allBookings.filter(booking => {
                 if (!booking.time || !booking.time.start || !booking.time.end) return false;
                 
@@ -298,7 +309,16 @@ exports.updateBookingDetails = async (req, res) => {
                 // Find bookings with overlapping times
                 const checkDate = date || booking.date;
                 const checkItem = item || booking.item;
-                const allBookings = await Bookings.find({ item: checkItem, date: checkDate, _id: { $ne: req.params.id } });
+                
+                // Normalize date for comparison (ignore time component)
+                const startOfDay = dayjs(checkDate).startOf('day').toDate();
+                const endOfDay = dayjs(checkDate).endOf('day').toDate();
+                
+                const allBookings = await Bookings.find({ 
+                    item: checkItem, 
+                    date: { $gte: startOfDay, $lte: endOfDay },
+                    _id: { $ne: req.params.id } 
+                });
                 const conflictingBookings = allBookings.filter(existingBooking => {
                     if (!existingBooking.time || !existingBooking.time.start || !existingBooking.time.end) return false;
                     
