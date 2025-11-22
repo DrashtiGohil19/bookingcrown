@@ -209,21 +209,44 @@ function CommonTable({ filter }) {
             const bookingDate = dayjs(booking.date).format('DD-MM-YYYY');
             return bookingDate === selectedDate;
         })
-        .map((booking) => ({
-            key: booking._id,
-            customerName: booking.customerName,
-            mobilenu: booking.mobilenu,
-            date: booking.date,
-            startTime: dayjs(booking.time?.start).tz('Asia/Kolkata').format('h:mm A'),
-            endTime: dayjs(booking.time?.end).tz('Asia/Kolkata').format('h:mm A'),
-            item: booking.item,
-            Hr: booking.totalHours,
-            session: booking.session,
-            payment: booking.payment,
-            amount: booking.amount,
-            advance: booking.advance,
-            pending: booking.pending
-        }))
+        .map((booking) => {
+            // Display times as IST - if it's a string, use directly; if Date object, convert from UTC/GMT to IST
+            let startTime = '';
+            let endTime = '';
+            if (booking.time?.start) {
+                if (typeof booking.time.start === 'string') {
+                    // Already in IST string format (e.g., "06:30 PM")
+                    startTime = booking.time.start;
+                } else {
+                    // Date object (legacy format) - convert from GMT to IST
+                    startTime = dayjs.utc(booking.time.start).tz('Asia/Kolkata').format('h:mm A');
+                }
+            }
+            if (booking.time?.end) {
+                if (typeof booking.time.end === 'string') {
+                    // Already in IST string format (e.g., "09:30 PM")
+                    endTime = booking.time.end;
+                } else {
+                    // Date object (legacy format) - convert from GMT to IST
+                    endTime = dayjs.utc(booking.time.end).tz('Asia/Kolkata').format('h:mm A');
+                }
+            }
+            return {
+                key: booking._id,
+                customerName: booking.customerName,
+                mobilenu: booking.mobilenu,
+                date: booking.date,
+                startTime,
+                endTime,
+                item: booking.item,
+                Hr: booking.totalHours,
+                session: booking.session,
+                payment: booking.payment,
+                amount: booking.amount,
+                advance: booking.advance,
+                pending: booking.pending
+            };
+        })
         .sort((a, b) => new Date(a.date) - new Date(b.date));
 
     const handleEdit = (id) => {

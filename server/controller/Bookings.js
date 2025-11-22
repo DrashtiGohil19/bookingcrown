@@ -13,26 +13,29 @@ exports.createBookings = async (req, res) => {
 
         let query
         if (time) {
-            const parsedStartTime = dayjs(time.start, "h:mm A")
-            const parsedEndTime = dayjs(time.end, "h:mm A");
-            query = {
-                item,
-                date,
-                $or: [
-                    {
-                        $and: [
-                            { "time.start": { $lt: parsedEndTime } },
-                            { "time.end": { $gt: parsedStartTime } }
-                        ]
-                    },
-                    {
-                        $and: [
-                            { "time.start": { $gte: parsedStartTime } },
-                            { "time.end": { $lte: parsedEndTime } }
-                        ]
-                    }
-                ]
+            // Convert IST time strings to minutes for comparison
+            const timeToMinutes = (timeStr) => {
+                const parsed = dayjs(timeStr, "h:mm A");
+                return parsed.hour() * 60 + parsed.minute();
             };
+            const newStartMinutes = timeToMinutes(time.start);
+            const newEndMinutes = timeToMinutes(time.end);
+            
+            // Find bookings with overlapping times by comparing time strings
+            const allBookings = await Bookings.find({ item, date });
+            const conflictingBookings = allBookings.filter(booking => {
+                if (!booking.time || !booking.time.start || !booking.time.end) return false;
+                const existingStartMinutes = timeToMinutes(booking.time.start);
+                const existingEndMinutes = timeToMinutes(booking.time.end);
+                // Check for overlap: new start < existing end AND new end > existing start
+                return (newStartMinutes < existingEndMinutes && newEndMinutes > existingStartMinutes);
+            });
+            
+            if (conflictingBookings.length > 0) {
+                return res.status(400).json({ message: "Unable to add booking, Booking already exists for the specified time and date.", success: false });
+            }
+            
+            query = { item, date, _id: null }; // Set to never match since we already checked conflicts
         } else {
             if (session === "Full Day") {
                 query = {
@@ -62,10 +65,12 @@ exports.createBookings = async (req, res) => {
             }
         }
 
-        const existingBooking = await Bookings.findOne(query);
-
-        if (existingBooking) {
-            return res.status(400).json({ message: "Unable to add booking, Booking already exists for the specified time and date.", success: false });
+        // Only check for conflicts if not already checked (for time-based bookings, conflicts were already checked above)
+        if (query && query._id !== null) {
+            const existingBooking = await Bookings.findOne(query);
+            if (existingBooking) {
+                return res.status(400).json({ message: "Unable to add booking, Booking already exists for the specified time and date.", success: false });
+            }
         }
 
         const bookingData = {
@@ -77,9 +82,10 @@ exports.createBookings = async (req, res) => {
         };
 
         if (time && time.start && time.end) {
+            // Store times as IST strings directly (no timezone conversion)
             bookingData.time = {
-                start: dayjs(time.start, "h:mm A"),
-                end: dayjs(time.end, "h:mm A")
+                start: time.start,  // Already in "hh:mm A" format (IST)
+                end: time.end       // Already in "hh:mm A" format (IST)
             };
         }
 
@@ -145,28 +151,31 @@ exports.updateBookingDetails = async (req, res) => {
             checkForConflict = true;
 
             if (time) {
-                const parsedStartTime = dayjs(time.start, "h:mm A");
-                const parsedEndTime = dayjs(time.end, "h:mm A");
-
-                query = {
-                    item: item || booking.item,
-                    date: date || booking.date,
-                    $or: [
-                        {
-                            $and: [
-                                { "time.start": { $lt: parsedEndTime } },
-                                { "time.end": { $gt: parsedStartTime } }
-                            ]
-                        },
-                        {
-                            $and: [
-                                { "time.start": { $gte: parsedStartTime } },
-                                { "time.end": { $lte: parsedEndTime } }
-                            ]
-                        }
-                    ],
-                    _id: { $ne: req.params.id }
+                // Convert IST time strings to minutes for comparison
+                const timeToMinutes = (timeStr) => {
+                    const parsed = dayjs(timeStr, "h:mm A");
+                    return parsed.hour() * 60 + parsed.minute();
                 };
+                const newStartMinutes = timeToMinutes(time.start);
+                const newEndMinutes = timeToMinutes(time.end);
+                
+                // Find bookings with overlapping times
+                const checkDate = date || booking.date;
+                const checkItem = item || booking.item;
+                const allBookings = await Bookings.find({ item: checkItem, date: checkDate, _id: { $ne: req.params.id } });
+                const conflictingBookings = allBookings.filter(existingBooking => {
+                    if (!existingBooking.time || !existingBooking.time.start || !existingBooking.time.end) return false;
+                    const existingStartMinutes = timeToMinutes(existingBooking.time.start);
+                    const existingEndMinutes = timeToMinutes(existingBooking.time.end);
+                    // Check for overlap: new start < existing end AND new end > existing start
+                    return (newStartMinutes < existingEndMinutes && newEndMinutes > existingStartMinutes);
+                });
+                
+                if (conflictingBookings.length > 0) {
+                    return res.status(400).json({ message: "Unable to update booking, Booking already exists for the specified time and date.", success: false });
+                }
+                
+                query = null; // Conflicts already checked
             } else {
                 // if (session === "Full Day") {
                 //     query = {
@@ -215,10 +224,12 @@ exports.updateBookingDetails = async (req, res) => {
                 }
             }
 
-            const existingBooking = await Bookings.findOne(query);
-
-            if (existingBooking) {
-                return res.status(400).json({ message: "Unable to update booking, Booking already exists for the specified time and date.", success: false });
+            // Only check for conflicts if query exists (session-based bookings)
+            if (query) {
+                const existingBooking = await Bookings.findOne(query);
+                if (existingBooking) {
+                    return res.status(400).json({ message: "Unable to update booking, Booking already exists for the specified time and date.", success: false });
+                }
             }
         }
 
@@ -231,9 +242,10 @@ exports.updateBookingDetails = async (req, res) => {
 
         if (checkForConflict) {
             if (time) {
+                // Store times as IST strings directly (no timezone conversion)
                 booking.time = {
-                    start: dayjs(time.start, "h:mm A"),
-                    end: dayjs(time.end, "h:mm A")
+                    start: time.start,  // Already in "hh:mm A" format (IST)
+                    end: time.end       // Already in "hh:mm A" format (IST)
                 };
             }
             if (date !== undefined) booking.date = date;
