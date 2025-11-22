@@ -6,7 +6,12 @@ import { CreateBooking, getBookingById, UpdateBooking } from '../../../api/Booki
 import { fetchAllBookings } from '../../../features/bookings/BookingSlice';
 import { useNavigate } from 'react-router-dom';
 import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
+import timezone from 'dayjs/plugin/timezone';
 import "../../../App.css"
+
+dayjs.extend(utc);
+dayjs.extend(timezone);
 
 const { Item } = Form;
 
@@ -60,13 +65,29 @@ function HourlyForm({ isEditing, userId }) {
             const data = await getBookingById(userId)
             const bookingDate = dayjs(data.date);
             if (data) {
+                // Load times as IST - if string, parse it; if Date object, convert from UTC to IST
+                let startTime, endTime;
+                if (typeof data.time?.start === 'string') {
+                    // IST string format - parse it directly
+                    startTime = dayjs(data.time.start, 'hh:mm A');
+                } else if (data.time?.start) {
+                    // Date object (legacy) - convert from UTC/GMT to IST
+                    startTime = dayjs.utc(data.time.start).tz('Asia/Kolkata');
+                }
+                if (typeof data.time?.end === 'string') {
+                    // IST string format - parse it directly
+                    endTime = dayjs(data.time.end, 'hh:mm A');
+                } else if (data.time?.end) {
+                    // Date object (legacy) - convert from UTC/GMT to IST
+                    endTime = dayjs.utc(data.time.end).tz('Asia/Kolkata');
+                }
                 form.setFieldsValue({
                     customerName: data.customerName,
                     mobileNumber: data.mobilenu,
                     date: bookingDate,
                     item: data.item,
-                    startTime: dayjs(data.time.start),
-                    endTime: dayjs(data.time.end),
+                    startTime,
+                    endTime,
                     totalHours: data.totalHours,
                     totalAmount: data.amount,
                     advanceAmount: data.advance,

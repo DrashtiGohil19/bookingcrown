@@ -106,7 +106,11 @@ function CustomerDetail() {
                                                     <Col xs={24} sm={12} md={8} lg={8}>
                                                         <div className="flex gap-4 mb-1 md:mb-3">
                                                             <Text className="font-semibold">Booking Time:</Text>
-                                                            <Text>{dayjs(booking.time?.start).tz("Asia/Kolkata").format('h:mm A')} To {dayjs(booking.time?.end).tz("Asia/Kolkata").format('h:mm A')}</Text>
+                                                            <Text>{
+                                                                (typeof booking.time?.start === 'string' ? booking.time.start : dayjs.utc(booking.time?.start).tz("Asia/Kolkata").format('h:mm A'))
+                                                            } To {
+                                                                (typeof booking.time?.end === 'string' ? booking.time.end : dayjs.utc(booking.time?.end).tz("Asia/Kolkata").format('h:mm A'))
+                                                            }</Text>
                                                         </div>
                                                     </Col>
                                                     <Col xs={24} sm={12} md={8} lg={8}>
