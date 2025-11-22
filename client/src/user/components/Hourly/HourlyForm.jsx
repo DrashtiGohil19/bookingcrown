@@ -101,20 +101,36 @@ function HourlyForm({ isEditing, userId }) {
 
     const onFinish = async (values) => {
         let response = null
+        // Ensure times are formatted as strings (not dayjs objects)
+        const formatTime = (timeValue) => {
+            if (!timeValue) return '';
+            // If it's already a string, return it
+            if (typeof timeValue === 'string') return timeValue;
+            // If it's a dayjs object, format it
+            if (dayjs.isDayjs(timeValue)) return timeValue.format('hh:mm A');
+            // If it's a Date object, convert and format
+            if (timeValue instanceof Date) return dayjs(timeValue).format('hh:mm A');
+            // Otherwise convert to string
+            return String(timeValue);
+        };
+        
         const formData = {
             customerName: values.customerName,
             mobilenu: values.mobileNumber,
             item: values.item,
             date: dayjs(values.date).format('YYYY-MM-DD'),
             time: {
-                start: values.startTime.format('hh:mm A'),
-                end: values.endTime.format('hh:mm A'),
+                start: formatTime(values.startTime),
+                end: formatTime(values.endTime),
             },
             totalHours: values.totalHours,
             amount: values.totalAmount,
             advance: values.advanceAmount || 0,
             pending: values.pendingAmount
         }
+        
+        // Debug log to verify what's being sent
+        console.log('Form data being sent:', JSON.stringify(formData, null, 2));
 
         if (isEditing) {
             response = await UpdateBooking(formData, userId)

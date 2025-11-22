@@ -172,16 +172,45 @@ exports.createBookings = async (req, res) => {
         if (time && time.start && time.end) {
             // Normalize and store times as IST strings directly (no timezone conversion)
             // Ensure consistent format for storage
-            const normalizeTime = (timeStr) => {
-                if (!timeStr) return null;
-                // Normalize: trim, uppercase, ensure single space
-                return timeStr.trim().toUpperCase().replace(/\s+/g, ' ');
+            const normalizeTime = (timeValue) => {
+                if (!timeValue) return null;
+                
+                // If it's already a string, normalize it
+                if (typeof timeValue === 'string') {
+                    // Check if it's a Date string (contains GMT or full date format)
+                    if (timeValue.includes('GMT') || timeValue.includes('UTC') || timeValue.match(/\d{4}-\d{2}-\d{2}/)) {
+                        console.error(`Invalid time format received (Date string): ${timeValue}`);
+                        return null;
+                    }
+                    // Normalize: trim, uppercase, ensure single space
+                    return timeValue.trim().toUpperCase().replace(/\s+/g, ' ');
+                }
+                
+                // If it's a Date object or dayjs object, extract time only
+                if (timeValue instanceof Date || dayjs.isDayjs(timeValue)) {
+                    const timeObj = dayjs.isDayjs(timeValue) ? timeValue : dayjs(timeValue);
+                    // Format as time string only (hh:mm A)
+                    return timeObj.format('hh:mm A');
+                }
+                
+                // Convert to string if it's something else
+                return String(timeValue).trim().toUpperCase().replace(/\s+/g, ' ');
             };
             
+            const normalizedStart = normalizeTime(time.start);
+            const normalizedEnd = normalizeTime(time.end);
+            
+            if (!normalizedStart || !normalizedEnd) {
+                console.error(`Invalid time values - Start: ${time.start} (${typeof time.start}), End: ${time.end} (${typeof time.end})`);
+                return res.status(400).json({ message: "Invalid time format. Please use format like '04:00 PM'.", success: false });
+            }
+            
             bookingData.time = {
-                start: normalizeTime(time.start),  // Normalized IST string format (e.g., "04:00 PM")
-                end: normalizeTime(time.end)       // Normalized IST string format (e.g., "06:00 PM")
+                start: normalizedStart,  // Normalized IST string format (e.g., "04:00 PM")
+                end: normalizedEnd       // Normalized IST string format (e.g., "06:00 PM")
             };
+            
+            console.log(`Storing times as strings - Start: "${bookingData.time.start}", End: "${bookingData.time.end}"`);
         }
 
         if (session) {
@@ -414,16 +443,45 @@ exports.updateBookingDetails = async (req, res) => {
         if (checkForConflict) {
             if (time) {
                 // Normalize and store times as IST strings directly (no timezone conversion)
-                const normalizeTime = (timeStr) => {
-                    if (!timeStr) return null;
-                    // Normalize: trim, uppercase, ensure single space
-                    return timeStr.trim().toUpperCase().replace(/\s+/g, ' ');
+                const normalizeTime = (timeValue) => {
+                    if (!timeValue) return null;
+                    
+                    // If it's already a string, normalize it
+                    if (typeof timeValue === 'string') {
+                        // Check if it's a Date string (contains GMT or full date format)
+                        if (timeValue.includes('GMT') || timeValue.includes('UTC') || timeValue.match(/\d{4}-\d{2}-\d{2}/)) {
+                            console.error(`Invalid time format received (Date string): ${timeValue}`);
+                            return null;
+                        }
+                        // Normalize: trim, uppercase, ensure single space
+                        return timeValue.trim().toUpperCase().replace(/\s+/g, ' ');
+                    }
+                    
+                    // If it's a Date object or dayjs object, extract time only
+                    if (timeValue instanceof Date || dayjs.isDayjs(timeValue)) {
+                        const timeObj = dayjs.isDayjs(timeValue) ? timeValue : dayjs(timeValue);
+                        // Format as time string only (hh:mm A)
+                        return timeObj.format('hh:mm A');
+                    }
+                    
+                    // Convert to string if it's something else
+                    return String(timeValue).trim().toUpperCase().replace(/\s+/g, ' ');
                 };
                 
+                const normalizedStart = normalizeTime(time.start);
+                const normalizedEnd = normalizeTime(time.end);
+                
+                if (!normalizedStart || !normalizedEnd) {
+                    console.error(`Invalid time values - Start: ${time.start} (${typeof time.start}), End: ${time.end} (${typeof time.end})`);
+                    return res.status(400).json({ message: "Invalid time format. Please use format like '04:00 PM'.", success: false });
+                }
+                
                 booking.time = {
-                    start: normalizeTime(time.start),  // Normalized IST string format (e.g., "04:00 PM")
-                    end: normalizeTime(time.end)       // Normalized IST string format (e.g., "06:00 PM")
+                    start: normalizedStart,  // Normalized IST string format (e.g., "04:00 PM")
+                    end: normalizedEnd       // Normalized IST string format (e.g., "06:00 PM")
                 };
+                
+                console.log(`Updating times as strings - Start: "${booking.time.start}", End: "${booking.time.end}"`);
             }
             if (date !== undefined) booking.date = date;
             if (session !== undefined) booking.session = session;
