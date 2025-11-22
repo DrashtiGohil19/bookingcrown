@@ -2,9 +2,12 @@ const Bookings = require("../model/Bookings");
 const User = require("../model/User");
 const dayjs = require("dayjs")
 const customParseFormat = require('dayjs/plugin/customParseFormat');
-dayjs.extend(customParseFormat);
 const utc = require('dayjs/plugin/utc');
+const timezone = require('dayjs/plugin/timezone');
+
+dayjs.extend(customParseFormat);
 dayjs.extend(utc);
+dayjs.extend(timezone);
 
 exports.createBookings = async (req, res) => {
     try {
@@ -13,21 +16,56 @@ exports.createBookings = async (req, res) => {
 
         let query
         if (time) {
-            // Convert IST time strings to minutes for comparison
-            const timeToMinutes = (timeStr) => {
-                const parsed = dayjs(timeStr, "h:mm A");
-                return parsed.hour() * 60 + parsed.minute();
+            // Helper function to convert time to minutes for comparison
+            // Handles both IST string format ("06:30 PM") and legacy Date objects
+            const timeToMinutes = (timeValue) => {
+                if (!timeValue) return null;
+                
+                // If it's a string (IST format), parse it
+                if (typeof timeValue === 'string') {
+                    // Try parsing with different formats: "h:mm A" and "hh:mm A"
+                    const parsed = dayjs(timeValue, ["h:mm A", "hh:mm A"], true);
+                    if (parsed.isValid()) {
+                        return parsed.hour() * 60 + parsed.minute();
+                    }
+                }
+                
+                // If it's a Date object (legacy GMT format), convert to IST then get minutes
+                if (timeValue instanceof Date || dayjs.isDayjs(timeValue)) {
+                    const istTime = dayjs.utc(timeValue).tz('Asia/Kolkata');
+                    return istTime.hour() * 60 + istTime.minute();
+                }
+                
+                return null;
             };
+            
             const newStartMinutes = timeToMinutes(time.start);
             const newEndMinutes = timeToMinutes(time.end);
+            
+            if (newStartMinutes === null || newEndMinutes === null) {
+                return res.status(400).json({ message: "Invalid time format provided.", success: false });
+            }
+            
+            // Validate time range
+            if (newEndMinutes <= newStartMinutes) {
+                return res.status(400).json({ message: "End time must be after start time.", success: false });
+            }
             
             // Find bookings with overlapping times by comparing time strings
             const allBookings = await Bookings.find({ item, date });
             const conflictingBookings = allBookings.filter(booking => {
                 if (!booking.time || !booking.time.start || !booking.time.end) return false;
+                
                 const existingStartMinutes = timeToMinutes(booking.time.start);
                 const existingEndMinutes = timeToMinutes(booking.time.end);
+                
+                if (existingStartMinutes === null || existingEndMinutes === null) return false;
+                
                 // Check for overlap: new start < existing end AND new end > existing start
+                // This catches all overlapping scenarios:
+                // - New booking completely inside existing
+                // - Existing booking completely inside new
+                // - Partial overlaps on either side
                 return (newStartMinutes < existingEndMinutes && newEndMinutes > existingStartMinutes);
             });
             
@@ -151,13 +189,40 @@ exports.updateBookingDetails = async (req, res) => {
             checkForConflict = true;
 
             if (time) {
-                // Convert IST time strings to minutes for comparison
-                const timeToMinutes = (timeStr) => {
-                    const parsed = dayjs(timeStr, "h:mm A");
-                    return parsed.hour() * 60 + parsed.minute();
+                // Helper function to convert time to minutes for comparison
+                // Handles both IST string format ("06:30 PM") and legacy Date objects
+                const timeToMinutes = (timeValue) => {
+                    if (!timeValue) return null;
+                    
+                    // If it's a string (IST format), parse it
+                    if (typeof timeValue === 'string') {
+                        // Try parsing with different formats: "h:mm A" and "hh:mm A"
+                        const parsed = dayjs(timeValue, ["h:mm A", "hh:mm A"], true);
+                        if (parsed.isValid()) {
+                            return parsed.hour() * 60 + parsed.minute();
+                        }
+                    }
+                    
+                    // If it's a Date object (legacy GMT format), convert to IST then get minutes
+                    if (timeValue instanceof Date || dayjs.isDayjs(timeValue)) {
+                        const istTime = dayjs.utc(timeValue).tz('Asia/Kolkata');
+                        return istTime.hour() * 60 + istTime.minute();
+                    }
+                    
+                    return null;
                 };
+                
                 const newStartMinutes = timeToMinutes(time.start);
                 const newEndMinutes = timeToMinutes(time.end);
+                
+                if (newStartMinutes === null || newEndMinutes === null) {
+                    return res.status(400).json({ message: "Invalid time format provided.", success: false });
+                }
+                
+                // Validate time range
+                if (newEndMinutes <= newStartMinutes) {
+                    return res.status(400).json({ message: "End time must be after start time.", success: false });
+                }
                 
                 // Find bookings with overlapping times
                 const checkDate = date || booking.date;
@@ -165,9 +230,14 @@ exports.updateBookingDetails = async (req, res) => {
                 const allBookings = await Bookings.find({ item: checkItem, date: checkDate, _id: { $ne: req.params.id } });
                 const conflictingBookings = allBookings.filter(existingBooking => {
                     if (!existingBooking.time || !existingBooking.time.start || !existingBooking.time.end) return false;
+                    
                     const existingStartMinutes = timeToMinutes(existingBooking.time.start);
                     const existingEndMinutes = timeToMinutes(existingBooking.time.end);
+                    
+                    if (existingStartMinutes === null || existingEndMinutes === null) return false;
+                    
                     // Check for overlap: new start < existing end AND new end > existing start
+                    // This catches all overlapping scenarios
                     return (newStartMinutes < existingEndMinutes && newEndMinutes > existingStartMinutes);
                 });
                 
