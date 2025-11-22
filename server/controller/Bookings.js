@@ -23,17 +23,43 @@ exports.createBookings = async (req, res) => {
                 
                 // If it's a string (IST format), parse it
                 if (typeof timeValue === 'string') {
-                    // Try parsing with different formats: "h:mm A" and "hh:mm A"
-                    const parsed = dayjs(timeValue, ["h:mm A", "hh:mm A"], true);
-                    if (parsed.isValid()) {
-                        return parsed.hour() * 60 + parsed.minute();
+                    // Normalize the string: remove extra spaces and ensure proper format
+                    const normalizedTime = timeValue.trim().toUpperCase().replace(/\s+/g, ' ');
+                    
+                    // Try parsing with different formats
+                    let parsed = dayjs(normalizedTime, "h:mm A", true); // Strict parsing with single digit hour
+                    if (!parsed.isValid()) {
+                        parsed = dayjs(normalizedTime, "hh:mm A", true); // Strict parsing with double digit hour
                     }
+                    if (!parsed.isValid()) {
+                        parsed = dayjs(normalizedTime, "h:mmA", true); // Without space
+                    }
+                    if (!parsed.isValid()) {
+                        parsed = dayjs(normalizedTime, "hh:mmA", true); // Without space, double digit
+                    }
+                    
+                    if (parsed.isValid()) {
+                        const hours = parsed.hour();
+                        const minutes = parsed.minute();
+                        // Handle PM times: 12:XX PM stays 12, 1-11 PM becomes 13-23
+                        // AM times: 12:XX AM becomes 0, 1-11 AM stays 1-11
+                        const totalMinutes = hours * 60 + minutes;
+                        return totalMinutes;
+                    }
+                    
+                    console.error(`Failed to parse time string: "${timeValue}"`);
+                    return null;
                 }
                 
                 // If it's a Date object (legacy GMT format), convert to IST then get minutes
-                if (timeValue instanceof Date || dayjs.isDayjs(timeValue)) {
+                if (timeValue instanceof Date) {
                     const istTime = dayjs.utc(timeValue).tz('Asia/Kolkata');
                     return istTime.hour() * 60 + istTime.minute();
+                }
+                
+                // If it's already a dayjs object
+                if (dayjs.isDayjs(timeValue)) {
+                    return timeValue.hour() * 60 + timeValue.minute();
                 }
                 
                 return null;
@@ -43,7 +69,8 @@ exports.createBookings = async (req, res) => {
             const newEndMinutes = timeToMinutes(time.end);
             
             if (newStartMinutes === null || newEndMinutes === null) {
-                return res.status(400).json({ message: "Invalid time format provided.", success: false });
+                console.error(`Invalid time format - Start: ${time.start}, End: ${time.end}`);
+                return res.status(400).json({ message: "Invalid time format provided. Please use format like '04:00 PM' or '4:00 PM'.", success: false });
             }
             
             // Validate time range
@@ -59,14 +86,26 @@ exports.createBookings = async (req, res) => {
                 const existingStartMinutes = timeToMinutes(booking.time.start);
                 const existingEndMinutes = timeToMinutes(booking.time.end);
                 
-                if (existingStartMinutes === null || existingEndMinutes === null) return false;
+                if (existingStartMinutes === null || existingEndMinutes === null) {
+                    console.error(`Failed to parse existing booking times - Start: ${booking.time.start}, End: ${booking.time.end}`);
+                    return false;
+                }
                 
                 // Check for overlap: new start < existing end AND new end > existing start
                 // This catches all overlapping scenarios:
                 // - New booking completely inside existing
                 // - Existing booking completely inside new
                 // - Partial overlaps on either side
-                return (newStartMinutes < existingEndMinutes && newEndMinutes > existingStartMinutes);
+                // - Exact matches (same start or same end or completely overlapping)
+                // Also check for exact time matches
+                const isExactMatch = (newStartMinutes === existingStartMinutes && newEndMinutes === existingEndMinutes);
+                const hasOverlap = (newStartMinutes < existingEndMinutes && newEndMinutes > existingStartMinutes) || isExactMatch;
+                
+                if (hasOverlap) {
+                    console.log(`Conflict detected: New booking [${time.start} (${newStartMinutes})-${time.end} (${newEndMinutes})] overlaps with existing [${booking.time.start} (${existingStartMinutes})-${booking.time.end} (${existingEndMinutes})]`);
+                }
+                
+                return hasOverlap;
             });
             
             if (conflictingBookings.length > 0) {
@@ -120,10 +159,17 @@ exports.createBookings = async (req, res) => {
         };
 
         if (time && time.start && time.end) {
-            // Store times as IST strings directly (no timezone conversion)
+            // Normalize and store times as IST strings directly (no timezone conversion)
+            // Ensure consistent format for storage
+            const normalizeTime = (timeStr) => {
+                if (!timeStr) return null;
+                // Normalize: trim, uppercase, ensure single space
+                return timeStr.trim().toUpperCase().replace(/\s+/g, ' ');
+            };
+            
             bookingData.time = {
-                start: time.start,  // Already in "hh:mm A" format (IST)
-                end: time.end       // Already in "hh:mm A" format (IST)
+                start: normalizeTime(time.start),  // Normalized IST string format (e.g., "04:00 PM")
+                end: normalizeTime(time.end)       // Normalized IST string format (e.g., "06:00 PM")
             };
         }
 
@@ -196,17 +242,41 @@ exports.updateBookingDetails = async (req, res) => {
                     
                     // If it's a string (IST format), parse it
                     if (typeof timeValue === 'string') {
-                        // Try parsing with different formats: "h:mm A" and "hh:mm A"
-                        const parsed = dayjs(timeValue, ["h:mm A", "hh:mm A"], true);
-                        if (parsed.isValid()) {
-                            return parsed.hour() * 60 + parsed.minute();
+                        // Normalize the string: remove extra spaces and ensure proper format
+                        const normalizedTime = timeValue.trim().toUpperCase().replace(/\s+/g, ' ');
+                        
+                        // Try parsing with different formats
+                        let parsed = dayjs(normalizedTime, "h:mm A", true); // Strict parsing with single digit hour
+                        if (!parsed.isValid()) {
+                            parsed = dayjs(normalizedTime, "hh:mm A", true); // Strict parsing with double digit hour
                         }
+                        if (!parsed.isValid()) {
+                            parsed = dayjs(normalizedTime, "h:mmA", true); // Without space
+                        }
+                        if (!parsed.isValid()) {
+                            parsed = dayjs(normalizedTime, "hh:mmA", true); // Without space, double digit
+                        }
+                        
+                        if (parsed.isValid()) {
+                            const hours = parsed.hour();
+                            const minutes = parsed.minute();
+                            const totalMinutes = hours * 60 + minutes;
+                            return totalMinutes;
+                        }
+                        
+                        console.error(`Failed to parse time string: "${timeValue}"`);
+                        return null;
                     }
                     
                     // If it's a Date object (legacy GMT format), convert to IST then get minutes
-                    if (timeValue instanceof Date || dayjs.isDayjs(timeValue)) {
+                    if (timeValue instanceof Date) {
                         const istTime = dayjs.utc(timeValue).tz('Asia/Kolkata');
                         return istTime.hour() * 60 + istTime.minute();
+                    }
+                    
+                    // If it's already a dayjs object
+                    if (dayjs.isDayjs(timeValue)) {
+                        return timeValue.hour() * 60 + timeValue.minute();
                     }
                     
                     return null;
@@ -216,7 +286,8 @@ exports.updateBookingDetails = async (req, res) => {
                 const newEndMinutes = timeToMinutes(time.end);
                 
                 if (newStartMinutes === null || newEndMinutes === null) {
-                    return res.status(400).json({ message: "Invalid time format provided.", success: false });
+                    console.error(`Invalid time format - Start: ${time.start}, End: ${time.end}`);
+                    return res.status(400).json({ message: "Invalid time format provided. Please use format like '04:00 PM' or '4:00 PM'.", success: false });
                 }
                 
                 // Validate time range
@@ -234,11 +305,21 @@ exports.updateBookingDetails = async (req, res) => {
                     const existingStartMinutes = timeToMinutes(existingBooking.time.start);
                     const existingEndMinutes = timeToMinutes(existingBooking.time.end);
                     
-                    if (existingStartMinutes === null || existingEndMinutes === null) return false;
+                    if (existingStartMinutes === null || existingEndMinutes === null) {
+                        console.error(`Failed to parse existing booking times - Start: ${existingBooking.time.start}, End: ${existingBooking.time.end}`);
+                        return false;
+                    }
                     
                     // Check for overlap: new start < existing end AND new end > existing start
-                    // This catches all overlapping scenarios
-                    return (newStartMinutes < existingEndMinutes && newEndMinutes > existingStartMinutes);
+                    // Also check for exact time matches
+                    const isExactMatch = (newStartMinutes === existingStartMinutes && newEndMinutes === existingEndMinutes);
+                    const hasOverlap = (newStartMinutes < existingEndMinutes && newEndMinutes > existingStartMinutes) || isExactMatch;
+                    
+                    if (hasOverlap) {
+                        console.log(`Update: Conflict detected: New booking [${time.start} (${newStartMinutes})-${time.end} (${newEndMinutes})] overlaps with existing [${existingBooking.time.start} (${existingStartMinutes})-${existingBooking.time.end} (${existingEndMinutes})]`);
+                    }
+                    
+                    return hasOverlap;
                 });
                 
                 if (conflictingBookings.length > 0) {
@@ -312,10 +393,16 @@ exports.updateBookingDetails = async (req, res) => {
 
         if (checkForConflict) {
             if (time) {
-                // Store times as IST strings directly (no timezone conversion)
+                // Normalize and store times as IST strings directly (no timezone conversion)
+                const normalizeTime = (timeStr) => {
+                    if (!timeStr) return null;
+                    // Normalize: trim, uppercase, ensure single space
+                    return timeStr.trim().toUpperCase().replace(/\s+/g, ' ');
+                };
+                
                 booking.time = {
-                    start: time.start,  // Already in "hh:mm A" format (IST)
-                    end: time.end       // Already in "hh:mm A" format (IST)
+                    start: normalizeTime(time.start),  // Normalized IST string format (e.g., "04:00 PM")
+                    end: normalizeTime(time.end)       // Normalized IST string format (e.g., "06:00 PM")
                 };
             }
             if (date !== undefined) booking.date = date;
