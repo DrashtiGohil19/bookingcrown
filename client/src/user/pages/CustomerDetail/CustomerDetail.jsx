@@ -110,21 +110,30 @@ function CustomerDetail() {
                                                                 const formatTime = (timeValue) => {
                                                                     if (!timeValue) return '';
                                                                     if (typeof timeValue === 'string') {
-                                                                        // Check if it's a GMT date string
+                                                                        // Check if it's a GMT date string - extract time directly (no conversion)
                                                                         if (timeValue.includes('GMT') || timeValue.includes('UTC') || timeValue.match(/[A-Za-z]{3},\s+\d{1,2}\s+[A-Za-z]{3}\s+\d{4}/)) {
-                                                                            return dayjs.utc(timeValue).tz('Asia/Kolkata').format('hh:mm A');
+                                                                            const parsed = dayjs.utc(timeValue);
+                                                                            if (parsed.isValid()) {
+                                                                                const hours = parsed.hour();
+                                                                                const minutes = parsed.minute();
+                                                                                const ampm = hours >= 12 ? 'PM' : 'AM';
+                                                                                const displayHours = hours % 12 || 12;
+                                                                                return `${String(displayHours).padStart(2, '0')}:${String(minutes).padStart(2, '0')} ${ampm}`;
+                                                                            }
                                                                         }
                                                                         // If already a simple time string
                                                                         if (timeValue.match(/^\d{1,2}:\d{2}\s*(AM|PM)$/i)) {
                                                                             return timeValue;
                                                                         }
-                                                                        // Try parsing as date
-                                                                        const parsed = dayjs.utc(timeValue);
-                                                                        if (parsed.isValid()) return parsed.tz('Asia/Kolkata').format('hh:mm A');
                                                                         return timeValue;
                                                                     }
                                                                     if (timeValue instanceof Date || dayjs.isDayjs(timeValue)) {
-                                                                        return dayjs.utc(timeValue).tz('Asia/Kolkata').format('hh:mm A');
+                                                                        const parsed = dayjs.isDayjs(timeValue) ? timeValue : dayjs(timeValue);
+                                                                        const hours = parsed.hour();
+                                                                        const minutes = parsed.minute();
+                                                                        const ampm = hours >= 12 ? 'PM' : 'AM';
+                                                                        const displayHours = hours % 12 || 12;
+                                                                        return `${String(displayHours).padStart(2, '0')}:${String(minutes).padStart(2, '0')} ${ampm}`;
                                                                     }
                                                                     return '';
                                                                 };

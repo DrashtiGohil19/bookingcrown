@@ -65,34 +65,40 @@ function HourlyForm({ isEditing, userId }) {
             const data = await getBookingById(userId)
             const bookingDate = dayjs(data.date);
             if (data) {
-                // Load times as IST - handle GMT date strings and simple time strings
+                // Load times - handle GMT date strings and simple time strings (extract time directly, no conversion)
                 const parseTimeForForm = (timeValue) => {
                     if (!timeValue) return null;
                     
                     if (typeof timeValue === 'string') {
                         // Check if it's a GMT date string (e.g., "Sun, 23 Nov 2025 06:00:00 GMT")
                         if (timeValue.includes('GMT') || timeValue.includes('UTC') || timeValue.match(/[A-Za-z]{3},\s+\d{1,2}\s+[A-Za-z]{3}\s+\d{4}/)) {
-                            // Parse GMT date string, convert to IST, then create dayjs object from time only
-                            const istTime = dayjs.utc(timeValue).tz('Asia/Kolkata');
-                            return dayjs(istTime.format('hh:mm A'), 'hh:mm A');
+                            // Parse GMT date string and extract time directly (no conversion)
+                            const parsed = dayjs.utc(timeValue);
+                            if (parsed.isValid()) {
+                                const hours = parsed.hour();
+                                const minutes = parsed.minute();
+                                const ampm = hours >= 12 ? 'PM' : 'AM';
+                                const displayHours = hours % 12 || 12;
+                                const timeStr = `${String(displayHours).padStart(2, '0')}:${String(minutes).padStart(2, '0')} ${ampm}`;
+                                return dayjs(timeStr, 'hh:mm A');
+                            }
                         }
                         // If it's already a simple time string (e.g., "06:00 AM"), parse it directly
                         if (timeValue.match(/^\d{1,2}:\d{2}\s*(AM|PM)$/i)) {
                             return dayjs(timeValue, 'hh:mm A');
                         }
-                        // Try parsing as date
-                        const parsed = dayjs.utc(timeValue);
-                        if (parsed.isValid()) {
-                            const istTime = parsed.tz('Asia/Kolkata');
-                            return dayjs(istTime.format('hh:mm A'), 'hh:mm A');
-                        }
                         return null;
                     }
                     
-                    // If it's a Date object, convert from UTC/GMT to IST
+                    // If it's a Date object, extract time directly (no conversion)
                     if (timeValue instanceof Date || dayjs.isDayjs(timeValue)) {
-                        const istTime = dayjs.utc(timeValue).tz('Asia/Kolkata');
-                        return dayjs(istTime.format('hh:mm A'), 'hh:mm A');
+                        const parsed = dayjs.isDayjs(timeValue) ? timeValue : dayjs(timeValue);
+                        const hours = parsed.hour();
+                        const minutes = parsed.minute();
+                        const ampm = hours >= 12 ? 'PM' : 'AM';
+                        const displayHours = hours % 12 || 12;
+                        const timeStr = `${String(displayHours).padStart(2, '0')}:${String(minutes).padStart(2, '0')} ${ampm}`;
+                        return dayjs(timeStr, 'hh:mm A');
                     }
                     
                     return null;
