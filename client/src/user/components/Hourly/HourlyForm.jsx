@@ -65,22 +65,41 @@ function HourlyForm({ isEditing, userId }) {
             const data = await getBookingById(userId)
             const bookingDate = dayjs(data.date);
             if (data) {
-                // Load times as IST - if string, parse it; if Date object, convert from UTC to IST
-                let startTime, endTime;
-                if (typeof data.time?.start === 'string') {
-                    // IST string format - parse it directly
-                    startTime = dayjs(data.time.start, 'hh:mm A');
-                } else if (data.time?.start) {
-                    // Date object (legacy) - convert from UTC/GMT to IST
-                    startTime = dayjs.utc(data.time.start).tz('Asia/Kolkata');
-                }
-                if (typeof data.time?.end === 'string') {
-                    // IST string format - parse it directly
-                    endTime = dayjs(data.time.end, 'hh:mm A');
-                } else if (data.time?.end) {
-                    // Date object (legacy) - convert from UTC/GMT to IST
-                    endTime = dayjs.utc(data.time.end).tz('Asia/Kolkata');
-                }
+                // Load times as IST - handle GMT date strings and simple time strings
+                const parseTimeForForm = (timeValue) => {
+                    if (!timeValue) return null;
+                    
+                    if (typeof timeValue === 'string') {
+                        // Check if it's a GMT date string (e.g., "Sun, 23 Nov 2025 06:00:00 GMT")
+                        if (timeValue.includes('GMT') || timeValue.includes('UTC') || timeValue.match(/[A-Za-z]{3},\s+\d{1,2}\s+[A-Za-z]{3}\s+\d{4}/)) {
+                            // Parse GMT date string, convert to IST, then create dayjs object from time only
+                            const istTime = dayjs.utc(timeValue).tz('Asia/Kolkata');
+                            return dayjs(istTime.format('hh:mm A'), 'hh:mm A');
+                        }
+                        // If it's already a simple time string (e.g., "06:00 AM"), parse it directly
+                        if (timeValue.match(/^\d{1,2}:\d{2}\s*(AM|PM)$/i)) {
+                            return dayjs(timeValue, 'hh:mm A');
+                        }
+                        // Try parsing as date
+                        const parsed = dayjs.utc(timeValue);
+                        if (parsed.isValid()) {
+                            const istTime = parsed.tz('Asia/Kolkata');
+                            return dayjs(istTime.format('hh:mm A'), 'hh:mm A');
+                        }
+                        return null;
+                    }
+                    
+                    // If it's a Date object, convert from UTC/GMT to IST
+                    if (timeValue instanceof Date || dayjs.isDayjs(timeValue)) {
+                        const istTime = dayjs.utc(timeValue).tz('Asia/Kolkata');
+                        return dayjs(istTime.format('hh:mm A'), 'hh:mm A');
+                    }
+                    
+                    return null;
+                };
+                
+                const startTime = parseTimeForForm(data.time?.start);
+                const endTime = parseTimeForForm(data.time?.end);
                 form.setFieldsValue({
                     customerName: data.customerName,
                     mobileNumber: data.mobilenu,

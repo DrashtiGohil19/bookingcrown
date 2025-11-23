@@ -89,11 +89,30 @@ const HourlyBookingDetail = () => {
                                         <Col xs={24} sm={12} md={8} lg={8}>
                                             <div className="flex gap-4 mb-1 md:mb-5">
                                                 <Text className='font-semibold'>Booking Time:</Text>
-                                                <Text>{
-                                                    (typeof booking.time?.start === 'string' ? booking.time.start : dayjs.utc(booking.time?.start).tz("Asia/Kolkata").format('h:mm A'))
-                                                } To {
-                                                    (typeof booking.time?.end === 'string' ? booking.time.end : dayjs.utc(booking.time?.end).tz("Asia/Kolkata").format('h:mm A'))
-                                                }</Text>
+                                                <Text>{(() => {
+                                                    const formatTime = (timeValue) => {
+                                                        if (!timeValue) return '';
+                                                        if (typeof timeValue === 'string') {
+                                                            // Check if it's a GMT date string
+                                                            if (timeValue.includes('GMT') || timeValue.includes('UTC') || timeValue.match(/[A-Za-z]{3},\s+\d{1,2}\s+[A-Za-z]{3}\s+\d{4}/)) {
+                                                                return dayjs.utc(timeValue).tz('Asia/Kolkata').format('hh:mm A');
+                                                            }
+                                                            // If already a simple time string
+                                                            if (timeValue.match(/^\d{1,2}:\d{2}\s*(AM|PM)$/i)) {
+                                                                return timeValue;
+                                                            }
+                                                            // Try parsing as date
+                                                            const parsed = dayjs.utc(timeValue);
+                                                            if (parsed.isValid()) return parsed.tz('Asia/Kolkata').format('hh:mm A');
+                                                            return timeValue;
+                                                        }
+                                                        if (timeValue instanceof Date || dayjs.isDayjs(timeValue)) {
+                                                            return dayjs.utc(timeValue).tz('Asia/Kolkata').format('hh:mm A');
+                                                        }
+                                                        return '';
+                                                    };
+                                                    return `${formatTime(booking.time?.start)} To ${formatTime(booking.time?.end)}`;
+                                                })()}</Text>
                                             </div>
                                         </Col>
                                         <Col xs={24} sm={12} md={8} lg={8}>

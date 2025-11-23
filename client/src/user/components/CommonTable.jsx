@@ -210,34 +210,45 @@ function CommonTable({ filter }) {
             return bookingDate === selectedDate;
         })
         .map((booking) => {
-            // Display times as IST - if it's a string, use directly; if Date object, convert from UTC/GMT to IST
-            let startTime = '';
-            let endTime = '';
-            if (booking.time?.start) {
-                if (typeof booking.time.start === 'string') {
-                    // Already in IST string format (e.g., "06:30 PM")
-                    startTime = booking.time.start;
-                } else {
-                    // Date object (legacy format) - convert from GMT to IST
-                    startTime = dayjs.utc(booking.time.start).tz('Asia/Kolkata').format('h:mm A');
+            // Helper function to convert time to display format
+            // Handles GMT date strings (e.g., "Sun, 23 Nov 2025 06:00:00 GMT") and simple time strings
+            const formatTimeForDisplay = (timeValue) => {
+                if (!timeValue) return '';
+                
+                // If it's a string
+                if (typeof timeValue === 'string') {
+                    // Check if it's a GMT date string (contains GMT or full date format)
+                    if (timeValue.includes('GMT') || timeValue.includes('UTC') || timeValue.match(/[A-Za-z]{3},\s+\d{1,2}\s+[A-Za-z]{3}\s+\d{4}/)) {
+                        // Parse GMT date string and convert to IST, then show only time
+                        return dayjs.utc(timeValue).tz('Asia/Kolkata').format('hh:mm A');
+                    }
+                    // If it's already a simple time string (e.g., "06:00 AM"), use it directly
+                    if (timeValue.match(/^\d{1,2}:\d{2}\s*(AM|PM)$/i)) {
+                        return timeValue;
+                    }
+                    // Try to parse as date and extract time
+                    const parsed = dayjs.utc(timeValue);
+                    if (parsed.isValid()) {
+                        return parsed.tz('Asia/Kolkata').format('hh:mm A');
+                    }
+                    return timeValue; // Fallback to original
                 }
-            }
-            if (booking.time?.end) {
-                if (typeof booking.time.end === 'string') {
-                    // Already in IST string format (e.g., "09:30 PM")
-                    endTime = booking.time.end;
-                } else {
-                    // Date object (legacy format) - convert from GMT to IST
-                    endTime = dayjs.utc(booking.time.end).tz('Asia/Kolkata').format('h:mm A');
+                
+                // If it's a Date object, convert from GMT to IST
+                if (timeValue instanceof Date || dayjs.isDayjs(timeValue)) {
+                    return dayjs.utc(timeValue).tz('Asia/Kolkata').format('hh:mm A');
                 }
-            }
+                
+                return '';
+            };
+            
             return {
                 key: booking._id,
                 customerName: booking.customerName,
                 mobilenu: booking.mobilenu,
                 date: booking.date,
-                startTime,
-                endTime,
+                startTime: formatTimeForDisplay(booking.time?.start),
+                endTime: formatTimeForDisplay(booking.time?.end),
                 item: booking.item,
                 Hr: booking.totalHours,
                 session: booking.session,
