@@ -13,6 +13,12 @@ exports.createBookings = async (req, res) => {
     try {
         const userId = req.user.id;
         const { customerName, mobilenu, date, time, totalHours, amount, advance, pending, session, item } = req.body;
+        
+        // Debug log to see what we're receiving
+        console.log('=== CREATE BOOKING REQUEST ===');
+        console.log('Time received:', JSON.stringify(time, null, 2));
+        console.log('Time start type:', typeof time?.start, 'Value:', time?.start);
+        console.log('Time end type:', typeof time?.end, 'Value:', time?.end);
 
         let query
         if (time) {

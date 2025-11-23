@@ -65,9 +65,33 @@ function HourlyForm({ isEditing, userId }) {
             const data = await getBookingById(userId)
             const bookingDate = dayjs(data.date);
             if (data) {
-                // Load times - parse simple time strings (e.g., "06:00 AM")
-                const startTime = data.time?.start ? dayjs(data.time.start, 'hh:mm A') : null;
-                const endTime = data.time?.end ? dayjs(data.time.end, 'hh:mm A') : null;
+                // Load times - handle both simple time strings and GMT date strings
+                const parseTimeForForm = (timeValue) => {
+                    if (!timeValue) return null;
+                    
+                    // If it's a GMT date string (legacy), extract time
+                    if (typeof timeValue === 'string') {
+                        if (timeValue.includes('GMT') || timeValue.includes('UTC') || timeValue.match(/[A-Za-z]{3},\s+\d{1,2}\s+[A-Za-z]{3}\s+\d{4}/)) {
+                            const parsed = dayjs.utc(timeValue);
+                            if (parsed.isValid()) {
+                                const hours = parsed.hour();
+                                const minutes = parsed.minute();
+                                const ampm = hours >= 12 ? 'PM' : 'AM';
+                                const displayHours = hours % 12 || 12;
+                                const timeStr = `${String(displayHours).padStart(2, '0')}:${String(minutes).padStart(2, '0')} ${ampm}`;
+                                return dayjs(timeStr, 'hh:mm A');
+                            }
+                        }
+                        // If it's a simple time string, parse it directly
+                        if (timeValue.match(/^\d{1,2}:\d{2}\s*(AM|PM)$/i)) {
+                            return dayjs(timeValue, 'hh:mm A');
+                        }
+                    }
+                    return null;
+                };
+                
+                const startTime = parseTimeForForm(data.time?.start);
+                const endTime = parseTimeForForm(data.time?.end);
                 form.setFieldsValue({
                     customerName: data.customerName,
                     mobileNumber: data.mobilenu,
@@ -88,18 +112,61 @@ function HourlyForm({ isEditing, userId }) {
 
     const onFinish = async (values) => {
         let response = null
-        // Ensure times are formatted as strings (not dayjs objects)
+        // Ensure times are formatted as plain strings (not dayjs objects)
+        // This function explicitly converts dayjs objects to simple time strings
         const formatTime = (timeValue) => {
-            if (!timeValue) return '';
-            // If it's already a string, return it
-            if (typeof timeValue === 'string') return timeValue;
-            // If it's a dayjs object, format it
-            if (dayjs.isDayjs(timeValue)) return timeValue.format('hh:mm A');
-            // If it's a Date object, convert and format
-            if (timeValue instanceof Date) return dayjs(timeValue).format('hh:mm A');
-            // Otherwise convert to string
+            if (!timeValue) {
+                console.warn('Empty time value received');
+                return '';
+            }
+            
+            // If it's already a plain string, verify it's a time string format
+            if (typeof timeValue === 'string') {
+                // Check if it's a GMT date string (shouldn't happen, but handle it)
+                if (timeValue.includes('GMT') || timeValue.includes('UTC') || timeValue.match(/[A-Za-z]{3},\s+\d{1,2}\s+[A-Za-z]{3}\s+\d{4}/)) {
+                    console.warn('Received GMT date string in form, extracting time:', timeValue);
+                    const parsed = dayjs.utc(timeValue);
+                    if (parsed.isValid()) {
+                        const hours = parsed.hour();
+                        const minutes = parsed.minute();
+                        const ampm = hours >= 12 ? 'PM' : 'AM';
+                        const displayHours = hours % 12 || 12;
+                        return `${String(displayHours).padStart(2, '0')}:${String(minutes).padStart(2, '0')} ${ampm}`;
+                    }
+                }
+                // If it's already a simple time string, return it
+                if (timeValue.match(/^\d{1,2}:\d{2}\s*(AM|PM)$/i)) {
+                    return timeValue.trim().toUpperCase().replace(/\s+/g, ' ');
+                }
+                // Return the string as-is if it seems valid
+                return timeValue;
+            }
+            
+            // If it's a dayjs object, explicitly format it as a plain string
+            if (dayjs.isDayjs(timeValue)) {
+                const timeStr = timeValue.format('hh:mm A');
+                console.log('Converted dayjs object to time string:', timeStr);
+                return timeStr;
+            }
+            
+            // If it's a Date object, extract time and format
+            if (timeValue instanceof Date) {
+                const hours = timeValue.getHours();
+                const minutes = timeValue.getMinutes();
+                const ampm = hours >= 12 ? 'PM' : 'AM';
+                const displayHours = hours % 12 || 12;
+                const timeStr = `${String(displayHours).padStart(2, '0')}:${String(minutes).padStart(2, '0')} ${ampm}`;
+                console.log('Converted Date object to time string:', timeStr);
+                return timeStr;
+            }
+            
+            console.error('Unexpected time value type:', typeof timeValue, timeValue);
             return String(timeValue);
         };
+        
+        // Explicitly convert times to strings before creating formData
+        const startTimeStr = formatTime(values.startTime);
+        const endTimeStr = formatTime(values.endTime);
         
         const formData = {
             customerName: values.customerName,
@@ -107,8 +174,8 @@ function HourlyForm({ isEditing, userId }) {
             item: values.item,
             date: dayjs(values.date).format('YYYY-MM-DD'),
             time: {
-                start: formatTime(values.startTime),
-                end: formatTime(values.endTime),
+                start: startTimeStr,  // Plain string: "06:00 PM"
+                end: endTimeStr       // Plain string: "08:00 PM"
             },
             totalHours: values.totalHours,
             amount: values.totalAmount,
@@ -118,6 +185,7 @@ function HourlyForm({ isEditing, userId }) {
         
         // Debug log to verify what's being sent
         console.log('Form data being sent:', JSON.stringify(formData, null, 2));
+        console.log('Time values:', { start: formData.time.start, end: formData.time.end, startType: typeof formData.time.start, endType: typeof formData.time.end });
 
         if (isEditing) {
             response = await UpdateBooking(formData, userId)
