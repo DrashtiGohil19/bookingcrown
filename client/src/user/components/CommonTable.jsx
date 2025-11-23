@@ -209,63 +209,21 @@ function CommonTable({ filter }) {
             const bookingDate = dayjs(booking.date).format('DD-MM-YYYY');
             return bookingDate === selectedDate;
         })
-        .map((booking) => {
-            // Helper function to extract time from GMT date string without conversion
-            // Handles GMT date strings (e.g., "Sun, 23 Nov 2025 06:00:00 GMT") and simple time strings
-            const formatTimeForDisplay = (timeValue) => {
-                if (!timeValue) return '';
-                
-                // If it's a string
-                if (typeof timeValue === 'string') {
-                    // Check if it's a GMT date string (contains GMT or full date format)
-                    if (timeValue.includes('GMT') || timeValue.includes('UTC') || timeValue.match(/[A-Za-z]{3},\s+\d{1,2}\s+[A-Za-z]{3}\s+\d{4}/)) {
-                        // Parse GMT date string and extract time directly (no conversion)
-                        const parsed = dayjs.utc(timeValue);
-                        if (parsed.isValid()) {
-                            // Extract hour and minute, format as hh:mm A
-                            const hours = parsed.hour();
-                            const minutes = parsed.minute();
-                            const ampm = hours >= 12 ? 'PM' : 'AM';
-                            const displayHours = hours % 12 || 12;
-                            return `${String(displayHours).padStart(2, '0')}:${String(minutes).padStart(2, '0')} ${ampm}`;
-                        }
-                    }
-                    // If it's already a simple time string (e.g., "06:00 AM"), use it directly
-                    if (timeValue.match(/^\d{1,2}:\d{2}\s*(AM|PM)$/i)) {
-                        return timeValue;
-                    }
-                    return timeValue; // Fallback to original
-                }
-                
-                // If it's a Date object, extract time directly (no conversion)
-                if (timeValue instanceof Date || dayjs.isDayjs(timeValue)) {
-                    const parsed = dayjs.isDayjs(timeValue) ? timeValue : dayjs(timeValue);
-                    const hours = parsed.hour();
-                    const minutes = parsed.minute();
-                    const ampm = hours >= 12 ? 'PM' : 'AM';
-                    const displayHours = hours % 12 || 12;
-                    return `${String(displayHours).padStart(2, '0')}:${String(minutes).padStart(2, '0')} ${ampm}`;
-                }
-                
-                return '';
-            };
-            
-            return {
-                key: booking._id,
-                customerName: booking.customerName,
-                mobilenu: booking.mobilenu,
-                date: booking.date,
-                startTime: formatTimeForDisplay(booking.time?.start),
-                endTime: formatTimeForDisplay(booking.time?.end),
-                item: booking.item,
-                Hr: booking.totalHours,
-                session: booking.session,
-                payment: booking.payment,
-                amount: booking.amount,
-                advance: booking.advance,
-                pending: booking.pending
-            };
-        })
+        .map((booking) => ({
+            key: booking._id,
+            customerName: booking.customerName,
+            mobilenu: booking.mobilenu,
+            date: booking.date,
+            startTime: booking.time?.start || '',
+            endTime: booking.time?.end || '',
+            item: booking.item,
+            Hr: booking.totalHours,
+            session: booking.session,
+            payment: booking.payment,
+            amount: booking.amount,
+            advance: booking.advance,
+            pending: booking.pending
+        }))
         .sort((a, b) => new Date(a.date) - new Date(b.date));
 
     const handleEdit = (id) => {

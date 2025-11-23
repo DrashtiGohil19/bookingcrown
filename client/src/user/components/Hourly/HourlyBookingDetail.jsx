@@ -1,18 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Card, Col, Row, Typography, Skeleton, Button, Modal } from 'antd';
-import dayjs from 'dayjs'
 import { DeleteBooking, getBookingById } from '../../../api/Bookings';
 import Sidebar from '../Sidebar';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { fetchAllBookings } from '../../../features/bookings/BookingSlice';
 import { useDispatch } from 'react-redux';
-import utc from "dayjs/plugin/utc";
-import timezone from "dayjs/plugin/timezone";
 import { handleCopy } from '../../../utilities/utils';
-
-dayjs.extend(utc);
-dayjs.extend(timezone);
 
 const { Text } = Typography;
 const { confirm } = Modal
@@ -89,39 +83,7 @@ const HourlyBookingDetail = () => {
                                         <Col xs={24} sm={12} md={8} lg={8}>
                                             <div className="flex gap-4 mb-1 md:mb-5">
                                                 <Text className='font-semibold'>Booking Time:</Text>
-                                                <Text>{(() => {
-                                                    const formatTime = (timeValue) => {
-                                                        if (!timeValue) return '';
-                                                        if (typeof timeValue === 'string') {
-                                                            // Check if it's a GMT date string - extract time directly (no conversion)
-                                                            if (timeValue.includes('GMT') || timeValue.includes('UTC') || timeValue.match(/[A-Za-z]{3},\s+\d{1,2}\s+[A-Za-z]{3}\s+\d{4}/)) {
-                                                                const parsed = dayjs.utc(timeValue);
-                                                                if (parsed.isValid()) {
-                                                                    const hours = parsed.hour();
-                                                                    const minutes = parsed.minute();
-                                                                    const ampm = hours >= 12 ? 'PM' : 'AM';
-                                                                    const displayHours = hours % 12 || 12;
-                                                                    return `${String(displayHours).padStart(2, '0')}:${String(minutes).padStart(2, '0')} ${ampm}`;
-                                                                }
-                                                            }
-                                                            // If already a simple time string
-                                                            if (timeValue.match(/^\d{1,2}:\d{2}\s*(AM|PM)$/i)) {
-                                                                return timeValue;
-                                                            }
-                                                            return timeValue;
-                                                        }
-                                                        if (timeValue instanceof Date || dayjs.isDayjs(timeValue)) {
-                                                            const parsed = dayjs.isDayjs(timeValue) ? timeValue : dayjs(timeValue);
-                                                            const hours = parsed.hour();
-                                                            const minutes = parsed.minute();
-                                                            const ampm = hours >= 12 ? 'PM' : 'AM';
-                                                            const displayHours = hours % 12 || 12;
-                                                            return `${String(displayHours).padStart(2, '0')}:${String(minutes).padStart(2, '0')} ${ampm}`;
-                                                        }
-                                                        return '';
-                                                    };
-                                                    return `${formatTime(booking.time?.start)} To ${formatTime(booking.time?.end)}`;
-                                                })()}</Text>
+                                                <Text>{booking.time?.start} To {booking.time?.end}</Text>
                                             </div>
                                         </Col>
                                         <Col xs={24} sm={12} md={8} lg={8}>

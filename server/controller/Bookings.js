@@ -175,26 +175,46 @@ exports.createBookings = async (req, res) => {
             const normalizeTime = (timeValue) => {
                 if (!timeValue) return null;
                 
-                // If it's already a string, normalize it
+                // If it's already a string
                 if (typeof timeValue === 'string') {
-                    // Check if it's a Date string (contains GMT or full date format)
-                    if (timeValue.includes('GMT') || timeValue.includes('UTC') || timeValue.match(/\d{4}-\d{2}-\d{2}/)) {
-                        console.error(`Invalid time format received (Date string): ${timeValue}`);
+                    // Check if it's a GMT/UTC date string (e.g., "Sun, 23 Nov 2025 06:00:00 GMT")
+                    if (timeValue.includes('GMT') || timeValue.includes('UTC') || timeValue.match(/[A-Za-z]{3},\s+\d{1,2}\s+[A-Za-z]{3}\s+\d{4}/)) {
+                        // Extract time from GMT date string and convert to simple time format
+                        const parsed = dayjs.utc(timeValue);
+                        if (parsed.isValid()) {
+                            const hours = parsed.hour();
+                            const minutes = parsed.minute();
+                            const ampm = hours >= 12 ? 'PM' : 'AM';
+                            const displayHours = hours % 12 || 12;
+                            // Return in hh:mm A format (e.g., "06:00 AM")
+                            return `${String(displayHours).padStart(2, '0')}:${String(minutes).padStart(2, '0')} ${ampm}`;
+                        }
+                        console.error(`Failed to parse GMT date string: ${timeValue}`);
                         return null;
                     }
-                    // Normalize: trim, uppercase, ensure single space
-                    return timeValue.trim().toUpperCase().replace(/\s+/g, ' ');
+                    // If it's already a simple time string (e.g., "06:00 AM"), normalize it
+                    if (timeValue.match(/^\d{1,2}:\d{2}\s*(AM|PM)$/i)) {
+                        // Normalize: ensure uppercase and proper spacing
+                        return timeValue.trim().toUpperCase().replace(/\s+/g, ' ');
+                    }
+                    // Try to parse as time string
+                    const normalizedTime = timeValue.trim().toUpperCase().replace(/\s+/g, ' ');
+                    return normalizedTime;
                 }
                 
                 // If it's a Date object or dayjs object, extract time only
                 if (timeValue instanceof Date || dayjs.isDayjs(timeValue)) {
                     const timeObj = dayjs.isDayjs(timeValue) ? timeValue : dayjs(timeValue);
-                    // Format as time string only (hh:mm A)
-                    return timeObj.format('hh:mm A');
+                    // Format as time string only (hh:mm A) - use hour() directly without conversion
+                    const hours = timeObj.hour();
+                    const minutes = timeObj.minute();
+                    const ampm = hours >= 12 ? 'PM' : 'AM';
+                    const displayHours = hours % 12 || 12;
+                    return `${String(displayHours).padStart(2, '0')}:${String(minutes).padStart(2, '0')} ${ampm}`;
                 }
                 
-                // Convert to string if it's something else
-                return String(timeValue).trim().toUpperCase().replace(/\s+/g, ' ');
+                console.error(`Invalid time value type: ${typeof timeValue}, value: ${timeValue}`);
+                return null;
             };
             
             const normalizedStart = normalizeTime(time.start);
@@ -442,30 +462,51 @@ exports.updateBookingDetails = async (req, res) => {
 
         if (checkForConflict) {
             if (time) {
-                // Normalize and store times as IST strings directly (no timezone conversion)
+                // Normalize and store times as simple time strings (e.g., "06:00 AM")
+                // This function extracts time from GMT date strings or normalizes simple time strings
                 const normalizeTime = (timeValue) => {
                     if (!timeValue) return null;
                     
-                    // If it's already a string, normalize it
+                    // If it's already a string
                     if (typeof timeValue === 'string') {
-                        // Check if it's a Date string (contains GMT or full date format)
-                        if (timeValue.includes('GMT') || timeValue.includes('UTC') || timeValue.match(/\d{4}-\d{2}-\d{2}/)) {
-                            console.error(`Invalid time format received (Date string): ${timeValue}`);
+                        // Check if it's a GMT/UTC date string (e.g., "Sun, 23 Nov 2025 06:00:00 GMT")
+                        if (timeValue.includes('GMT') || timeValue.includes('UTC') || timeValue.match(/[A-Za-z]{3},\s+\d{1,2}\s+[A-Za-z]{3}\s+\d{4}/)) {
+                            // Extract time from GMT date string and convert to simple time format
+                            const parsed = dayjs.utc(timeValue);
+                            if (parsed.isValid()) {
+                                const hours = parsed.hour();
+                                const minutes = parsed.minute();
+                                const ampm = hours >= 12 ? 'PM' : 'AM';
+                                const displayHours = hours % 12 || 12;
+                                // Return in hh:mm A format (e.g., "06:00 AM")
+                                return `${String(displayHours).padStart(2, '0')}:${String(minutes).padStart(2, '0')} ${ampm}`;
+                            }
+                            console.error(`Failed to parse GMT date string: ${timeValue}`);
                             return null;
                         }
-                        // Normalize: trim, uppercase, ensure single space
-                        return timeValue.trim().toUpperCase().replace(/\s+/g, ' ');
+                        // If it's already a simple time string (e.g., "06:00 AM"), normalize it
+                        if (timeValue.match(/^\d{1,2}:\d{2}\s*(AM|PM)$/i)) {
+                            // Normalize: ensure uppercase and proper spacing
+                            return timeValue.trim().toUpperCase().replace(/\s+/g, ' ');
+                        }
+                        // Try to parse as time string
+                        const normalizedTime = timeValue.trim().toUpperCase().replace(/\s+/g, ' ');
+                        return normalizedTime;
                     }
                     
                     // If it's a Date object or dayjs object, extract time only
                     if (timeValue instanceof Date || dayjs.isDayjs(timeValue)) {
                         const timeObj = dayjs.isDayjs(timeValue) ? timeValue : dayjs(timeValue);
-                        // Format as time string only (hh:mm A)
-                        return timeObj.format('hh:mm A');
+                        // Format as time string only (hh:mm A) - use hour() directly without conversion
+                        const hours = timeObj.hour();
+                        const minutes = timeObj.minute();
+                        const ampm = hours >= 12 ? 'PM' : 'AM';
+                        const displayHours = hours % 12 || 12;
+                        return `${String(displayHours).padStart(2, '0')}:${String(minutes).padStart(2, '0')} ${ampm}`;
                     }
                     
-                    // Convert to string if it's something else
-                    return String(timeValue).trim().toUpperCase().replace(/\s+/g, ' ');
+                    console.error(`Invalid time value type: ${typeof timeValue}, value: ${timeValue}`);
+                    return null;
                 };
                 
                 const normalizedStart = normalizeTime(time.start);
