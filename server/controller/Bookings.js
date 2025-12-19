@@ -89,8 +89,17 @@ exports.createBookings = async (req, res) => {
                 return res.status(400).json({ message: "Invalid time format provided. Please use format like '04:00 PM' or '4:00 PM'.", success: false });
             }
             
-            // Validate time range
-            if (newEndMinutes <= newStartMinutes) {
+            // Check if this is an overnight booking (end time is before start time, meaning it spans midnight)
+            const isOvernightBooking = newEndMinutes <= newStartMinutes;
+            const MINUTES_PER_DAY = 1440; // 24 hours * 60 minutes
+            
+            // Normalize end time for overnight bookings by adding 24 hours (1440 minutes)
+            // This allows us to compare overnight bookings properly
+            const normalizedNewEndMinutes = isOvernightBooking ? newEndMinutes + MINUTES_PER_DAY : newEndMinutes;
+            
+            // Validate: For overnight bookings, the normalized end should be after start
+            // For regular bookings, end should be after start
+            if (!isOvernightBooking && newEndMinutes <= newStartMinutes) {
                 return res.status(400).json({ message: "End time must be after start time.", success: false });
             }
             
@@ -118,18 +127,34 @@ exports.createBookings = async (req, res) => {
                     return false;
                 }
                 
-                // Check for overlap: new start < existing end AND new end > existing start
-                // This catches all overlapping scenarios:
-                // - New booking completely inside existing
-                // - Existing booking completely inside new
-                // - Partial overlaps on either side
-                // - Exact matches (same start or same end or completely overlapping)
-                // Also check for exact time matches
+                // Check if existing booking is overnight
+                const isExistingOvernight = existingEndMinutes <= existingStartMinutes;
+                const normalizedExistingEndMinutes = isExistingOvernight ? existingEndMinutes + MINUTES_PER_DAY : existingEndMinutes;
+                
+                // Check for overlap using normalized times
+                // For overnight bookings, we've normalized the end time by adding 1440 minutes
+                // This allows proper comparison between:
+                // - Regular bookings (e.g., 9:00 AM to 5:00 PM)
+                // - Overnight bookings (e.g., 11:00 PM to 12:00 AM becomes 1380 to 1440)
+                // - Overnight bookings that start at midnight (e.g., 12:00 AM to 3:00 AM becomes 0 to 1620)
+                // Note: Bookings that end exactly when another starts (e.g., 11 PM-12 AM and 12 AM-3 AM) don't overlap
                 const isExactMatch = (newStartMinutes === existingStartMinutes && newEndMinutes === existingEndMinutes);
-                const hasOverlap = (newStartMinutes < existingEndMinutes && newEndMinutes > existingStartMinutes) || isExactMatch;
+                
+                // Special case: if one booking ends at midnight (1440) and another starts at midnight (0), they don't overlap
+                // because they're consecutive bookings (one ends exactly when the other starts)
+                const newEndsAtMidnight = normalizedNewEndMinutes === MINUTES_PER_DAY;
+                const existingEndsAtMidnight = normalizedExistingEndMinutes === MINUTES_PER_DAY;
+                const newStartsAtMidnight = newStartMinutes === 0;
+                const existingStartsAtMidnight = existingStartMinutes === 0;
+                
+                // If one ends at midnight and the other starts at midnight, they're consecutive (no overlap)
+                const areConsecutive = (newEndsAtMidnight && existingStartsAtMidnight) || (existingEndsAtMidnight && newStartsAtMidnight);
+                
+                // Use strict < and > to exclude cases where one booking ends exactly when another starts
+                const hasOverlap = !areConsecutive && (newStartMinutes < normalizedExistingEndMinutes && normalizedNewEndMinutes > existingStartMinutes) || isExactMatch;
                 
                 if (hasOverlap) {
-                    console.log(`Conflict detected: New booking [${time.start} (${newStartMinutes})-${time.end} (${newEndMinutes})] overlaps with existing [${booking.time.start} (${existingStartMinutes})-${booking.time.end} (${existingEndMinutes})]`);
+                    console.log(`Conflict detected: New booking [${time.start} (${newStartMinutes})-${time.end} (${newEndMinutes}, normalized: ${normalizedNewEndMinutes})] overlaps with existing [${booking.time.start} (${existingStartMinutes})-${booking.time.end} (${existingEndMinutes}, normalized: ${normalizedExistingEndMinutes})]`);
                 }
                 
                 return hasOverlap;
@@ -382,8 +407,16 @@ exports.updateBookingDetails = async (req, res) => {
                     return res.status(400).json({ message: "Invalid time format provided. Please use format like '04:00 PM' or '4:00 PM'.", success: false });
                 }
                 
-                // Validate time range
-                if (newEndMinutes <= newStartMinutes) {
+                // Check if this is an overnight booking (end time is before start time, meaning it spans midnight)
+                const isOvernightBooking = newEndMinutes <= newStartMinutes;
+                const MINUTES_PER_DAY = 1440; // 24 hours * 60 minutes
+                
+                // Normalize end time for overnight bookings by adding 24 hours (1440 minutes)
+                const normalizedNewEndMinutes = isOvernightBooking ? newEndMinutes + MINUTES_PER_DAY : newEndMinutes;
+                
+                // Validate: For overnight bookings, the normalized end should be after start
+                // For regular bookings, end should be after start
+                if (!isOvernightBooking && newEndMinutes <= newStartMinutes) {
                     return res.status(400).json({ message: "End time must be after start time.", success: false });
                 }
                 
@@ -411,13 +444,25 @@ exports.updateBookingDetails = async (req, res) => {
                         return false;
                     }
                     
-                    // Check for overlap: new start < existing end AND new end > existing start
-                    // Also check for exact time matches
+                    // Check if existing booking is overnight
+                    const isExistingOvernight = existingEndMinutes <= existingStartMinutes;
+                    const normalizedExistingEndMinutes = isExistingOvernight ? existingEndMinutes + MINUTES_PER_DAY : existingEndMinutes;
+                    
+                    // Check for overlap using normalized times
+                    // Special case: if one booking ends at midnight (1440) and another starts at midnight (0), they don't overlap
+                    const newEndsAtMidnight = normalizedNewEndMinutes === MINUTES_PER_DAY;
+                    const existingEndsAtMidnight = normalizedExistingEndMinutes === MINUTES_PER_DAY;
+                    const newStartsAtMidnight = newStartMinutes === 0;
+                    const existingStartsAtMidnight = existingStartMinutes === 0;
+                    
+                    // If one ends at midnight and the other starts at midnight, they're consecutive (no overlap)
+                    const areConsecutive = (newEndsAtMidnight && existingStartsAtMidnight) || (existingEndsAtMidnight && newStartsAtMidnight);
+                    
                     const isExactMatch = (newStartMinutes === existingStartMinutes && newEndMinutes === existingEndMinutes);
-                    const hasOverlap = (newStartMinutes < existingEndMinutes && newEndMinutes > existingStartMinutes) || isExactMatch;
+                    const hasOverlap = !areConsecutive && (newStartMinutes < normalizedExistingEndMinutes && normalizedNewEndMinutes > existingStartMinutes) || isExactMatch;
                     
                     if (hasOverlap) {
-                        console.log(`Update: Conflict detected: New booking [${time.start} (${newStartMinutes})-${time.end} (${newEndMinutes})] overlaps with existing [${existingBooking.time.start} (${existingStartMinutes})-${existingBooking.time.end} (${existingEndMinutes})]`);
+                        console.log(`Update: Conflict detected: New booking [${time.start} (${newStartMinutes})-${time.end} (${newEndMinutes}, normalized: ${normalizedNewEndMinutes})] overlaps with existing [${existingBooking.time.start} (${existingStartMinutes})-${existingBooking.time.end} (${existingEndMinutes}, normalized: ${normalizedExistingEndMinutes})]`);
                     }
                     
                     return hasOverlap;
