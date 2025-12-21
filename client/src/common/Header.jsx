@@ -1,8 +1,9 @@
 import { Disclosure, DisclosureButton, DisclosurePanel } from '@headlessui/react'
 import { FaBars } from 'react-icons/fa'
 import { IoClose } from 'react-icons/io5'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom'
 import { Link } from 'react-scroll'
+import { Link as RouterLink } from 'react-router-dom'
 import { getToken, getUserRole } from '../services/authService/AuthService'
 import { resetUserData } from '../features/user/UserSlice'
 import { resetBookingData } from '../features/bookings/BookingSlice'
@@ -10,15 +11,37 @@ import { useDispatch } from 'react-redux'
 
 function Header() {
     const navigate = useNavigate()
+    const location = useLocation()
     const dispatch = useDispatch();
     const token = getToken()
     const role = getUserRole()
+    const isHomePage = location.pathname === '/'
 
     const handleLogOut = async () => {
         dispatch(resetUserData());
         dispatch(resetBookingData());
         localStorage.clear()
         navigate("/")
+    }
+
+    const handleNavigation = (section) => {
+        if (isHomePage) {
+            // On home page, scroll to section
+            const element = document.getElementById(section)
+            if (element) {
+                element.scrollIntoView({ behavior: 'smooth' })
+            }
+        } else {
+            // On other pages, navigate to home with hash
+            navigate(`/#${section}`)
+            // Small delay to ensure page loads before scrolling
+            setTimeout(() => {
+                const element = document.getElementById(section)
+                if (element) {
+                    element.scrollIntoView({ behavior: 'smooth' })
+                }
+            }, 100)
+        }
     }
     return (
         <div className="fixed top-0 left-0 right-0 bg-white shadow z-50">
@@ -37,53 +60,92 @@ function Header() {
                                         <IoClose aria-hidden="true" className="hidden h-6 w-6 group-open:block" />
                                     </DisclosureButton>
                                 </div>
-                                <img
-                                    alt="Company"
-                                    src={require("../assets/Logo.png")}
-                                    className="h-16 w-auto"
-                                />
+                                <RouterLink to="/" className="cursor-pointer">
+                                    <img
+                                        alt="Company"
+                                        src={require("../assets/Logo.png")}
+                                        className="h-16 w-auto"
+                                    />
+                                </RouterLink>
                             </div>
                             <div className="hidden sm:ml-6 sm:flex md:space-x-8 space-x-4">
-                                <Link
-                                    to="home"
-                                    smooth={true}
-                                    duration={1000}
-                                    className="inline-flex items-center border-b-2 border-transparent px-1 pt-1 text-sm font-medium text-gray-900 hover:text-themeColor cursor-pointer duration-300"
-                                >
-                                    Home
-                                </Link>
-                                <Link
-                                    to="about"
-                                    smooth={true}
-                                    duration={1000}
-                                    className="cursor-pointer inline-flex items-center border-b-2 border-transparent px-1 pt-1 text-sm font-medium text-gray-900 hover:text-themeColor duration-300"
-                                >
-                                    About
-                                </Link>
-                                <Link
-                                    to="service"
-                                    smooth={true}
-                                    duration={1000}
-                                    className="cursor-pointer inline-flex items-center border-b-2 border-transparent px-1 pt-1 text-sm font-medium text-gray-900 hover:text-themeColor duration-300"
-                                >
-                                    Services
-                                </Link>
-                                <Link
-                                    to="feature"
-                                    smooth={true}
-                                    duration={1000}
-                                    className="cursor-pointer inline-flex items-center border-b-2 border-transparent px-1 pt-1 text-sm font-medium text-gray-900 hover:text-themeColor duration-300"
-                                >
-                                    Features
-                                </Link>
-                                <Link
-                                    to="contact"
-                                    smooth={true}
-                                    duration={1000}
-                                    className="cursor-pointer inline-flex items-center border-b-2 border-transparent px-1 pt-1 text-sm font-medium text-gray-900 hover:text-themeColor duration-300"
-                                >
-                                    Contact
-                                </Link>
+                                {isHomePage ? (
+                                    <>
+                                        <Link
+                                            to="home"
+                                            smooth={true}
+                                            duration={1000}
+                                            className="inline-flex items-center border-b-2 border-transparent px-1 pt-1 text-sm font-medium text-gray-900 hover:text-themeColor cursor-pointer duration-300"
+                                        >
+                                            Home
+                                        </Link>
+                                        <Link
+                                            to="about"
+                                            smooth={true}
+                                            duration={1000}
+                                            className="cursor-pointer inline-flex items-center border-b-2 border-transparent px-1 pt-1 text-sm font-medium text-gray-900 hover:text-themeColor duration-300"
+                                        >
+                                            About
+                                        </Link>
+                                        <Link
+                                            to="service"
+                                            smooth={true}
+                                            duration={1000}
+                                            className="cursor-pointer inline-flex items-center border-b-2 border-transparent px-1 pt-1 text-sm font-medium text-gray-900 hover:text-themeColor duration-300"
+                                        >
+                                            Services
+                                        </Link>
+                                        <Link
+                                            to="feature"
+                                            smooth={true}
+                                            duration={1000}
+                                            className="cursor-pointer inline-flex items-center border-b-2 border-transparent px-1 pt-1 text-sm font-medium text-gray-900 hover:text-themeColor duration-300"
+                                        >
+                                            Features
+                                        </Link>
+                                        <Link
+                                            to="contact"
+                                            smooth={true}
+                                            duration={1000}
+                                            className="cursor-pointer inline-flex items-center border-b-2 border-transparent px-1 pt-1 text-sm font-medium text-gray-900 hover:text-themeColor duration-300"
+                                        >
+                                            Contact
+                                        </Link>
+                                    </>
+                                ) : (
+                                    <>
+                                        <RouterLink
+                                            to="/"
+                                            className="inline-flex items-center border-b-2 border-transparent px-1 pt-1 text-sm font-medium text-gray-900 hover:text-themeColor cursor-pointer duration-300"
+                                        >
+                                            Home
+                                        </RouterLink>
+                                        <RouterLink
+                                            to="/about-us"
+                                            className="cursor-pointer inline-flex items-center border-b-2 border-transparent px-1 pt-1 text-sm font-medium text-gray-900 hover:text-themeColor duration-300"
+                                        >
+                                            About
+                                        </RouterLink>
+                                        <button
+                                            onClick={() => handleNavigation('service')}
+                                            className="cursor-pointer inline-flex items-center border-b-2 border-transparent px-1 pt-1 text-sm font-medium text-gray-900 hover:text-themeColor duration-300"
+                                        >
+                                            Services
+                                        </button>
+                                        <button
+                                            onClick={() => handleNavigation('feature')}
+                                            className="cursor-pointer inline-flex items-center border-b-2 border-transparent px-1 pt-1 text-sm font-medium text-gray-900 hover:text-themeColor duration-300"
+                                        >
+                                            Features
+                                        </button>
+                                        <RouterLink
+                                            to="/contact-us"
+                                            className="cursor-pointer inline-flex items-center border-b-2 border-transparent px-1 pt-1 text-sm font-medium text-gray-900 hover:text-themeColor duration-300"
+                                        >
+                                            Contact
+                                        </RouterLink>
+                                    </>
+                                )}
                             </div>
                             <div className="flex items-center ml-auto space-x-2">
                                 {token && role ? (
@@ -129,46 +191,99 @@ function Header() {
 
                 <DisclosurePanel className="sm:hidden">
                     <div className="space-y-1 pb-4 pt-2">
-                        <Link
-                            to='home'
-                            smooth={true}
-                            duration={1000}
-                            className="block border-l-4 border-themeColor bg-themeLight py-2 pl-3 pr-4 text-base font-medium text-themeColor"
-                        >
-                            Home
-                        </Link>
-                        <Link
-                            to='about'
-                            smooth={true}
-                            duration={1000}
-                            className="block border-l-4 border-transparent py-2 pl-3 pr-4 text-base font-medium text-themeLight0 hover:border-themeColor hover:bg-themeLight hover:text-themeColor"
-                        >
-                            About
-                        </Link>
-                        <Link
-                            smooth={true}
-                            duration={1000}
-                            to='service'
-                            className="block border-l-4 border-transparent py-2 pl-3 pr-4 text-base font-medium text-themeLight0 hover:border-themeColor hover:bg-themeLight hover:text-themeColor"
-                        >
-                            Services
-                        </Link>
-                        <Link
-                            smooth={true}
-                            duration={1000}
-                            to='feature'
-                            className="block border-l-4 border-transparent py-2 pl-3 pr-4 text-base font-medium text-themeLight0 hover:border-themeColor hover:bg-themeLight hover:text-themeColor"
-                        >
-                            Features
-                        </Link>
-                        <Link
-                            smooth={true}
-                            duration={1000}
-                            to='contact'
-                            className="block border-l-4 border-transparent py-2 pl-3 pr-4 text-base font-medium text-themeLight0 hover:border-themeColor hover:bg-themeLight hover:text-themeColor"
-                        >
-                            Contact
-                        </Link>
+                        {isHomePage ? (
+                            <>
+                                <Link
+                                    to='home'
+                                    smooth={true}
+                                    duration={1000}
+                                    className="block border-l-4 border-themeColor bg-themeLight py-2 pl-3 pr-4 text-base font-medium text-themeColor"
+                                >
+                                    Home
+                                </Link>
+                                <Link
+                                    to='about'
+                                    smooth={true}
+                                    duration={1000}
+                                    className="block border-l-4 border-transparent py-2 pl-3 pr-4 text-base font-medium text-themeLight0 hover:border-themeColor hover:bg-themeLight hover:text-themeColor"
+                                >
+                                    About
+                                </Link>
+                                <Link
+                                    smooth={true}
+                                    duration={1000}
+                                    to='service'
+                                    className="block border-l-4 border-transparent py-2 pl-3 pr-4 text-base font-medium text-themeLight0 hover:border-themeColor hover:bg-themeLight hover:text-themeColor"
+                                >
+                                    Services
+                                </Link>
+                                <Link
+                                    smooth={true}
+                                    duration={1000}
+                                    to='feature'
+                                    className="block border-l-4 border-transparent py-2 pl-3 pr-4 text-base font-medium text-themeLight0 hover:border-themeColor hover:bg-themeLight hover:text-themeColor"
+                                >
+                                    Features
+                                </Link>
+                                <Link
+                                    smooth={true}
+                                    duration={1000}
+                                    to='contact'
+                                    className="block border-l-4 border-transparent py-2 pl-3 pr-4 text-base font-medium text-themeLight0 hover:border-themeColor hover:bg-themeLight hover:text-themeColor"
+                                >
+                                    Contact
+                                </Link>
+                            </>
+                        ) : (
+                            <>
+                                <RouterLink
+                                    to="/"
+                                    className="block border-l-4 border-themeColor bg-themeLight py-2 pl-3 pr-4 text-base font-medium text-themeColor"
+                                >
+                                    Home
+                                </RouterLink>
+                                <RouterLink
+                                    to="/about-us"
+                                    className="block border-l-4 border-transparent py-2 pl-3 pr-4 text-base font-medium text-themeLight0 hover:border-themeColor hover:bg-themeLight hover:text-themeColor"
+                                >
+                                    About
+                                </RouterLink>
+                                <button
+                                    onClick={() => {
+                                        navigate('/#service')
+                                        setTimeout(() => {
+                                            const element = document.getElementById('service')
+                                            if (element) {
+                                                element.scrollIntoView({ behavior: 'smooth' })
+                                            }
+                                        }, 100)
+                                    }}
+                                    className="block w-full text-left border-l-4 border-transparent py-2 pl-3 pr-4 text-base font-medium text-themeLight0 hover:border-themeColor hover:bg-themeLight hover:text-themeColor"
+                                >
+                                    Services
+                                </button>
+                                <button
+                                    onClick={() => {
+                                        navigate('/#feature')
+                                        setTimeout(() => {
+                                            const element = document.getElementById('feature')
+                                            if (element) {
+                                                element.scrollIntoView({ behavior: 'smooth' })
+                                            }
+                                        }, 100)
+                                    }}
+                                    className="block w-full text-left border-l-4 border-transparent py-2 pl-3 pr-4 text-base font-medium text-themeLight0 hover:border-themeColor hover:bg-themeLight hover:text-themeColor"
+                                >
+                                    Features
+                                </button>
+                                <RouterLink
+                                    to="/contact-us"
+                                    className="block border-l-4 border-transparent py-2 pl-3 pr-4 text-base font-medium text-themeLight0 hover:border-themeColor hover:bg-themeLight hover:text-themeColor"
+                                >
+                                    Contact
+                                </RouterLink>
+                            </>
+                        )}
                     </div>
                 </DisclosurePanel>
             </Disclosure>

@@ -1,4 +1,5 @@
-import React from 'react'
+import React, { useEffect } from 'react'
+import { useLocation } from 'react-router-dom'
 import AboutUs from '../../assets/asset_9.webp'
 import boxCricket from "../../assets/asset_4.jpg"
 import rastuarant from "../../assets/asset_0.jpg"
@@ -95,6 +96,21 @@ const about = [
 ]
 
 function Home() {
+    const location = useLocation()
+
+    useEffect(() => {
+        // Handle hash navigation when coming from other pages
+        if (location.hash) {
+            const hash = location.hash.substring(1) // Remove the # symbol
+            setTimeout(() => {
+                const element = document.getElementById(hash)
+                if (element) {
+                    element.scrollIntoView({ behavior: 'smooth' })
+                }
+            }, 100)
+        }
+    }, [location.hash])
+
     return (
         <div>
             <Header />

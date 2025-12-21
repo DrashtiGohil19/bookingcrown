@@ -21,6 +21,10 @@ import DailyBookingDetail from './user/components/Daily/DailyBookingDetail';
 import CustomerDetail from './user/pages/CustomerDetail/CustomerDetail';
 import ForgetPassword from './pages/ForgetPassword/ForgetPassword';
 import IncomeExpense from './user/pages/IncomeExpense/IncomeExpense';
+import PrivacyPolicy from './pages/PrivacyPolicy/PrivacyPolicy';
+import TermsAndConditions from './pages/TermsAndConditions/TermsAndConditions';
+import AboutUs from './pages/AboutUs/AboutUs';
+import ContactUs from './pages/ContactUs/ContactUs';
 
 function App() {
   return (
@@ -33,6 +37,10 @@ function App() {
         <Route path="/change-password" element={<ChangePassword />} />
         <Route path="/forget-password" element={<ForgetPassword />} />
         <Route path="/customer/booking-details/:id" element={<CustomerDetail />} />
+        <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+        <Route path="/terms-and-conditions" element={<TermsAndConditions />} />
+        <Route path="/about-us" element={<AboutUs />} />
+        <Route path="/contact-us" element={<ContactUs />} />
         <Route path="/*" element={<NotFound />} />
 
         <Route path="/access-denied" element={<ProtectedAccessDenied element={AccessDenied} />} />
