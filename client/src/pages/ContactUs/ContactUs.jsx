@@ -16,7 +16,7 @@ function ContactUs() {
                         </p>
                     </div>
 
-                    <div className='bg-white rounded-lg shadow-md p-6 md:p-8 mb-8'>
+                    <div className='mb-8'>
                         <Contact />
                     </div>
 
@@ -75,4 +75,3 @@ function ContactUs() {
 }
 
 export default ContactUs;
-

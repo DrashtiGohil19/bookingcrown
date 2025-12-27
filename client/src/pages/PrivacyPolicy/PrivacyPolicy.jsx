@@ -10,12 +10,12 @@ function PrivacyPolicy() {
                 <div className='container mx-auto px-4 md:px-8 py-12 max-w-4xl'>
                     <h1 className='text-3xl md:text-4xl font-bold text-themeColor mb-6'>Privacy Policy</h1>
                     <p className='text-slate-600 mb-4'>Last updated: {new Date().toLocaleDateString()}</p>
-                    
+
                     <div className='bg-white rounded-lg shadow-md p-6 md:p-8 space-y-6'>
                         <section>
                             <h2 className='text-2xl font-semibold text-gray-800 mb-4'>1. Introduction</h2>
                             <p className='text-slate-600 leading-relaxed mb-4'>
-                                Welcome to BookingCrown ("we," "our," or "us"). We are committed to protecting your privacy and ensuring the security of your personal information. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you visit our website and use our booking management services.
+                                Welcome to BookingCrown. We are committed to protecting your privacy and ensuring the security of your personal information. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you visit our website and use our booking management services.
                             </p>
                             <p className='text-slate-600 leading-relaxed'>
                                 By using our website and services, you agree to the collection and use of information in accordance with this policy. If you do not agree with our policies and practices, please do not use our services.
@@ -154,4 +154,3 @@ function PrivacyPolicy() {
 }
 
 export default PrivacyPolicy;
-

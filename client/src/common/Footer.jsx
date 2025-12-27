@@ -64,7 +64,7 @@ function Footer() {
                 </div>
                 <div className="border-t border-white/20 pt-4">
                     <div className="text-center text-[14px] text-white/80">
-                        <p>© BookingCrown 2024-25, All rights reserved.</p>
+                        <p>© BookingCrown 2025-26, All rights reserved.</p>
                     </div>
                 </div>
             </div>
