@@ -73,7 +73,7 @@ export default function Sidebar() {
                             </TransitionChild>
                             {/* Sidebar component, swap this element with another sidebar if you like */}
                             <div className="flex grow flex-col gap-y-5 overflow-y-auto bg-themeColor px-6 pb-4">
-                                <div className="flex h-16 shrink-0 items-center border-b-[1px]">
+                                <div className="flex h-16 shrink-0 items-center border-b-[1px] select-none" onClick={() => navigate("/user/dashboard")}>
                                     <img
                                         alt="Company"
                                         src={require("../../assets/Logo3.jpg")}
@@ -120,7 +120,7 @@ export default function Sidebar() {
                 <div className="hidden lg:fixed lg:inset-y-0 lg:z-50 lg:flex lg:w-[16rem] lg:flex-col">
                     {/* Sidebar component, swap this element with another sidebar if you like */}
                     <div className="flex grow flex-col gap-y-5 overflow-y-auto bg-themeColor px-6 pb-4">
-                        <div className="flex h-16 shrink-0 items-center border-b-[1px]">
+                        <div className="flex h-16 shrink-0 items-center border-b-[1px] select-none" onClick={() => navigate("/user/dashboard")}>
                             <img
                                 alt="Company"
                                 src={require("../../assets/Logo3.jpg")}
@@ -167,7 +167,7 @@ export default function Sidebar() {
                             <span className="sr-only">Open sidebar</span>
                             <FaBars aria-hidden="true" className="h-6 w-6" />
                         </button>
-                        <div className="flex items-center lg:hidden">
+                        <div className="flex items-center lg:hidden select-none" onClick={() => navigate("/admin/dashboard")}>
                             <img
                                 src={require("../../assets/Logo.png")}
                                 alt="logo"

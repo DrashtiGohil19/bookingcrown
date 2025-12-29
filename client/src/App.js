@@ -25,10 +25,12 @@ import PrivacyPolicy from './pages/PrivacyPolicy/PrivacyPolicy';
 import TermsAndConditions from './pages/TermsAndConditions/TermsAndConditions';
 import AboutUs from './pages/AboutUs/AboutUs';
 import ContactUs from './pages/ContactUs/ContactUs';
+import ScrollToTop from './common/ScrollToTop';
 
 function App() {
   return (
     <div>
+      <ScrollToTop />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
