@@ -1,5 +1,5 @@
 import { Card, Col, Row, Skeleton, Typography } from 'antd'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import { useParams } from 'react-router-dom'
 import { getBookingById } from '../../../api/Bookings';
 import { FaCheckCircle } from 'react-icons/fa';
@@ -19,7 +19,7 @@ function CustomerDetail() {
     const [loading, setLoading] = useState(true);
     const params = useParams();
 
-    const fetchBooking = async () => {
+    const fetchBooking = useCallback(async () => {
         try {
             const response = await getBookingById(params.id);
             setBooking(response);
@@ -28,7 +28,7 @@ function CustomerDetail() {
         } finally {
             setLoading(false);
         }
-    };
+    }, [params.id]);
 
     const itemTypeMapping = {
         "Box Cricket": "Turf",
@@ -43,7 +43,7 @@ function CustomerDetail() {
         if (params.id) {
             fetchBooking();
         }
-    }, [params.id]);
+    }, [params.id, fetchBooking]);
 
     return (
         <div>

@@ -49,13 +49,13 @@ function IncomeExpense() {
     const [open, setOpen] = useState(false);
     const [selectedMonth, setSelectedMonth] = useState(null);
     const dispatch = useDispatch();
-    const { incomeData, expenseData, totalIncome, totalExpense, profitOrLoss, status, error } = useSelector(state => state.expenses);
+    const { incomeData, expenseData, totalIncome, totalExpense, profitOrLoss, status } = useSelector(state => state.expenses);
 
     useEffect(() => {
         if (status === "idle") {
             dispatch(fetchIncomeAndExpenses({ month: selectedMonth }));
         }
-    }, [dispatch, status]);
+    }, [dispatch, status, selectedMonth]);
 
     const handleCancel = () => {
         setOpen(false);

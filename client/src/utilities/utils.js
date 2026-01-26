@@ -1,5 +1,3 @@
-const {  Notification } = require("./Notification");
-
 export const handleCopy = (mobilenu, bookingId) => {
   const bookingLink = `${process.env.REACT_APP_BASE_URL}/customer/booking-details/${bookingId}`;
 
