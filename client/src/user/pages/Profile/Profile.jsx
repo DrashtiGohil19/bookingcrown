@@ -16,17 +16,20 @@ function Profile() {
     const [isFormChanged, setIsFormChanged] = useState(false);
     const [initialValues, setInitialValues] = useState({});
     const [itemList, setItemList] = useState([]);
+    // eslint-disable-next-line no-unused-vars
     const [session, setSession] = useState([])
     const [fields, setFields] = useState([{ key: Date.now(), value: '' }])
-    const [sessionFields, setSessionFields] = useState([])
+    // const [sessionFields, setSessionFields] = useState([])
 
     const addField = () => {
         setFields([...fields, { key: Date.now(), value: '' }]);
     };
 
-    const addSessionField = () => {
-        setSessionFields([...sessionFields, { key: Date.now(), value: '' }]);
-    };
+    // Session field management functions - currently not used as renderSessionList is commented
+    // Uncomment these when renderSessionList is enabled
+    // const addSessionField = () => {
+    //     setSessionFields([...sessionFields, { key: Date.now(), value: '' }]);
+    // };
 
     const removeField = (fieldItem) => {
         const isFromItemList = itemList.some(itemKey => fieldItem.value === itemKey)
@@ -39,16 +42,16 @@ function Profile() {
         checkFormChanges()
     };
 
-    const removeSessionField = (fieldItem) => {
-        const isFromSession = session.some(sessionItem => fieldItem.value === sessionItem);
+    // const removeSessionField = (fieldItem) => {
+    //     const isFromSession = session.some(sessionItem => fieldItem.value === sessionItem);
 
-        if (isFromSession) {
-            setSession(session.filter(item => item !== fieldItem.value));
-        } else {
-            setSessionFields(sessionFields.filter(field => field.key !== fieldItem.key));
-        }
-        checkFormChanges();
-    };
+    //     if (isFromSession) {
+    //         setSession(session.filter(item => item !== fieldItem.value));
+    //     } else {
+    //         setSessionFields(sessionFields.filter(field => field.key !== fieldItem.key));
+    //     }
+    //     checkFormChanges();
+    // };
 
     const checkFormChanges = () => {
         const currentValues = form.getFieldsValue();
@@ -186,63 +189,6 @@ function Profile() {
                     </Form.Item>
                 </Col>
                 <Button type="primary" className="ml-[7px] md:mt-[30px] h-10" onClick={addField}>
-                    Add More
-                </Button>
-            </>
-        );
-    };
-
-    const renderSessionList = () => {
-        const existingFields = session.map((item, i) => ({ key: i, value: item })) || [];
-        const allCurrentFields = [...existingFields, ...sessionFields];
-        const shouldShowRemoveButton = allCurrentFields.length > 0;
-        if (!allCurrentFields || allCurrentFields.length === 0) {
-            return null;
-        }
-        return (
-            <>
-                <Col xs={24} sm={24} md={18} lg={16} className="mb-[10px]">
-                    <Form.Item label="Session List" className="mb-0">
-                        {allCurrentFields.map(field => (
-                            <div key={field.key} className="flex gap-2 items-center mb-[10px]">
-                                <Form.Item
-                                    name={`sessionList_${field.key}`}
-                                    initialValue={field.value}
-                                    rules={[{ required: true, message: 'Please input your session!' }]}
-                                    noStyle
-                                >
-                                    <Input
-                                        type="text"
-                                        placeholder="Session List"
-                                        className="h-10"
-                                        value={field.value}
-                                        onChange={(e) => {
-                                            const newFields = sessionFields.map(f =>
-                                                f.key === field.key ? { ...f, value: e.target.value } : f
-                                            );
-                                            setSessionFields(newFields);
-                                        }}
-                                    />
-                                </Form.Item>
-                                {shouldShowRemoveButton && (
-                                    <Button
-                                        type="primary"
-                                        className="h-10"
-                                        onClick={() => removeSessionField(field)}
-                                    >
-                                        X
-                                    </Button>
-                                )}
-                            </div>
-                        ))}
-                    </Form.Item>
-                </Col>
-
-                <Button
-                    type="primary"
-                    className="ml-[7px] sm:mb-[25px] md:mt-[30px] h-10"
-                    onClick={addSessionField}
-                >
                     Add More
                 </Button>
             </>

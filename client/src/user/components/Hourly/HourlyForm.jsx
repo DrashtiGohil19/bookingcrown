@@ -1,5 +1,5 @@
 import { Button, Col, DatePicker, Form, Input, Row, Select, TimePicker } from 'antd'
-import React, { useEffect } from 'react'
+import React, { useEffect, useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import moment from 'moment';
 import { CreateBooking, getBookingById, UpdateBooking } from '../../../api/Bookings';
@@ -54,13 +54,7 @@ function HourlyForm({ isEditing, userId }) {
         }
     };
 
-    useEffect(() => {
-        if (userId) {
-            getBookingsData()
-        }
-    }, [userId, getBookingsData])
-
-    const getBookingsData = async () => {
+    const getBookingsData = useCallback(async () => {
         try {
             const data = await getBookingById(userId)
             const bookingDate = dayjs(data.date);
@@ -108,7 +102,13 @@ function HourlyForm({ isEditing, userId }) {
         } catch (error) {
             console.log(error);
         }
-    }
+    }, [userId, form]);
+
+    useEffect(() => {
+        if (userId) {
+            getBookingsData()
+        }
+    }, [userId, getBookingsData])
 
     const onFinish = async (values) => {
         let response = null

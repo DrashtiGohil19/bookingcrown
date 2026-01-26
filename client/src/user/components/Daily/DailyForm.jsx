@@ -1,5 +1,5 @@
 import { Button, Col, DatePicker, Form, Input, Row, Select } from 'antd'
-import React, { useEffect } from 'react'
+import React, { useEffect, useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { CreateBooking, getBookingById, UpdateBooking } from '../../../api/Bookings';
 import { fetchAllBookings } from '../../../features/bookings/BookingSlice';
@@ -15,25 +15,7 @@ function DailyForm({ isEditing, userId }) {
     const navigate = useNavigate()
     const dispatch = useDispatch()
 
-    useEffect(() => {
-        if (userId) {
-            getBookingsData()
-        }
-    }, [userId, getBookingsData])
-
-    const handleAmountChange = () => {
-        const { totalAmount, advanceAmount } = form.getFieldsValue();
-        if (totalAmount !== undefined || advanceAmount !== undefined) {
-            if (totalAmount !== undefined) {
-                const pendingAmount = advanceAmount !== undefined
-                    ? totalAmount - advanceAmount
-                    : totalAmount;
-                form.setFieldsValue({ pendingAmount: pendingAmount });
-            }
-        }
-    };
-
-    const getBookingsData = async () => {
+    const getBookingsData = useCallback(async () => {
         try {
             const data = await getBookingById(userId)
             const bookingDate = dayjs(data.date);
@@ -53,7 +35,25 @@ function DailyForm({ isEditing, userId }) {
         } catch (error) {
             console.log(error);
         }
-    }
+    }, [userId, form]);
+
+    useEffect(() => {
+        if (userId) {
+            getBookingsData()
+        }
+    }, [userId, getBookingsData])
+
+    const handleAmountChange = () => {
+        const { totalAmount, advanceAmount } = form.getFieldsValue();
+        if (totalAmount !== undefined || advanceAmount !== undefined) {
+            if (totalAmount !== undefined) {
+                const pendingAmount = advanceAmount !== undefined
+                    ? totalAmount - advanceAmount
+                    : totalAmount;
+                form.setFieldsValue({ pendingAmount: pendingAmount });
+            }
+        }
+    };
 
     const onFinish = async (values) => {
         let response = null
