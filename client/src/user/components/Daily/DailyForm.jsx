@@ -19,7 +19,7 @@ function DailyForm({ isEditing, userId }) {
         if (userId) {
             getBookingsData()
         }
-    }, [userId])
+    }, [userId, getBookingsData])
 
     const handleAmountChange = () => {
         const { totalAmount, advanceAmount } = form.getFieldsValue();

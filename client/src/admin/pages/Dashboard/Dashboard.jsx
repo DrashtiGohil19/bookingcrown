@@ -4,7 +4,6 @@ import { Badge, Tabs } from 'antd'
 import UsersTable from '../../components/UsersTable';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchAllUsers } from '../../../features/user/UserSlice';
-import moment from 'moment';
 import io from 'socket.io-client';
 import dayjs from 'dayjs';
 import timezone from "dayjs/plugin/timezone";

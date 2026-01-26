@@ -11,7 +11,7 @@ function Contact() {
                         <i className=' text-themeColor'><MdEmail className='mb-2 text-[30px] mx-auto text-center' /></i>
                         <h4 className='font-semibold text-themeColor'>Email</h4>
                         <p className="mt-3 text-[15px] text-slate-400">
-                            <a href="mailto:bookingcrown8@gmail.com" target='_blank'>bookingcrown8@gmail.com</a>
+                            <a href="mailto:bookingcrown8@gmail.com" target='_blank' rel="noreferrer">bookingcrown8@gmail.com</a>
                         </p>
                     </div>
                 </div>
@@ -20,7 +20,7 @@ function Contact() {
                         <i className=' text-themeColor'><IoCall className='mb-2 text-[30px] mx-auto text-center' /></i>
                         <h4 className='font-semibold text-themeColor'>Phone</h4>
                         <p className="mt-3 text-[15px] text-slate-400">
-                            <a href="tel:+91 99988 83603" target='_blank'>+91 99988 83603</a>
+                            <a href="tel:+91 99988 83603" target='_blank' rel="noreferrer">+91 99988 83603</a>
                         </p>
                     </div>
                 </div>

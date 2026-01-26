@@ -208,16 +208,16 @@ function Home() {
                                     <i className='text-2xl'>{item.icon}</i>
                                 </div>
                                 <div className="mt-6">
-                                    <a className="text-lg font-semibold group-hover:duration-300 group-hover:text-teal-500" href="#">
+                                    <h3 className="text-lg font-semibold group-hover:duration-300 group-hover:text-teal-500">
                                         {item.title}
-                                    </a>
+                                    </h3>
                                     <p className="text-slate-400 mt-3">
                                         {item.description}
                                     </p>
                                     <div className="mt-6">
-                                        <a className="text-teal-500 hover:text-teal-600" href="#">
+                                        <button className="text-teal-500 hover:text-teal-600" type="button" onClick={() => {}}>
                                             Read More
-                                        </a>
+                                        </button>
                                     </div>
                                 </div>
                             </div>
@@ -248,9 +248,9 @@ function Home() {
                             <div className="absolute inset-0 bg-themeColor opacity-0 group-hover:opacity-70 transition-opacity duration-500">
                             </div>
                             <div className="absolute bottom-[65px] left-0 right-0 p-6 text-white transform translate-y-full group-hover:translate-y-0 transition-transform duration-500 text-center">
-                                <a className="text-lg font-semibold" href="#">
+                                <h3 className="text-lg font-semibold">
                                     {item.title}
-                                </a>
+                                </h3>
                                 <p className="text-slate-200 mt-3 text-[15px]">
                                     {item.description}
                                 </p>

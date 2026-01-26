@@ -1,6 +1,5 @@
-import React, { useEffect } from 'react';
-import { Button, Checkbox, DatePicker, Form, Input, Modal } from 'antd';
-import moment from 'moment';
+import React from 'react';
+import { Button, DatePicker, Form, Input, Modal } from 'antd';
 import dayjs from 'dayjs';
 import { AddExpenses } from '../../api/Expenses';
 

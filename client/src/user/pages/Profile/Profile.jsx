@@ -196,6 +196,9 @@ function Profile() {
         const existingFields = session.map((item, i) => ({ key: i, value: item })) || [];
         const allCurrentFields = [...existingFields, ...sessionFields];
         const shouldShowRemoveButton = allCurrentFields.length > 0;
+        if (!allCurrentFields || allCurrentFields.length === 0) {
+            return null;
+        }
         return (
             <>
                 <Col xs={24} sm={24} md={18} lg={16} className="mb-[10px]">

@@ -4,7 +4,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { fetchAllUsers } from '../../features/user/UserSlice';
 import { FaInfoCircle } from 'react-icons/fa';
 import CreatePlan from '../model/CreatePlan';
-import moment from 'moment';
 import dayjs from 'dayjs';
 import timezone from "dayjs/plugin/timezone";
 import utc from "dayjs/plugin/utc";

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Card, Col, Row, Typography, Skeleton, Button, Modal } from 'antd';
 import { DeleteBooking, getBookingById } from '../../../api/Bookings';
@@ -19,7 +19,7 @@ const HourlyBookingDetail = () => {
     const params = useParams();
     const bookingLink = `${process.env.REACT_APP_BASE_URL}/customer/booking-details/${booking?._id}`;
 
-    const fetchBooking = async () => {
+    const fetchBooking = useCallback(async () => {
         try {
             const response = await getBookingById(params.id);
             setBooking(response);
@@ -28,7 +28,7 @@ const HourlyBookingDetail = () => {
         } finally {
             setLoading(false);
         }
-    };
+    }, [params.id]);
 
     const handleDelete = (id) => {
         confirm({
@@ -50,7 +50,7 @@ const HourlyBookingDetail = () => {
         if (params.id) {
             fetchBooking();
         }
-    }, [params.id]);
+    }, [params.id, fetchBooking]);
 
     return (
         <div className='h-[100vh]'>

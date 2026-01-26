@@ -58,7 +58,7 @@ function HourlyForm({ isEditing, userId }) {
         if (userId) {
             getBookingsData()
         }
-    }, [userId])
+    }, [userId, getBookingsData])
 
     const getBookingsData = async () => {
         try {
