@@ -10,6 +10,22 @@ function PrivacyPolicy() {
                     <h1 className='text-3xl md:text-4xl font-bold text-themeColor mb-6'>Privacy Policy</h1>
                     <p className='text-slate-600 mb-4'>Last updated: {new Date().toLocaleDateString()}</p>
 
+                    <div style={{ textAlign: 'center', margin: '24px 0' }}>
+                        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9954652290347538"
+                            crossOrigin="anonymous"></script>
+                        <ins className="adsbygoogle"
+                            style={{
+                                display: 'block'
+                            }}
+                            data-ad-client="ca-pub-9954652290347538"
+                            data-ad-slot="4489052415"
+                            data-ad-format="auto"
+                            data-full-width-responsive="true"></ins>
+                        <script>
+                            {`(adsbygoogle = window.adsbygoogle || []).push({});`}
+                        </script>
+                    </div>
+
                     <div className='bg-white rounded-lg shadow-md p-6 md:p-8 space-y-6'>
                         <section>
                             <h2 className='text-2xl font-semibold text-gray-800 mb-4'>1. Introduction</h2>

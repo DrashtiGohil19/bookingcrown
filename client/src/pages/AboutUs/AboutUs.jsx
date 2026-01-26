@@ -62,6 +62,21 @@ function AboutUs() {
 
                     <div className='bg-white rounded-lg shadow-md p-6 md:p-8 mb-8'>
                         <h2 className='text-2xl font-semibold text-gray-800 mb-6 text-center'>Why Choose BookingCrown?</h2>
+                        <div style={{ textAlign: 'center', margin: '24px 0' }}>
+                            <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9954652290347538"
+                                crossOrigin="anonymous"></script>
+                            <ins className="adsbygoogle"
+                                style={{
+                                    display: 'block'
+                                }}
+                                data-ad-client="ca-pub-9954652290347538"
+                                data-ad-slot="5802134089"
+                                data-ad-format="auto"
+                                data-full-width-responsive="true"></ins>
+                            <script>
+                                {`(adsbygoogle = window.adsbygoogle || []).push({});`}
+                            </script>
+                        </div>
                         <div className='grid md:grid-cols-3 gap-6'>
                             {aboutFeatures.map((feature) => (
                                 <div key={feature.id} className='text-center p-6 rounded-lg bg-[#f1fafb] hover:shadow-lg transition-shadow'>

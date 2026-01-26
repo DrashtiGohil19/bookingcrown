@@ -182,6 +182,21 @@ function Home() {
                         At BookingCrown, we offer a comprehensive suite of services to help you manage your bookings efficiently
                     </p>
                 </div>
+                <div style={{ textAlign: 'center', margin: '24px 0' }}>
+                    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9954652290347538"
+                        crossOrigin="anonymous"></script>
+                    <ins className="adsbygoogle"
+                        style={{
+                            display: 'block'
+                        }}
+                        data-ad-client="ca-pub-9954652290347538"
+                        data-ad-slot="1498043097"
+                        data-ad-format="auto"
+                        data-full-width-responsive="true"></ins>
+                    <script>
+                        {`(adsbygoogle = window.adsbygoogle || []).push({});`}
+                    </script>
+                </div>
                 <div className="grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 grid-cols-1 gap-6 mt-6">
                     {events.map((item, i) => {
                         return (

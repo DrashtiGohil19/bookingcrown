@@ -47,6 +47,21 @@ function CustomerDetail() {
 
     return (
         <div>
+            <div style={{ textAlign: 'center', margin: '24px 0' }}>
+                <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9954652290347538"
+                    crossOrigin="anonymous"></script>
+                <ins className="adsbygoogle"
+                    style={{
+                        display: 'block'
+                    }}
+                    data-ad-client="ca-pub-9954652290347538"
+                    data-ad-slot="7100232872"
+                    data-ad-format="auto"
+                    data-full-width-responsive="true"></ins>
+                <script>
+                    {`(adsbygoogle = window.adsbygoogle || []).push({});`}
+                </script>
+            </div>
             <Skeleton loading={loading} active>
                 {!loading && (
                     <div className="flex flex-col min-h-screen">
