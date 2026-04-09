@@ -8,7 +8,6 @@ import Footer from '../../common/Footer';
 import Contact from '../../common/Contact';
 import Seo from '../../common/Seo';
 import StructuredData from '../../common/StructuredData';
-import ContentAd from '../../common/ContentAd';
 import blogPosts from '../../content/blogPosts';
 import {
   ABOUT_WORKFLOW_IMAGE,
@@ -195,7 +194,6 @@ function Home() {
               </div>
             </div>
 
-            <ContentAd content={coreContent} minWords={120} slot="1498043097" />
           </div>
         </section>
 

@@ -2,7 +2,6 @@ import { Link, useParams } from 'react-router-dom';
 import PublicPageShell from '../../common/PublicPageShell';
 import Seo from '../../common/Seo';
 import StructuredData from '../../common/StructuredData';
-import ContentAd from '../../common/ContentAd';
 import blogPosts from '../../content/blogPosts';
 import { SITE_NAME, SITE_URL } from '../../content/siteData';
 import NotFound from '../NotFound/NotFound';
@@ -14,11 +13,6 @@ function BlogPost() {
   if (!post) {
     return <NotFound />;
   }
-
-  const articleContent = [
-    post.intro,
-    ...post.sections.flatMap((section) => [section.heading, ...section.paragraphs]),
-  ];
 
   const relatedPosts = blogPosts.filter((item) => item.slug !== slug).slice(0, 3);
 
@@ -70,8 +64,6 @@ function BlogPost() {
           className="mt-6 h-72 w-full rounded-[28px] object-cover md:h-[420px]"
         />
         <p className="mt-6 text-lg leading-8 text-slate-700">{post.intro}</p>
-
-        <ContentAd content={articleContent} minWords={650} slot="1498043097" />
 
         <div className="space-y-8">
           {post.sections.map((section) => (
