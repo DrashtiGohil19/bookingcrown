@@ -64,6 +64,11 @@ function BlogPost() {
         <p className="text-sm text-slate-500">
           {post.readTime} | Published on {post.publishedOn}
         </p>
+        <img
+          src={post.image}
+          alt={post.title}
+          className="mt-6 h-72 w-full rounded-[28px] object-cover md:h-[420px]"
+        />
         <p className="mt-6 text-lg leading-8 text-slate-700">{post.intro}</p>
 
         <ContentAd content={articleContent} minWords={650} slot="1498043097" />

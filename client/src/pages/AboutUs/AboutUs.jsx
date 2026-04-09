@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import PublicPageShell from '../../common/PublicPageShell';
 import Seo from '../../common/Seo';
-import { testimonials } from '../../content/siteData';
+import { ABOUT_WORKFLOW_IMAGE, testimonials } from '../../content/siteData';
 
 const storySections = [
   {
@@ -60,6 +60,11 @@ function AboutUs() {
 
       <div className="space-y-8">
         <section className="rounded-[30px] border border-slate-200 bg-white p-6 shadow-sm md:p-8">
+          <img
+            src={ABOUT_WORKFLOW_IMAGE}
+            alt="Booking workflow planning for service businesses"
+            className="mb-8 h-72 w-full rounded-[28px] object-cover"
+          />
           <div className="space-y-8">
             {storySections.map((section) => (
               <section key={section.heading}>

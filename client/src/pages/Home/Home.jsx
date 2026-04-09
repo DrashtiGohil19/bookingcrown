@@ -10,7 +10,16 @@ import Seo from '../../common/Seo';
 import StructuredData from '../../common/StructuredData';
 import ContentAd from '../../common/ContentAd';
 import blogPosts from '../../content/blogPosts';
-import { homepageFaqs, SITE_NAME, SITE_URL, SUPPORT_EMAIL, SUPPORT_PHONE, testimonials } from '../../content/siteData';
+import {
+  ABOUT_WORKFLOW_IMAGE,
+  HOME_HERO_IMAGE,
+  homepageFaqs,
+  SITE_NAME,
+  SITE_URL,
+  SUPPORT_EMAIL,
+  SUPPORT_PHONE,
+  testimonials,
+} from '../../content/siteData';
 
 const featureCards = [
   {
@@ -169,10 +178,15 @@ function Home() {
                   ))}
                 </div>
 
-                <div className="mt-6 rounded-2xl bg-[#0b1f1f] p-5 text-white">
-                  <div className="flex items-center gap-3">
-                    <FaShieldAlt className="text-xl text-teal-300" />
-                    <p className="font-semibold">Trust-first public experience</p>
+              <div className="mt-6 rounded-2xl bg-[#0b1f1f] p-5 text-white">
+                <img
+                  src={HOME_HERO_IMAGE}
+                  alt="BookingCrown dashboard and booking workflow preview"
+                  className="mb-5 h-56 w-full rounded-2xl object-cover"
+                />
+                <div className="flex items-center gap-3">
+                  <FaShieldAlt className="text-xl text-teal-300" />
+                  <p className="font-semibold">Trust-first public experience</p>
                   </div>
                   <p className="mt-3 text-sm leading-7 text-white/80">
                     The site includes direct contact information, detailed legal pages, helpful articles, strong page structure, and ad placements only where content depth supports them.
@@ -264,6 +278,11 @@ function Home() {
             <div className="mt-8 grid gap-6 md:grid-cols-2 xl:grid-cols-3">
               {blogPosts.slice(0, 3).map((post) => (
                 <article key={post.slug} className="rounded-[28px] border border-slate-200 bg-white p-6 shadow-sm">
+                  <img
+                    src={post.image}
+                    alt={post.title}
+                    className="h-52 w-full rounded-2xl object-cover"
+                  />
                   <p className="text-xs font-semibold uppercase tracking-[0.18em] text-themeColor">{post.category}</p>
                   <h3 className="mt-4 text-2xl font-semibold text-slate-900">
                     <Link to={`/blog/${post.slug}`} className="hover:text-themeColor">
@@ -280,6 +299,11 @@ function Home() {
 
         <section className="px-4 py-10 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-7xl rounded-[34px] border border-slate-200 bg-white p-8 shadow-sm">
+            <img
+              src={ABOUT_WORKFLOW_IMAGE}
+              alt="Booking team reviewing reservations and customer communication"
+              className="mb-8 h-64 w-full rounded-[28px] object-cover"
+            />
             <p className="text-sm font-semibold uppercase tracking-[0.2em] text-themeColor">Trust signals</p>
             <h2 className="mt-4 font-['Crimson_Text'] text-4xl font-semibold text-slate-900">
               What customers say about a clearer booking workflow

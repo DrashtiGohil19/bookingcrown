@@ -2,6 +2,7 @@ const blogPosts = [
   {
     slug: 'how-to-set-up-a-booking-system-for-a-box-cricket-ground',
     title: 'How to Set Up a Booking System for a Box Cricket Ground',
+    image: '/images/blog-box-cricket-booking.jpg',
     description:
       'A practical guide for box cricket owners who want clearer scheduling, fewer conflicts, and a smoother booking experience.',
     category: 'Operations Guide',
@@ -70,6 +71,7 @@ const blogPosts = [
   {
     slug: 'best-practices-for-restaurant-and-cafe-reservation-management',
     title: 'Best Practices for Restaurant and Cafe Reservation Management',
+    image: '/images/blog-cafe-reservations.jpg',
     description:
       'A practical playbook for cafes and restaurants that want fewer no-shows, cleaner tableside coordination, and more predictable service.',
     category: 'Hospitality',
@@ -138,6 +140,7 @@ const blogPosts = [
   {
     slug: 'pricing-guide-for-event-space-and-small-venue-bookings',
     title: 'Pricing Guide for Event Space and Small Venue Bookings',
+    image: '/images/blog-event-space-pricing.jpg',
     description:
       'How to build a transparent pricing strategy for event spaces, private rooms, community venues, and bookable experiences.',
     category: 'Pricing',
@@ -206,6 +209,7 @@ const blogPosts = [
   {
     slug: 'how-to-reduce-no-shows-and-last-minute-cancellations',
     title: 'How to Reduce No-Shows and Last-Minute Cancellations',
+    image: '/images/blog-no-show-reduction.jpg',
     description:
       'A practical framework for service businesses that want fewer missed bookings and better customer communication.',
     category: 'Customer Experience',
@@ -274,6 +278,7 @@ const blogPosts = [
   {
     slug: 'why-service-businesses-need-content-not-just-a-booking-form',
     title: 'Why Service Businesses Need Content, Not Just a Booking Form',
+    image: '/images/blog-booking-content-strategy.jpg',
     description:
       'Why content depth matters for trust, SEO, AdSense review, and conversion when your website includes booking functionality.',
     category: 'SEO and Growth',

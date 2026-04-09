@@ -4,6 +4,8 @@ export const SUPPORT_EMAIL = 'bookingcrown8@gmail.com';
 export const SUPPORT_PHONE = '+91 99988 83603';
 export const SUPPORT_PHONE_LINK = '+919998883603';
 export const LAST_UPDATED = 'April 9, 2026';
+export const HOME_HERO_IMAGE = '/images/home-booking-hero.jpg';
+export const ABOUT_WORKFLOW_IMAGE = '/images/about-booking-workflow.jpg';
 
 export const testimonials = [
   {

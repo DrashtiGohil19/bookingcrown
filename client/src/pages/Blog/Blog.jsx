@@ -45,6 +45,11 @@ function Blog() {
       <div className="grid gap-6 md:grid-cols-2">
         {blogPosts.map((post) => (
           <article key={post.slug} className="rounded-[28px] border border-slate-200 bg-white p-6 shadow-sm transition-transform duration-300 hover:-translate-y-1 hover:shadow-lg">
+            <img
+              src={post.image}
+              alt={post.title}
+              className="h-56 w-full rounded-2xl object-cover"
+            />
             <p className="text-xs font-semibold uppercase tracking-[0.18em] text-themeColor">
               {post.category}
             </p>
