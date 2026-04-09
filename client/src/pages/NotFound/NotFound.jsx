@@ -1,33 +1,38 @@
-import { Button } from 'antd'
-import React from 'react'
+import { Button } from 'antd';
 import { useNavigate } from 'react-router-dom';
+import Header from '../../common/Header';
 import Footer from '../../common/Footer';
+import Seo from '../../common/Seo';
 
 function NotFound() {
-    const navigate = useNavigate();
-    return (
-        <section className='bg-[#f1fafb]'>
-            <main className='min-h-screen flex flex-col justify-center items-center py-8 px-4'>
-                <div className='max-w-2xl w-full text-center'>
-                    <h1 className='font-semibold text-3xl md:text-4xl text-themeColor mb-4'>
-                        404 - Page Not Found
-                    </h1>
+  const navigate = useNavigate();
 
-                    <div className='text-center mt-6 text-slate-400'>
-                        <p>
-                            Sorry, the page you’re looking for doesn’t exist.
-                            It looks like you’ve hit a dead end. The page you’re trying to reach might have been moved, deleted, or never existed.
-                        </p>
-                    </div>
-                    <Button type='primary' className='h-10 mt-5' onClick={() => navigate("/")}>
-                        Go Back To Home
-                    </Button>
-                </div>
-            </main>
-
-            <Footer />
-        </section>
-    )
+  return (
+    <div className="min-h-screen bg-customeBg text-slate-900">
+      <Seo
+        title="Page Not Found"
+        description="The page you requested could not be found on BookingCrown."
+        path="/404"
+        robots="noindex,nofollow"
+      />
+      <Header />
+      <main className="flex min-h-[calc(100vh-160px)] items-center px-4 py-24 sm:px-6 lg:px-8">
+        <div className="mx-auto max-w-3xl rounded-[32px] border border-slate-200 bg-white p-10 text-center shadow-sm">
+          <p className="text-sm font-semibold uppercase tracking-[0.2em] text-themeColor">404 error</p>
+          <h1 className="mt-4 font-['Crimson_Text'] text-5xl font-semibold text-slate-900">
+            This page is not available
+          </h1>
+          <p className="mt-5 text-base leading-8 text-slate-600">
+            The link may be outdated, the page may have moved, or the URL may have been entered incorrectly. Use the homepage or the blog to continue browsing useful content.
+          </p>
+          <Button type="primary" className="mt-8 h-11 rounded-xl bg-teal-500 px-6" onClick={() => navigate('/')}>
+            Go to homepage
+          </Button>
+        </div>
+      </main>
+      <Footer />
+    </div>
+  );
 }
 
-export default NotFound
+export default NotFound;

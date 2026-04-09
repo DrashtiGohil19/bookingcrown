@@ -282,19 +282,19 @@ function Profile() {
                                 </Row>
                             </Card>
 
-                            <Card title="Bussiness Information" className="mb-4 border-gray-100 shadow-lg">
+                            <Card title="Business Information" className="mb-4 border-gray-100 shadow-lg">
                                 <Row gutter={16}>
                                     <Col xs={12} sm={12} lg={12}>
                                         <Item
                                             name="businessType"
-                                            label="Bussiness Type"
+                                            label="Business Type"
                                             rules={[
-                                                { required: true, message: 'Please input your bussiness type!' },
+                                                { required: true, message: 'Please input your business type!' },
                                             ]}
                                         >
                                             <Input
                                                 type="text"
-                                                placeholder="Bussiness Type"
+                                                placeholder="Business Type"
                                                 className="h-10"
                                             />
                                         </Item>
@@ -303,14 +303,14 @@ function Profile() {
                                     <Col xs={12} sm={12} lg={12}>
                                         <Item
                                             name="businessName"
-                                            label="Bussiness Name"
+                                            label="Business Name"
                                             rules={[
-                                                { required: true, message: 'Please input your bussiness name!' },
+                                                { required: true, message: 'Please input your business name!' },
                                             ]}
                                         >
                                             <Input
                                                 type="text"
-                                                placeholder="Bussiness Name"
+                                                placeholder="Business Name"
                                                 className="h-10"
                                             />
                                         </Item>

@@ -3,6 +3,7 @@ import Footer from '../../common/Footer'
 import { Form, Input, Button, Spin } from 'antd';
 import { changePassword } from '../../api/Auth';
 import { useNavigate } from 'react-router-dom'
+import Seo from '../../common/Seo';
 
 function ChangePassword() {
     const [loading, setLoading] = useState(false);
@@ -18,12 +19,18 @@ function ChangePassword() {
     };
     return (
         <div>
+            <Seo
+                title="Change Password"
+                description="Change your BookingCrown account password."
+                path="/change-password"
+                robots="noindex,nofollow"
+            />
             <section className="flex items-center justify-center py-12 px-4 min-h-screen">
                 <div className="grid md:grid-cols-12 grid-cols-1 gap-8 items-center">
                     <div className="lg:col-span-6 md:col-span-6 hidden lg:flex justify-center">
                         <img
                             src="https://upcover-shreethemes.vercel.app/static/media/contact.adff68c5dcc9005ceb1a5566aaf4440b.svg"
-                            alt=""
+                            alt="Password update illustration"
                             className="w-full h-[580px] max-w-[500px]"
                         />
                     </div>
@@ -34,7 +41,7 @@ function ChangePassword() {
                                     Change Password
                                 </h3>
                                 <p className="text-slate-400 max-w-xl mx-auto">
-                                    Welcome back! Please sign in to access your account.
+                                    Update your password to keep your BookingCrown account secure.
                                 </p>
                             </div>
                             <div className="bg-white rounded-md p-6">

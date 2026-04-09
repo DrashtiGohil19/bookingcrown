@@ -4,6 +4,7 @@ import Footer from "../../common/Footer";
 import { Form, Input, Button, Spin } from 'antd';
 import { useNavigate } from "react-router-dom";
 import { forgetPassword } from '../../api/Auth';
+import Seo from '../../common/Seo';
 
 function ForgetPassword() {
     const [loading, setLoading] = useState(false);
@@ -25,12 +26,18 @@ function ForgetPassword() {
 
     return (
         <div>
+            <Seo
+                title="Forgot Password"
+                description="Reset your BookingCrown password."
+                path="/forget-password"
+                robots="noindex,nofollow"
+            />
             <section className="flex items-center justify-center px-4 min-h-screen">
                 <div className="grid md:grid-cols-12 grid-cols-1 gap-8 items-center">
                     <div className="lg:col-span-6 md:col-span-6 hidden lg:flex justify-center">
                         <img
                             src="https://upcover-shreethemes.vercel.app/static/media/contact.adff68c5dcc9005ceb1a5566aaf4440b.svg"
-                            alt=""
+                            alt="Password recovery illustration"
                             className="w-full h-[580px] max-w-[500px]"
                         />
                     </div>

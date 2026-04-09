@@ -25,6 +25,9 @@ import PrivacyPolicy from './pages/PrivacyPolicy/PrivacyPolicy';
 import TermsAndConditions from './pages/TermsAndConditions/TermsAndConditions';
 import AboutUs from './pages/AboutUs/AboutUs';
 import ContactUs from './pages/ContactUs/ContactUs';
+import Disclaimer from './pages/Disclaimer/Disclaimer';
+import Blog from './pages/Blog/Blog';
+import BlogPost from './pages/BlogPost/BlogPost';
 import ScrollToTop from './common/ScrollToTop';
 
 function App() {
@@ -43,6 +46,9 @@ function App() {
         <Route path="/terms-and-conditions" element={<TermsAndConditions />} />
         <Route path="/about-us" element={<AboutUs />} />
         <Route path="/contact-us" element={<ContactUs />} />
+        <Route path="/disclaimer" element={<Disclaimer />} />
+        <Route path="/blog" element={<Blog />} />
+        <Route path="/blog/:slug" element={<BlogPost />} />
         <Route path="/*" element={<NotFound />} />
 
         <Route path="/access-denied" element={<ProtectedAccessDenied element={AccessDenied} />} />

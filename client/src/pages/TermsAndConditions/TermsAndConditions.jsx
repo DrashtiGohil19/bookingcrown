@@ -1,182 +1,104 @@
-import React from 'react';
-import Header from '../../common/Header';
-import Footer from '../../common/Footer';
+import PublicPageShell from '../../common/PublicPageShell';
+import Seo from '../../common/Seo';
+import { LAST_UPDATED, SUPPORT_EMAIL, SUPPORT_PHONE } from '../../content/siteData';
+
+const sections = [
+  {
+    heading: 'Acceptance of terms',
+    paragraphs: [
+      'By accessing or using BookingCrown, you agree to these Terms and Conditions. These terms apply to visitors, prospective customers, account holders, and other users of the website or platform. If you do not agree with the terms, you should not use the service.',
+      'These terms exist to describe how the platform may be used, what responsibilities users have, and what limits apply to the service. They should be read alongside our Privacy Policy and any product-specific communication or operational instructions shared directly with registered users.',
+    ],
+  },
+  {
+    heading: 'Nature of the service',
+    paragraphs: [
+      'BookingCrown provides booking management functionality and related informational content intended to help service businesses organize reservations, manage customer details, and improve operational clarity. The website also includes educational articles and public content designed to explain booking-related concepts and service expectations.',
+      'Features, workflows, onboarding requirements, and access controls may change over time as the platform evolves. Public descriptions are intended to be accurate, but operational details may vary based on user role, business type, or current service availability.',
+    ],
+  },
+  {
+    heading: 'User responsibilities',
+    paragraphs: [
+      'Users are responsible for providing accurate information when creating accounts, contacting the team, or using booking-related features. Account holders must protect login credentials and are responsible for activity that occurs under their account unless and until they report unauthorized access.',
+      'Users must not misuse the platform, interfere with service stability, attempt unauthorized access, submit harmful content, harvest data improperly, or use the site in a way that violates applicable law or the rights of others.',
+    ],
+  },
+  {
+    heading: 'Content, accuracy, and operational decisions',
+    paragraphs: [
+      'BookingCrown publishes educational content to support better decision-making, but users remain responsible for their own commercial, legal, operational, and policy decisions. Articles, examples, and recommendations are general in nature and may not fit every business model or regulatory environment.',
+      'We aim to provide useful and accurate information, but we do not guarantee that public content will cover every scenario or remain suitable for all users without further review.',
+    ],
+  },
+  {
+    heading: 'Accounts, approvals, and access',
+    paragraphs: [
+      'Some parts of the BookingCrown platform require account access, and some access may depend on user role, account status, or business approval. We reserve the right to suspend, restrict, or terminate access where we believe a user has violated these terms, created operational risk, or used the platform improperly.',
+      'We may also modify, limit, or discontinue features where necessary for maintenance, service quality, compliance, or business operations. Where possible, we aim to communicate material changes clearly.',
+    ],
+  },
+  {
+    heading: 'Intellectual property',
+    paragraphs: [
+      'Unless otherwise stated, the content, structure, branding, and software elements of BookingCrown are owned by or licensed to BookingCrown and are protected by applicable intellectual property laws. Users may not copy, republish, distribute, or exploit site content or platform code beyond what is permitted by law or expressly authorized.',
+      'Limited personal or business reference use of publicly available information is acceptable, but that does not transfer ownership or create a right to reproduce the service as a competing product or duplicated website.',
+    ],
+  },
+  {
+    heading: 'Limitation of liability',
+    paragraphs: [
+      'To the fullest extent permitted by law, BookingCrown is not liable for indirect, incidental, special, consequential, or business interruption damages arising from use of the website or platform. This includes losses tied to missed bookings, data issues, operational misunderstandings, or reliance on general informational content.',
+      'Nothing in these terms is intended to exclude liability where exclusion is not legally permitted. In all cases, users remain responsible for reviewing their own business workflows and using the platform appropriately.',
+    ],
+  },
+];
 
 function TermsAndConditions() {
-    return (
-        <div>
-            <Header />
-            <section className='bg-[#f1fafb] min-h-screen pt-24'>
-                <div className='container mx-auto px-4 md:px-8 py-12 max-w-4xl'>
-                    <h1 className='text-3xl md:text-4xl font-bold text-themeColor mb-6'>Terms and Conditions</h1>
-                    <p className='text-slate-600 mb-4'>Last updated: {new Date().toLocaleDateString()}</p>
-                    
-                    <div style={{ textAlign: 'center', margin: '24px 0' }}>
-                        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9954652290347538"
-                            crossOrigin="anonymous"></script>
-                        <ins className="adsbygoogle"
-                            style={{
-                                display: 'block'
-                            }}
-                            data-ad-client="ca-pub-9954652290347538"
-                            data-ad-slot="1862889078"
-                            data-ad-format="auto"
-                            data-full-width-responsive="true"></ins>
-                        <script>
-                            {`(adsbygoogle = window.adsbygoogle || []).push({});`}
-                        </script>
-                    </div>
+  return (
+    <PublicPageShell
+      hero={{
+        eyebrow: 'Legal',
+        title: 'Terms and Conditions',
+        description:
+          'These terms describe how BookingCrown may be used, what users are responsible for, and how the service is presented to visitors and account holders.',
+      }}
+      breadcrumbs={[
+        { label: 'Home', to: '/' },
+        { label: 'Terms and conditions' },
+      ]}
+    >
+      <Seo
+        title="Terms and Conditions"
+        description="Read the BookingCrown terms and conditions covering use of the site, account responsibilities, content limitations, and service expectations."
+        path="/terms-and-conditions"
+      />
 
-                    <div className='bg-white rounded-lg shadow-md p-6 md:p-8 space-y-6'>
-                        <section>
-                            <h2 className='text-2xl font-semibold text-gray-800 mb-4'>1. Agreement to Terms</h2>
-                            <p className='text-slate-600 leading-relaxed mb-4'>
-                                By accessing or using BookingCrown ("the Service"), you agree to be bound by these Terms and Conditions ("Terms"). If you disagree with any part of these terms, then you may not access the Service.
-                            </p>
-                            <p className='text-slate-600 leading-relaxed'>
-                                These Terms apply to all visitors, users, and others who access or use the Service. Your use of the Service is also governed by our Privacy Policy, which is incorporated into these Terms by reference.
-                            </p>
-                        </section>
+      <div className="rounded-[30px] border border-slate-200 bg-white p-6 shadow-sm md:p-8">
+        <p className="text-sm text-slate-500">Last updated: {LAST_UPDATED}</p>
 
-                        <section>
-                            <h2 className='text-2xl font-semibold text-gray-800 mb-4'>2. Description of Service</h2>
-                            <p className='text-slate-600 leading-relaxed mb-4'>
-                                BookingCrown is a comprehensive booking management platform designed to help businesses manage their appointments, reservations, and customer bookings efficiently. Our Service includes:
-                            </p>
-                            <ul className='list-disc list-inside text-slate-600 space-y-2 ml-4'>
-                                <li>Online booking management system for hourly and daily reservations</li>
-                                <li>Customer information management and tracking</li>
-                                <li>Dashboard for viewing and managing bookings</li>
-                                <li>Automated notifications and confirmations</li>
-                                <li>Income and expense tracking tools</li>
-                                <li>Secure user authentication and access control</li>
-                            </ul>
-                        </section>
-
-                        <section>
-                            <h2 className='text-2xl font-semibold text-gray-800 mb-4'>3. User Accounts and Registration</h2>
-                            <p className='text-slate-600 leading-relaxed mb-4'>
-                                To access certain features of the Service, you must register for an account. When you register, you agree to:
-                            </p>
-                            <ul className='list-disc list-inside text-slate-600 space-y-2 ml-4'>
-                                <li>Provide accurate, current, and complete information</li>
-                                <li>Maintain and promptly update your account information</li>
-                                <li>Maintain the security of your password and account</li>
-                                <li>Accept responsibility for all activities that occur under your account</li>
-                                <li>Notify us immediately of any unauthorized use of your account</li>
-                            </ul>
-                            <p className='text-slate-600 leading-relaxed mt-4'>
-                                We reserve the right to suspend or terminate accounts that violate these Terms or engage in fraudulent, abusive, or illegal activity.
-                            </p>
-                        </section>
-
-                        <section>
-                            <h2 className='text-2xl font-semibold text-gray-800 mb-4'>4. Acceptable Use</h2>
-                            <p className='text-slate-600 leading-relaxed mb-4'>
-                                You agree not to use the Service to:
-                            </p>
-                            <ul className='list-disc list-inside text-slate-600 space-y-2 ml-4'>
-                                <li>Violate any applicable laws or regulations</li>
-                                <li>Infringe upon the rights of others, including intellectual property rights</li>
-                                <li>Transmit any harmful, offensive, or inappropriate content</li>
-                                <li>Attempt to gain unauthorized access to the Service or related systems</li>
-                                <li>Interfere with or disrupt the Service or servers connected to the Service</li>
-                                <li>Use automated systems to access the Service without permission</li>
-                                <li>Collect or harvest information about other users without their consent</li>
-                            </ul>
-                        </section>
-
-                        <section>
-                            <h2 className='text-2xl font-semibold text-gray-800 mb-4'>5. Booking and Payment Terms</h2>
-                            <p className='text-slate-600 leading-relaxed mb-4'>
-                                When using our booking services:
-                            </p>
-                            <ul className='list-disc list-inside text-slate-600 space-y-2 ml-4'>
-                                <li>All bookings are subject to availability and confirmation</li>
-                                <li>Booking rates and terms are set by individual service providers</li>
-                                <li>Cancellation and refund policies vary by provider and booking type</li>
-                                <li>You are responsible for providing accurate booking information</li>
-                                <li>We act as an intermediary platform and are not responsible for the services provided by third-party businesses</li>
-                            </ul>
-                            <p className='text-slate-600 leading-relaxed mt-4'>
-                                Any disputes regarding bookings, payments, or services must be resolved directly with the service provider. BookingCrown is not liable for the quality, safety, or delivery of services booked through our platform.
-                            </p>
-                        </section>
-
-                        <section>
-                            <h2 className='text-2xl font-semibold text-gray-800 mb-4'>6. Intellectual Property</h2>
-                            <p className='text-slate-600 leading-relaxed mb-4'>
-                                The Service and its original content, features, and functionality are owned by BookingCrown and are protected by international copyright, trademark, patent, trade secret, and other intellectual property laws.
-                            </p>
-                            <p className='text-slate-600 leading-relaxed'>
-                                You may not copy, modify, distribute, sell, or lease any part of our Service or included software, nor may you reverse engineer or attempt to extract the source code of that software, unless laws prohibit those restrictions or you have our written permission.
-                            </p>
-                        </section>
-
-                        <section>
-                            <h2 className='text-2xl font-semibold text-gray-800 mb-4'>7. Limitation of Liability</h2>
-                            <p className='text-slate-600 leading-relaxed mb-4'>
-                                To the maximum extent permitted by law, BookingCrown shall not be liable for any indirect, incidental, special, consequential, or punitive damages, or any loss of profits or revenues, whether incurred directly or indirectly, or any loss of data, use, goodwill, or other intangible losses resulting from:
-                            </p>
-                            <ul className='list-disc list-inside text-slate-600 space-y-2 ml-4'>
-                                <li>Your use or inability to use the Service</li>
-                                <li>Any conduct or content of third parties on the Service</li>
-                                <li>Unauthorized access, use, or alteration of your transmissions or content</li>
-                                <li>Any other matter relating to the Service</li>
-                            </ul>
-                        </section>
-
-                        <section>
-                            <h2 className='text-2xl font-semibold text-gray-800 mb-4'>8. Indemnification</h2>
-                            <p className='text-slate-600 leading-relaxed'>
-                                You agree to defend, indemnify, and hold harmless BookingCrown and its officers, directors, employees, and agents from and against any claims, liabilities, damages, losses, and expenses, including without limitation reasonable attorney's fees and costs, arising out of or in any way connected with your access to or use of the Service, your violation of these Terms, or your violation of any third-party right.
-                            </p>
-                        </section>
-
-                        <section>
-                            <h2 className='text-2xl font-semibold text-gray-800 mb-4'>9. Termination</h2>
-                            <p className='text-slate-600 leading-relaxed mb-4'>
-                                We may terminate or suspend your account and access to the Service immediately, without prior notice or liability, for any reason whatsoever, including without limitation if you breach the Terms.
-                            </p>
-                            <p className='text-slate-600 leading-relaxed'>
-                                Upon termination, your right to use the Service will cease immediately. If you wish to terminate your account, you may simply discontinue using the Service or contact us to request account deletion.
-                            </p>
-                        </section>
-
-                        <section>
-                            <h2 className='text-2xl font-semibold text-gray-800 mb-4'>10. Changes to Terms</h2>
-                            <p className='text-slate-600 leading-relaxed'>
-                                We reserve the right, at our sole discretion, to modify or replace these Terms at any time. If a revision is material, we will try to provide at least 30 days notice prior to any new terms taking effect. What constitutes a material change will be determined at our sole discretion.
-                            </p>
-                            <p className='text-slate-600 leading-relaxed mt-4'>
-                                By continuing to access or use our Service after those revisions become effective, you agree to be bound by the revised terms. If you do not agree to the new terms, please stop using the Service.
-                            </p>
-                        </section>
-
-                        <section>
-                            <h2 className='text-2xl font-semibold text-gray-800 mb-4'>11. Governing Law</h2>
-                            <p className='text-slate-600 leading-relaxed'>
-                                These Terms shall be interpreted and governed by the laws of the jurisdiction in which BookingCrown operates, without regard to its conflict of law provisions. Our failure to enforce any right or provision of these Terms will not be considered a waiver of those rights.
-                            </p>
-                        </section>
-
-                        <section>
-                            <h2 className='text-2xl font-semibold text-gray-800 mb-4'>12. Contact Information</h2>
-                            <p className='text-slate-600 leading-relaxed mb-4'>
-                                If you have any questions about these Terms and Conditions, please contact us:
-                            </p>
-                            <ul className='list-none text-slate-600 space-y-2'>
-                                <li><strong>Email:</strong> <a href="mailto:bookingcrown8@gmail.com" className='text-themeColor hover:underline'>bookingcrown8@gmail.com</a></li>
-                                <li><strong>Phone:</strong> <a href="tel:+919998883603" className='text-themeColor hover:underline'>+91 99988 83603</a></li>
-                            </ul>
-                        </section>
-                    </div>
-                </div>
+        <div className="mt-6 space-y-8">
+          {sections.map((section) => (
+            <section key={section.heading}>
+              <h2 className="font-['Crimson_Text'] text-3xl font-semibold text-slate-900">{section.heading}</h2>
+              <div className="mt-4 space-y-4 text-base leading-8 text-slate-700">
+                {section.paragraphs.map((paragraph) => (
+                  <p key={paragraph}>{paragraph}</p>
+                ))}
+              </div>
             </section>
-            <Footer />
+          ))}
         </div>
-    );
+
+        <section className="mt-8 rounded-3xl bg-themeLight p-5">
+          <h2 className="text-xl font-semibold text-slate-900">Questions about these terms</h2>
+          <p className="mt-3 text-base leading-7 text-slate-700">
+            Contact BookingCrown at {SUPPORT_EMAIL} or {SUPPORT_PHONE} if you need clarification about these terms before using the platform.
+          </p>
+        </section>
+      </div>
+    </PublicPageShell>
+  );
 }
 
 export default TermsAndConditions;
-

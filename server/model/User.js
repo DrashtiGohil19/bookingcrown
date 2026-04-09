@@ -21,7 +21,7 @@ const UserSchema = new mongoose.Schema({
     },
     businessType: {
         type: String,
-        // enum: ["Box Cricket", "Cafe/Restuarant", "Hotel management", "Farm"]
+        // enum: ["Box Cricket", "Cafe/Restaurant", "Hotel management", "Farm"]
     },
     businessName: {
         type: String,
@@ -54,7 +54,7 @@ UserSchema.pre('save', async function (next) {
 
 UserSchema.pre('save', function (next) {
     if (this.isNew || this.isModified('businessType')) {
-        if (["Box Cricket", "Cafe/Restuarant"].includes(this.businessType)) {
+        if (["Box Cricket", "Cafe/Restuarant", "Cafe/Restaurant"].includes(this.businessType)) {
             this.bookingType = 'hourly';
         } else {
             this.bookingType = 'daily';

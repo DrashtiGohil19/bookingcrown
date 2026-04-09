@@ -4,6 +4,7 @@ import { useState } from "react";
 import Footer from "../../common/Footer";
 import { Form, Input, Button, Spin } from 'antd';
 import "../../App.css"
+import Seo from "../../common/Seo";
 
 function Login() {
     const [form] = Form.useForm();
@@ -39,12 +40,18 @@ function Login() {
 
     return (
         <>
+            <Seo
+                title="Log In"
+                description="Log in to your BookingCrown account."
+                path="/login"
+                robots="noindex,nofollow"
+            />
             <section className="flex items-center justify-center py-12 px-4 min-h-screen">
                 <div className="grid md:grid-cols-12 grid-cols-1 gap-8 items-center">
                     <div className="lg:col-span-6 md:col-span-6 hidden lg:flex justify-center">
                         <img
                             src="https://upcover-shreethemes.vercel.app/static/media/contact.adff68c5dcc9005ceb1a5566aaf4440b.svg"
-                            alt=""
+                            alt="Booking access illustration"
                             className="w-full h-[580px] max-w-[500px]"
                         />
                     </div>

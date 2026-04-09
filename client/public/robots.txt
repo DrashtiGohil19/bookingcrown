@@ -1,8 +1,9 @@
-# https://www.robotstxt.org/robotstxt.html
 User-agent: *
 Allow: /
 Allow: /about-us
+Allow: /blog
 Allow: /contact-us
+Allow: /disclaimer
 Allow: /privacy-policy
 Allow: /terms-and-conditions
 
@@ -16,7 +17,4 @@ Disallow: /change-password
 Disallow: /forget-password
 
 # Sitemap location
-Sitemap: https://bookingground.com/sitemap.xml
-
-# Crawl delay
-Crawl-delay: 1
+Sitemap: https://bookingcrown.com/sitemap.xml

@@ -6,6 +6,7 @@ import Footer from '../../../common/Footer';
 import { resetUserData } from '../../../features/user/UserSlice';
 import { resetBookingData } from '../../../features/bookings/BookingSlice';
 import { useDispatch } from 'react-redux';
+import Seo from '../../../common/Seo';
 
 function AccessDenied() {
     const navigate = useNavigate();
@@ -19,6 +20,12 @@ function AccessDenied() {
     }
     return (
         <section className='bg-[#f1fafb]'>
+            <Seo
+                title="Access Denied"
+                description="Access denied page for BookingCrown."
+                path="/access-denied"
+                robots="noindex,nofollow"
+            />
             <main className='min-h-screen flex flex-col justify-center items-center py-8 px-4'>
                 <div className='max-w-2xl w-full text-center'>
                     <h1 className='font-semibold text-3xl md:text-4xl text-red-500 mb-4'>

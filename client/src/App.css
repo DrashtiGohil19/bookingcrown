@@ -1,49 +1,26 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import url('https://fonts.googleapis.com/css2?family=Crimson+Text:wght@400;600;700&family=Libre+Franklin:ital,wght@0,100..900;1,100..900&display=swap');
 
-@import url('https://fonts.googleapis.com/css2?family=Crimson+Text:wght@400;600&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&family=Libre+Franklin:ital,wght@0,100..900;1,100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+:root {
+  color-scheme: light;
+}
 
 body {
   font-family: 'Libre Franklin', sans-serif;
-  background-color: #f8fafc;
+  background:
+    radial-gradient(circle at top left, rgba(20, 184, 166, 0.12), transparent 30%),
+    linear-gradient(180deg, #f8fafc 0%, #eef7f6 100%);
+  color: #0f172a;
 }
 
 ::selection {
   background-color: #14b8a6;
-  color: #fff;
-}
-
-.home-main {
-  background-image: url("./assets/asset_2.avif");
-  background-size: auto;
-  background-repeat: no-repeat;
-  background-attachment: fixed;
-  background-position: center;
-}
-
-/* about us */
-
-.services-main {
-  background-image: url("https://tanshcreative.com/saasflix-lp-preview/saasflix/assets/images/section-bg1.png");
-  background-size: auto;
-  background-repeat: no-repeat;
-  background-attachment: fixed;
-  background-position: center -24.4417px;
-}
-
-.contact-main {
-  background-image: url("https://tanshcreative.com/saasflix-lp-preview/saasflix/assets/images/section-bg2.png");
-  background-size: auto;
-  background-repeat: no-repeat;
-  background-attachment: fixed;
-  background-position: center -24.4417px;
+  color: #ffffff;
 }
 
 .spinner {
   border: 2px solid #0f766e;
   border-radius: 50%;
-  border-top: 2px solid #fff;
+  border-top: 2px solid #ffffff;
   width: 16px;
   height: 16px;
   animation: spin 1s linear infinite;
@@ -60,21 +37,16 @@ body {
 }
 
 @media (max-width: 768px) {
-
   .ant-table {
     font-size: 16px;
   }
 
-  .ant-table-thead>tr>th,
-  .ant-table-tbody>tr>td {
+  .ant-table-thead > tr > th,
+  .ant-table-tbody > tr > td {
     font-size: 16px;
   }
 }
 
 .ant-form-item-required::before {
   display: none !important;
-}
-
-.stepper-main>div:last-child .after-step {
-  display: none;
 }
