@@ -194,7 +194,7 @@ const blogPosts = [
         paragraphs: [
           'Price transparency works best when the page also explains what customers get. Add descriptive content about ideal event types, booking timelines, included amenities, venue rules, and support availability. This improves both trust and search visibility.',
           'A detailed venue page does more than rank in search. It helps customers picture the experience and decide whether your space fits their event.',
-          'That is especially important for AdSense and search quality because thin pages with only a form or pricing table rarely feel complete or authoritative.',
+          'That is especially important for overall site quality because thin pages with only a form or pricing table rarely feel complete or authoritative.',
         ],
       },
       {
@@ -247,7 +247,7 @@ const blogPosts = [
         paragraphs: [
           'If customers have to call during a narrow time window just to make a change, many will simply disappear. Give them a straightforward way to contact you before the booking starts. Even an email or phone link presented clearly in the confirmation can help.',
           'The point is not to encourage cancellations. It is to make communication easier than silence. When customers know how to inform you, your team can reopen the slot and reduce operational loss.',
-          'Ease of contact is also an important trust signal for site quality and AdSense review.',
+          'Ease of contact is also an important trust signal for site quality.',
         ],
       },
       {
@@ -280,7 +280,7 @@ const blogPosts = [
     title: 'Why Service Businesses Need Content, Not Just a Booking Form',
     image: '/images/blog-booking-content-strategy.jpg',
     description:
-      'Why content depth matters for trust, SEO, AdSense review, and conversion when your website includes booking functionality.',
+      'Why content depth matters for trust, SEO, and conversion when your website includes booking functionality.',
     category: 'SEO and Growth',
     readTime: '10 min read',
     publishedOn: '2026-04-09',
@@ -304,11 +304,11 @@ const blogPosts = [
         ],
       },
       {
-        heading: 'AdSense review looks at value and completeness',
+        heading: 'Quality review looks at value and completeness',
         paragraphs: [
-          'When a site applies for AdSense, reviewers are not evaluating ad code alone. They also look at whether pages provide substantial publisher content, whether the site feels complete, and whether the user experience is trustworthy.',
-          'Thin pages with little explanation, duplicate phrasing, navigation-only screens, or ads shown before meaningful content all weaken approval odds. Detailed editorial content helps address these concerns because it shows that the site exists to help users, not just to display monetization units.',
-          'That is why service businesses should treat content as part of compliance, not only marketing.',
+          'When a business site is evaluated for quality, people do not look at layout alone. They also look at whether pages provide substantial content, whether the site feels complete, and whether the user experience is trustworthy.',
+          'Thin pages with little explanation, duplicate phrasing, or navigation-only screens weaken trust. Detailed editorial content helps address these concerns because it shows that the site exists to help users, not just to capture a quick form submission.',
+          'That is why service businesses should treat content as part of trust-building, not only marketing.',
         ],
       },
       {
@@ -332,7 +332,7 @@ const blogPosts = [
         paragraphs: [
           'The best content is specific, readable, and rooted in real customer questions. It does not need to sound academic. It should explain how your service works, what customers should expect, what common mistakes to avoid, and how decisions like timing or pricing are typically made.',
           'Strong pages use a clear heading structure, original examples, internal links, and plain language. They are not stuffed with keywords or repeated phrases. They feel written for people first.',
-          'That is exactly the kind of content quality that supports long-term SEO and a healthier AdSense profile.',
+          'That is exactly the kind of content quality that supports long-term SEO and a healthier web presence.',
         ],
       },
       {

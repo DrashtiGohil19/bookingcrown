@@ -232,13 +232,13 @@ function Home() {
               </h2>
               <div className="mt-6 space-y-4 text-base leading-8 text-slate-700">
                 <p>
-                  Thin pages are a common reason websites struggle with both search visibility and AdSense review. A page that only shows a login box, a reservation widget, or a short paragraph does not do enough to explain the service or help the visitor make a decision.
+                  Thin pages create confusion for visitors. A page that only shows a login box, a reservation widget, or a short paragraph does not do enough to explain the service or help the visitor make a decision.
                 </p>
                 <p>
                   BookingCrown publishes educational content because customers need context. They want to understand how scheduling works, what affects pricing, how cancellations should be handled, and what makes a booking workflow reliable. That context improves trust and leads to better quality inquiries.
                 </p>
                 <p>
-                  The same principle applies to site quality. Search engines and ad-review teams are more likely to trust a website that demonstrates topic depth, visible business information, and useful editorial coverage around its transactional features.
+                  The same principle applies to site quality. A stronger website demonstrates topic depth, visible business information, and useful editorial coverage around its transactional features.
                 </p>
               </div>
             </div>
