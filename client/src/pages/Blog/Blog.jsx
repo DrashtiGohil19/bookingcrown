@@ -50,7 +50,7 @@ function Blog() {
               alt={post.title}
               className="h-56 w-full rounded-2xl object-cover"
             />
-            <p className="text-xs font-semibold uppercase tracking-[0.18em] text-themeColor">
+            <p className="mt-5 text-xs font-semibold uppercase tracking-[0.18em] text-themeColor">
               {post.category}
             </p>
             <h2 className="mt-4 font-['Crimson_Text'] text-3xl font-semibold text-slate-900">

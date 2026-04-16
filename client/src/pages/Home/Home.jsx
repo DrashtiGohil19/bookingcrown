@@ -281,7 +281,7 @@ function Home() {
                     alt={post.title}
                     className="h-52 w-full rounded-2xl object-cover"
                   />
-                  <p className="text-xs font-semibold uppercase tracking-[0.18em] text-themeColor">{post.category}</p>
+                  <p className="mt-5 text-xs font-semibold uppercase tracking-[0.18em] text-themeColor">{post.category}</p>
                   <h3 className="mt-4 text-2xl font-semibold text-slate-900">
                     <Link to={`/blog/${post.slug}`} className="hover:text-themeColor">
                       {post.title}

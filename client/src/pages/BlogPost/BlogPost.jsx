@@ -63,7 +63,7 @@ function BlogPost() {
           alt={post.title}
           className="mt-6 h-72 w-full rounded-[28px] object-cover md:h-[420px]"
         />
-        <p className="mt-6 text-lg leading-8 text-slate-700">{post.intro}</p>
+        <p className="mt-6 text-base leading-8 text-slate-700">{post.intro}</p>
 
         <div className="space-y-8">
           {post.sections.map((section) => (
