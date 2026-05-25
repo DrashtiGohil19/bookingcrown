@@ -124,7 +124,7 @@ function CustomerDetail() {
 
       <div className="mx-auto max-w-4xl px-4 py-6 sm:py-10">
         <div className="flex flex-col items-center gap-6 md:flex-row md:items-stretch">
-          <div className="w-full rounded-xl bg-gradient-to-br from-teal-500 to-teal-700 p-6 text-white shadow-lg sm:p-8 md:w-[420px]">
+          <div className="w-full rounded-xl bg-gradient-to-br from-themeColor to-themeDark p-6 text-white shadow-lg sm:p-8 md:w-[420px]">
             <div className="flex flex-col items-center text-center">
               <FaCheckCircle className="mb-4 text-4xl text-white/90" />
               <p className="text-base sm:text-lg font-semibold">
@@ -206,7 +206,7 @@ function CustomerDetail() {
           <p>
             If you have questions about your booking, please contact{' '}
             <strong>{booking.ownerData?.businessName}</strong> directly on{' '}
-            <a href={`tel:+91${booking.ownerData?.mobilenu}`} className="font-semibold text-themeColor hover:text-teal-700">
+            <a href={`tel:+91${booking.ownerData?.mobilenu}`} className="font-semibold text-themeColor hover:text-themeDark">
               +91 {booking.ownerData?.mobilenu}
             </a>.
           </p>

@@ -177,7 +177,7 @@ function Home() {
                   ))}
                 </div>
 
-              <div className="mt-6 rounded-2xl bg-[#0b1f1f] p-5 text-white">
+              <div className="mt-6 rounded-2xl bg-themeDeep p-5 text-white">
                 <img
                   src={HOME_HERO_IMAGE}
                   alt="BookingCrown dashboard and booking workflow preview"
@@ -243,7 +243,7 @@ function Home() {
               </div>
             </div>
 
-            <div className="rounded-[32px] bg-[#0d2323] p-8 text-white shadow-xl">
+            <div className="rounded-[32px] bg-themeDeep p-8 text-white shadow-xl">
               <div className="flex items-center gap-3">
                 <MdOutlineTipsAndUpdates className="text-3xl text-teal-300" />
                 <h2 className="font-['Crimson_Text'] text-3xl font-semibold">What visitors should find here</h2>
@@ -268,7 +268,7 @@ function Home() {
                   Original guides for booking-driven businesses
                 </h2>
               </div>
-              <Link to="/blog" className="hidden items-center gap-2 text-sm font-semibold text-themeColor hover:text-teal-700 md:inline-flex">
+              <Link to="/blog" className="hidden items-center gap-2 text-sm font-semibold text-themeColor hover:text-themeDark md:inline-flex">
                 View all articles <FaArrowRight />
               </Link>
             </div>

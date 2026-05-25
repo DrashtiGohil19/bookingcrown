@@ -98,7 +98,7 @@ function Login() {
                                     </Form.Item>
 
                                     <div>
-                                        <Link to="/forget-password" className="!text-themeColor hover:text-teal-700 font-semibold">
+                                        <Link to="/forget-password" className="!text-themeColor hover:text-themeDark font-semibold">
                                             Forget Password
                                         </Link>
                                     </div>
@@ -107,7 +107,7 @@ function Login() {
                                         <Button
                                             type="primary"
                                             htmlType="submit"
-                                            className={`h-10 w-full tracking-wide inline-flex items-center justify-center font-medium rounded-md ${loading ? '!bg-[#0f766e]' : 'bg-teal-500'} text-white mt-5`}
+                                            className={`h-10 w-full tracking-wide inline-flex items-center justify-center font-medium rounded-md ${loading ? '!bg-themeDark' : 'bg-themeColor'} text-white mt-5`}
                                             disabled={loading}
                                         >
                                             {loading && <Spin size="small" className="mr-2" />}
@@ -118,7 +118,7 @@ function Login() {
                             </div>
                             <div className="mt-6 text-center">
                                 <p className="text-slate-600">
-                                    Don't have an account? <Link to="/signup" className="text-teal-500 hover:text-teal-700 font-semibold">Register</Link>
+                                    Don't have an account? <Link to="/signup" className="text-themeColor hover:text-themeDark font-semibold">Register</Link>
                                 </p>
                             </div>
                         </div>

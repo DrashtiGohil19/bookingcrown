@@ -88,7 +88,7 @@ function ChangePassword() {
                                         <Button
                                             type="primary"
                                             htmlType="submit"
-                                            className={`h-10 w-full tracking-wide inline-flex items-center justify-center font-medium rounded-md ${loading ? '!bg-[#0f766e]' : 'bg-teal-500'} text-white mt-5`}
+                                            className={`h-10 w-full tracking-wide inline-flex items-center justify-center font-medium rounded-md ${loading ? '!bg-themeDark' : 'bg-themeColor'} text-white mt-5`}
                                             disabled={loading}
                                         >
                                             {loading && <Spin size="small" className="mr-2" />}

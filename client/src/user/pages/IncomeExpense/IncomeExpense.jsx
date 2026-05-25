@@ -119,7 +119,7 @@ function IncomeExpense() {
                     <Tooltip title="Edit">
                         <FaPenToSquare
                             onClick={() => handleEdit(record)}
-                            className="text-themeColor cursor-pointer text-[18px] hover:text-teal-700"
+                            className="text-themeColor cursor-pointer text-[18px] hover:text-themeDark"
                         />
                     </Tooltip>
                     <Tooltip title="Delete">

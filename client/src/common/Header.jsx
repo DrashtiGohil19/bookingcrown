@@ -128,7 +128,7 @@ function Header() {
                 <button
                   type="button"
                   onClick={handleLogOut}
-                  className="rounded-full bg-themeColor px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-teal-700"
+                  className="rounded-full bg-themeColor px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-themeDark"
                 >
                   Log out
                 </button>
@@ -145,7 +145,7 @@ function Header() {
                 <button
                   type="button"
                   onClick={() => navigate('/signup')}
-                  className="rounded-full bg-themeColor px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-teal-700"
+                  className="rounded-full bg-themeColor px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-themeDark"
                 >
                   Get started
                 </button>

@@ -43,7 +43,7 @@ function Contact() {
               <p className="mt-2 text-sm leading-6 text-slate-600">
                 Best for account questions, product inquiries, partnership requests, and follow-up after you sign up.
               </p>
-              <a href={`mailto:${SUPPORT_EMAIL}`} className="mt-3 inline-block font-semibold text-themeColor hover:text-teal-700">
+              <a href={`mailto:${SUPPORT_EMAIL}`} className="mt-3 inline-block font-semibold text-themeColor hover:text-themeDark">
                 {SUPPORT_EMAIL}
               </a>
             </div>
@@ -60,7 +60,7 @@ function Contact() {
               <p className="mt-2 text-sm leading-6 text-slate-600">
                 Use phone support for urgent booking workflow questions or account access issues that need a quicker reply.
               </p>
-              <a href={`tel:${SUPPORT_PHONE_LINK}`} className="mt-3 inline-block font-semibold text-themeColor hover:text-teal-700">
+              <a href={`tel:${SUPPORT_PHONE_LINK}`} className="mt-3 inline-block font-semibold text-themeColor hover:text-themeDark">
                 {SUPPORT_PHONE}
               </a>
             </div>
@@ -149,7 +149,7 @@ function Contact() {
           <Button
             type="primary"
             htmlType="submit"
-            className={`h-11 rounded-xl px-6 ${loading ? '!bg-[#0f766e]' : 'bg-teal-500'} text-white`}
+            className={`h-11 rounded-xl px-6 ${loading ? '!bg-themeDark' : 'bg-themeColor'} text-white`}
             disabled={loading}
           >
             {loading ? <Spin size="small" /> : 'Send inquiry'}

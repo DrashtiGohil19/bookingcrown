@@ -170,7 +170,7 @@ function Signup() {
                   <Button
                     type="primary"
                     htmlType="submit"
-                    className={`mt-5 inline-flex h-10 w-full items-center justify-center rounded-md font-medium tracking-wide ${loading ? '!bg-[#0f766e]' : 'bg-teal-500'} text-white`}
+                    className={`mt-5 inline-flex h-10 w-full items-center justify-center rounded-md font-medium tracking-wide ${loading ? '!bg-themeDark' : 'bg-themeColor'} text-white`}
                     disabled={loading}
                   >
                     {loading && <Spin size="small" className="mr-2" />}
@@ -182,7 +182,7 @@ function Signup() {
               <div className="mt-6 text-center">
                 <p className="text-slate-600">
                   Already have an account?{' '}
-                  <Link to="/login" className="font-semibold text-teal-500 hover:text-teal-700">
+                  <Link to="/login" className="font-semibold text-themeColor hover:text-themeDark">
                     Login
                   </Link>
                 </p>

@@ -65,7 +65,7 @@ function Blog() {
             <p className="mt-4 text-base leading-7 text-slate-600">{post.intro}</p>
             <Link
               to={`/blog/${post.slug}`}
-              className="mt-6 inline-flex rounded-full bg-themeColor px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-teal-700"
+              className="mt-6 inline-flex rounded-full bg-themeColor px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-themeDark"
             >
               Read article
             </Link>

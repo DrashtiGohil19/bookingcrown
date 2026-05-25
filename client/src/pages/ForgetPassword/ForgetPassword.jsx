@@ -76,7 +76,7 @@ function ForgetPassword() {
                                         <Button
                                             type="primary"
                                             htmlType="submit"
-                                            className={`h-10 w-full tracking-wide inline-flex items-center justify-center font-medium rounded-md ${loading ? '!bg-[#0f766e] !text-white' : 'bg-teal-500'} text-white mt-5`}
+                                            className={`h-10 w-full tracking-wide inline-flex items-center justify-center font-medium rounded-md ${loading ? '!bg-themeDark !text-white' : 'bg-themeColor'} text-white mt-5`}
                                             disabled={loading}
                                         >
                                             {loading && <Spin size="small" className="mr-2" />}

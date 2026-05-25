@@ -3,7 +3,7 @@ import { SITE_NAME, SUPPORT_EMAIL, SUPPORT_PHONE, SUPPORT_PHONE_LINK } from '../
 
 function Footer() {
   return (
-    <footer className="border-t border-slate-200 bg-[#0b1f1f] text-white">
+    <footer className="border-t border-slate-200 bg-themeDeep text-white">
       <div className="mx-auto grid max-w-7xl gap-10 px-4 py-12 sm:px-6 lg:grid-cols-[1.2fr,0.8fr,0.8fr,1fr] lg:px-8">
         <div>
           <h2 className="font-['Crimson_Text'] text-3xl font-semibold">{SITE_NAME}</h2>

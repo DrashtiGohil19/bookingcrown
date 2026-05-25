@@ -25,7 +25,7 @@ function NotFound() {
           <p className="mt-5 text-base leading-8 text-slate-600">
             The link may be outdated, the page may have moved, or the URL may have been entered incorrectly. Use the homepage or the blog to continue browsing useful content.
           </p>
-          <Button type="primary" className="mt-8 h-11 rounded-xl bg-teal-500 px-6" onClick={() => navigate('/')}>
+          <Button type="primary" className="mt-8 h-11 rounded-xl bg-themeColor px-6" onClick={() => navigate('/')}>
             Go to homepage
           </Button>
         </div>

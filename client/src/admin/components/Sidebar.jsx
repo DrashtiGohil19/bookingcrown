@@ -72,8 +72,8 @@ export default function Sidebar() {
                                 </div>
                             </TransitionChild>
                             {/* Sidebar component, swap this element with another sidebar if you like */}
-                            <div className="flex grow flex-col gap-y-5 overflow-y-auto bg-themeColor px-6 pb-4">
-                                <div className="flex h-16 shrink-0 items-center border-b-[1px] select-none" onClick={() => navigate("/user/dashboard")}>
+                            <div className="flex grow flex-col gap-y-5 overflow-y-auto bg-gradient-to-b from-themeDeep via-themeDark to-themeColor px-6 pb-4 shadow-xl">
+                                <div className="flex h-16 shrink-0 items-center border-b border-white/10 select-none" onClick={() => navigate("/user/dashboard")}>
                                     <img
                                         alt="Company"
                                         src={require("../../assets/Logo3.jpg")}
@@ -91,16 +91,16 @@ export default function Sidebar() {
                                                             to={item.href}
                                                             className={classNames(
                                                                 location.pathname === item.href
-                                                                    ? 'bg-[#029584] text-white'
-                                                                    : 'text-white hover:bg-[#029584] hover:text-white',
-                                                                'group flex gap-x-3 rounded-md p-3 text-sm font-semibold leading-6',
+                                                                    ? 'bg-white/15 text-white'
+                                                                    : 'text-white/80 hover:bg-white/10 hover:text-white',
+                                                                'group flex gap-x-3 rounded-md p-3 text-sm font-semibold leading-6 transition-all duration-200',
                                                             )}
                                                         >
                                                             <item.icon
                                                                 aria-hidden="true"
                                                                 className={classNames(
-                                                                    location.pathname === item.href ? 'text-white' : 'text-white group-hover:text-white',
-                                                                    'h-6 w-6 shrink-0',
+                                                                    location.pathname === item.href ? 'text-white' : 'text-white/80 group-hover:text-white',
+                                                                    'h-6 w-6 shrink-0 transition-colors duration-200',
                                                                 )}
                                                             />
                                                             {item.name}
@@ -119,8 +119,8 @@ export default function Sidebar() {
                 {/* Static sidebar for desktop */}
                 <div className="hidden lg:fixed lg:inset-y-0 lg:z-50 lg:flex lg:w-[16rem] lg:flex-col">
                     {/* Sidebar component, swap this element with another sidebar if you like */}
-                    <div className="flex grow flex-col gap-y-5 overflow-y-auto bg-themeColor px-6 pb-4">
-                        <div className="flex h-16 shrink-0 items-center border-b-[1px] select-none" onClick={() => navigate("/user/dashboard")}>
+                    <div className="flex grow flex-col gap-y-5 overflow-y-auto bg-gradient-to-b from-themeDeep via-themeDark to-themeColor px-6 pb-4 shadow-xl">
+                        <div className="flex h-16 shrink-0 items-center border-b border-white/10 select-none" onClick={() => navigate("/user/dashboard")}>
                             <img
                                 alt="Company"
                                 src={require("../../assets/Logo3.jpg")}
@@ -138,16 +138,16 @@ export default function Sidebar() {
                                                     to={item.href}
                                                     className={classNames(
                                                         location.pathname === item.href
-                                                            ? 'bg-[#029584] text-white'
-                                                            : 'text-white hover:bg-[#029584] hover:text-white',
-                                                        'group flex gap-x-3 rounded-md p-3 text-sm font-semibold leading-6',
+                                                            ? 'bg-white/15 text-white'
+                                                            : 'text-white/80 hover:bg-white/10 hover:text-white',
+                                                        'group flex gap-x-3 rounded-md p-3 text-sm font-semibold leading-6 transition-all duration-200',
                                                     )}
                                                 >
                                                     <item.icon
                                                         aria-hidden="true"
                                                         className={classNames(
-                                                            location.pathname === item.href ? 'text-white' : 'text-white group-hover:text-white',
-                                                            'h-6 w-6 shrink-0',
+                                                            location.pathname === item.href ? 'text-white' : 'text-white/80 group-hover:text-white',
+                                                            'h-6 w-6 shrink-0 transition-colors duration-200',
                                                         )}
                                                     />
                                                     {item.name}
