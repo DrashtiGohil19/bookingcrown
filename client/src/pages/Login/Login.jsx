@@ -16,7 +16,7 @@ function Login() {
         try {
             const data = await login(values.email, values.password)
 
-            if (data.success) {
+            if (data?.success) {
                 localStorage.setItem("token", data.token)
                 localStorage.setItem("role", data.role)
 
@@ -46,17 +46,17 @@ function Login() {
                 path="/login"
                 robots="noindex,nofollow"
             />
-            <section className="flex items-center justify-center py-12 px-4 min-h-screen">
-                <div className="grid md:grid-cols-12 grid-cols-1 gap-8 items-center">
+            <section className="flex min-h-screen items-center justify-center px-4 py-8 sm:py-12">
+                <div className="grid w-full max-w-6xl grid-cols-1 items-center gap-8 md:grid-cols-12">
                     <div className="lg:col-span-6 md:col-span-6 hidden lg:flex justify-center">
                         <img
                             src="https://upcover-shreethemes.vercel.app/static/media/contact.adff68c5dcc9005ceb1a5566aaf4440b.svg"
                             alt="Booking access illustration"
-                            className="w-full h-[580px] max-w-[500px]"
+                            className="h-auto max-h-[580px] w-full max-w-[500px]"
                         />
                     </div>
-                    <div className="lg:col-span-6 md:col-span-12 flex items-center justify-center md:p-0 p-6">
-                        <div className="max-w-[700px] w-full bg-white rounded-md shadow p-6">
+                    <div className="flex items-center justify-center md:col-span-12 lg:col-span-6">
+                        <div className="w-full max-w-[520px] rounded-md bg-white p-5 shadow sm:p-6">
                             <div className="pb-6 text-center">
                                 <h3 className="font-semibold text-2xl leading-normal mb-4">
                                     Sign In To Your Account
@@ -65,12 +65,12 @@ function Login() {
                                     Welcome back! Please sign in to access your account.
                                 </p>
                             </div>
-                            <div className="bg-white rounded-md md:p-6">
+                            <div className="rounded-md bg-white md:p-6">
                                 <Form
                                     name="login"
                                     layout="vertical"
                                     onFinish={onFinish}
-                                    className="max-w-lg mx-auto"
+                                    className="mx-auto max-w-lg"
                                 >
                                     <Form.Item
                                         label="Your Email"

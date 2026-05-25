@@ -30,6 +30,7 @@ function DailyForm({ isEditing, userId }) {
                     advanceAmount: data.advance,
                     pendingAmount: data.pending,
                     session: data.session,
+                    paymentMethod: data.paymentMethod || 'not_specified',
                 });
             }
         } catch (error) {
@@ -65,7 +66,8 @@ function DailyForm({ isEditing, userId }) {
             session: values.session,
             amount: values.totalAmount,
             advance: values.advanceAmount || 0,
-            pending: values.pendingAmount
+            pending: values.pendingAmount,
+            paymentMethod: values.paymentMethod || 'not_specified',
         }
         if (isEditing) {
             response = await UpdateBooking(formData, userId)
@@ -86,7 +88,7 @@ function DailyForm({ isEditing, userId }) {
                 onValuesChange={handleAmountChange}
             >
                 <Row gutter={16}>
-                    <Col xs={12} sm={12} lg={8}>
+                    <Col xs={24} sm={12} lg={8}>
                         <Item
                             name="customerName"
                             label="Customer name"
@@ -100,7 +102,7 @@ function DailyForm({ isEditing, userId }) {
                         </Item>
                     </Col>
 
-                    <Col xs={12} sm={12} lg={8}>
+                    <Col xs={24} sm={12} lg={8}>
                         <Item
                             name="mobileNumber"
                             label="Mobile Number"
@@ -120,7 +122,7 @@ function DailyForm({ isEditing, userId }) {
                         </Item>
                     </Col>
 
-                    <Col xs={12} sm={12} lg={8}>
+                    <Col xs={24} sm={12} lg={8}>
                         <Item
                             name="item"
                             label="Select Booking Item"
@@ -140,7 +142,7 @@ function DailyForm({ isEditing, userId }) {
                         </Item>
                     </Col>
 
-                    <Col xs={12} sm={12} lg={8}>
+                    <Col xs={24} sm={12} lg={8}>
                         <Item
                             name="date"
                             label="Booking Date"
@@ -156,7 +158,7 @@ function DailyForm({ isEditing, userId }) {
                         </Item>
                     </Col>
 
-                    <Col xs={12} sm={12} lg={8}>
+                    <Col xs={24} sm={12} lg={8}>
                         <Item
                             name="session"
                             label="Select Session"
@@ -175,7 +177,7 @@ function DailyForm({ isEditing, userId }) {
                         </Item>
                     </Col>
 
-                    <Col xs={12} sm={12} lg={8}>
+                    <Col xs={24} sm={12} lg={8}>
                         <Item
                             name="totalAmount"
                             label="Total Amount"
@@ -189,7 +191,7 @@ function DailyForm({ isEditing, userId }) {
                         </Item>
                     </Col>
 
-                    <Col xs={12} sm={12} lg={8}>
+                    <Col xs={24} sm={12} lg={8}>
                         <Item
                             name="advanceAmount"
                             label="Advance Amount"
@@ -202,7 +204,7 @@ function DailyForm({ isEditing, userId }) {
                         </Item>
                     </Col>
 
-                    <Col xs={12} sm={12} lg={8}>
+                    <Col xs={24} sm={12} lg={8}>
                         <Item
                             name="pendingAmount"
                             label="Pending Amount"
@@ -216,12 +218,30 @@ function DailyForm({ isEditing, userId }) {
                             />
                         </Item>
                     </Col>
+                    <Col xs={24} sm={12} lg={8}>
+                        <Item
+                            name="paymentMethod"
+                            label="Payment Method"
+                            initialValue="not_specified"
+                            rules={[{ required: true, message: 'Please select payment method!' }]}
+                        >
+                            <Select
+                                placeholder="Select Payment Method"
+                                className='h-10'
+                                options={[
+                                    { value: 'not_specified', label: 'Not Specified' },
+                                    { value: 'cash', label: 'Cash' },
+                                    { value: 'online_transfer', label: 'Online Transfer' },
+                                ]}
+                            />
+                        </Item>
+                    </Col>
 
                 </Row>
                 <Button
                     type="primary"
                     htmlType="submit"
-                    className='h-10'
+                    className='h-10 w-full sm:w-auto'
                 >
                     Save
                 </Button>

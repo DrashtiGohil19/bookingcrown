@@ -38,12 +38,21 @@ body {
 
 @media (max-width: 768px) {
   .ant-table {
-    font-size: 16px;
+    font-size: 14px;
   }
 
   .ant-table-thead > tr > th,
   .ant-table-tbody > tr > td {
-    font-size: 16px;
+    font-size: 14px;
+    white-space: nowrap;
+  }
+
+  .ant-card-head-title {
+    white-space: normal;
+  }
+
+  .ant-modal {
+    max-width: calc(100vw - 24px);
   }
 }
 

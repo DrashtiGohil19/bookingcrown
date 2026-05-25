@@ -14,6 +14,11 @@ dayjs.extend(timezone);
 dayjs.extend(utc);
 
 const { Text } = Typography;
+const paymentMethodLabels = {
+  cash: 'Cash',
+  online_transfer: 'Online Transfer',
+  not_specified: 'Not Specified',
+};
 
 function CustomerDetail() {
   const [booking, setBooking] = useState(null);
@@ -162,6 +167,12 @@ function CustomerDetail() {
                         <div className="mb-1 flex gap-4 md:mb-3">
                           <Text className="font-semibold">Pending Amount:</Text>
                           <Text>{`Rs. ${booking.pending}`}</Text>
+                        </div>
+                      </Col>
+                      <Col xs={24} sm={12} md={8} lg={8}>
+                        <div className="mb-1 flex gap-4 md:mb-3">
+                          <Text className="font-semibold">Payment Method:</Text>
+                          <Text>{paymentMethodLabels[booking.paymentMethod] || paymentMethodLabels.not_specified}</Text>
                         </div>
                       </Col>
                     </Row>

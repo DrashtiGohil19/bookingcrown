@@ -10,6 +10,11 @@ import { handleCopy } from '../../../utilities/utils';
 
 const { Text } = Typography;
 const { confirm } = Modal
+const paymentMethodLabels = {
+    cash: 'Cash',
+    online_transfer: 'Online Transfer',
+    not_specified: 'Not Specified',
+};
 
 const HourlyBookingDetail = () => {
     const [booking, setBooking] = useState(null);
@@ -122,14 +127,20 @@ const HourlyBookingDetail = () => {
                                                 <Text>{booking.payment}</Text>
                                             </div>
                                         </Col>
+                                        <Col xs={24} sm={12} md={8} lg={8}>
+                                            <div className="flex gap-4 mb-1 md:mb-5">
+                                                <Text className='font-semibold'>Payment Method:</Text>
+                                                <Text>{paymentMethodLabels[booking.paymentMethod] || paymentMethodLabels.not_specified}</Text>
+                                            </div>
+                                        </Col>
                                     </Row>
                                 )}
                             </Card>
 
                             <Card title="Copy this link and send to the customer" className='mt-3'>
-                                <div className='flex gap-6'>
-                                    <CopyToClipboard onCopy={() => handleCopy(booking.mobilenu, booking?._id)} text={bookingLink}>
-                                        <Button type="primary">Click here to copy link and send on WhatsApp</Button>
+                                <div className='flex flex-wrap gap-6'>
+                                    <CopyToClipboard onCopy={() => handleCopy(booking.mobilenu, booking?._id, booking)} text={bookingLink}>
+                                        <Button type="primary" className="h-auto min-h-10 whitespace-normal">Click here to copy link and send on WhatsApp</Button>
                                     </CopyToClipboard>
                                 </div>
                             </Card>

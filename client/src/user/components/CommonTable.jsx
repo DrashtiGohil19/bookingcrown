@@ -19,6 +19,12 @@ dayjs.extend(isSameOrAfter);
 
 const { Option } = Select;
 
+const paymentMethodLabels = {
+    cash: 'Cash',
+    online_transfer: 'Online Transfer',
+    not_specified: 'Not Specified',
+};
+
 const commonColumns = [
     {
         title: 'Name',
@@ -123,6 +129,17 @@ const actionColumns = (handleEdit, navigateDetailPage, showModal) => [
         }
     },
     {
+        title: 'Payment Method',
+        dataIndex: 'paymentMethod',
+        key: 'paymentMethod',
+        align: 'center',
+        responsive: ['sm'],
+        render: (text, record) => {
+            if (record.key === 'total') return null;
+            return paymentMethodLabels[text] || paymentMethodLabels.not_specified;
+        }
+    },
+    {
         title: 'Actions',
         key: 'actions',
         align: 'center',
@@ -132,7 +149,7 @@ const actionColumns = (handleEdit, navigateDetailPage, showModal) => [
             return (
                 <div className="flex justify-center gap-4 items-center">
                     <FaWhatsapp
-                        onClick={() => handleCopy(record.mobilenu, record.key)}
+                        onClick={() => handleCopy(record.mobilenu, record.key, record)}
                         className="text-[20px] text-green-500 cursor-pointer"
                         title="Send WhatsApp Link"
                     />
@@ -195,8 +212,8 @@ function CommonTable({ filter }) {
         .filter((booking) => {
             const searchLower = searchText.toLowerCase();
             return (
-                booking.mobilenu.toString().includes(searchText) ||
-                booking.customerName.toLowerCase().includes(searchLower)
+                booking.mobilenu?.toString().includes(searchText) ||
+                booking.customerName?.toLowerCase().includes(searchLower)
             );
         })
         .filter((booking) => {
@@ -220,11 +237,17 @@ function CommonTable({ filter }) {
             Hr: booking.totalHours,
             session: booking.session,
             payment: booking.payment,
+            paymentMethod: booking.paymentMethod || 'not_specified',
             amount: booking.amount,
             advance: booking.advance,
-            pending: booking.pending
+            pending: booking.pending,
+            createdAt: booking.createdAt,
         }))
-        .sort((a, b) => new Date(a.date) - new Date(b.date));
+        .sort((a, b) => {
+            const createdA = new Date(a.createdAt || a.date || 0).getTime();
+            const createdB = new Date(b.createdAt || b.date || 0).getTime();
+            return createdB - createdA;
+        });
 
     const handleEdit = (id) => {
         navigate(`/user/edit-booking/${id}`);
@@ -285,7 +308,7 @@ function CommonTable({ filter }) {
         <div>
             <div className="mb-4">
                 <Row gutter={14}>
-                    <Col xs={12} sm={12} md={8}>
+                    <Col xs={24} sm={12} md={8}>
                         <Input
                             placeholder="Search by Name or Mobile Number"
                             value={searchText}
@@ -293,7 +316,7 @@ function CommonTable({ filter }) {
                             className="w-full h-8 mb-2 md:mb-0"
                         />
                     </Col>
-                    <Col xs={12} sm={12} md={8}>
+                    <Col xs={24} sm={12} md={8}>
                         <Select
                             placeholder="Search by Month"
                             value={selectedMonth}
@@ -308,7 +331,7 @@ function CommonTable({ filter }) {
                             ))}
                         </Select>
                     </Col>
-                    <Col xs={12} sm={12} md={8}>
+                    <Col xs={24} sm={12} md={8}>
                         <DatePicker
                             placeholder="Search by date"
                             format="DD-MM-YYYY"
@@ -322,7 +345,7 @@ function CommonTable({ filter }) {
                 <Table
                     columns={columns}
                     dataSource={getCurrentPageData()}
-                    pagination={{ pageSize: 11, onChange: (page) => setCurrentPage(page), total: filteredData.length + 1 }}
+                    pagination={{ pageSize: 11, onChange: (page) => setCurrentPage(page), total: filteredData.length }}
                     scroll={{ x: 'max-content' }}
                     loading={{
                         indicator: <Spin size="large" />,

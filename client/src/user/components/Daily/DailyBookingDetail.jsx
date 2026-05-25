@@ -4,12 +4,17 @@ import { Card, Col, Row, Typography, Skeleton, Button, Modal } from 'antd';
 import { DeleteBooking, getBookingById } from '../../../api/Bookings';
 import Sidebar from '../../components/Sidebar';
 import CopyToClipboard from 'react-copy-to-clipboard';
-import Notification from '../../../utilities/Notification';
 import { fetchAllBookings } from '../../../features/bookings/BookingSlice';
 import { useDispatch } from 'react-redux';
+import { handleCopy } from '../../../utilities/utils';
 
 const { Text } = Typography;
 const { confirm } = Modal
+const paymentMethodLabels = {
+    cash: 'Cash',
+    online_transfer: 'Online Transfer',
+    not_specified: 'Not Specified',
+};
 
 const DailyBookingDetail = () => {
     const [booking, setBooking] = useState(null);
@@ -18,11 +23,6 @@ const DailyBookingDetail = () => {
     const navigate = useNavigate()
     const params = useParams();
     const bookingLink = `${process.env.REACT_APP_BASE_URL}/customer/booking-details/${booking?._id}`;
-
-    const handleCopy = (mobilenu) => {
-        Notification.success("Link copied to clipboard!");
-        window.open(`https://wa.me/${mobilenu}?text=${encodeURIComponent(bookingLink)}`, '_blank');
-    };
 
     const fetchBooking = useCallback(async () => {
         try {
@@ -121,14 +121,20 @@ const DailyBookingDetail = () => {
                                                 <Text>{booking.payment}</Text>
                                             </div>
                                         </Col>
+                                        <Col xs={24} sm={12} md={8} lg={8}>
+                                            <div className="flex gap-4 mb-1 md:mb-5">
+                                                <Text className='font-semibold'>Payment Method:</Text>
+                                                <Text>{paymentMethodLabels[booking.paymentMethod] || paymentMethodLabels.not_specified}</Text>
+                                            </div>
+                                        </Col>
                                     </Row>
                                 )}
                             </Card>
 
                             <Card title="Copy this link and send to the customer" className='mt-3'>
-                                <div className='flex gap-6'>
-                                    <CopyToClipboard onCopy={() => handleCopy(booking.mobilenu)} text={bookingLink}>
-                                        <Button type="primary">Click here to copy link and send on WhatsApp</Button>
+                                <div className='flex flex-wrap gap-6'>
+                                    <CopyToClipboard onCopy={() => handleCopy(booking.mobilenu, booking?._id, booking)} text={bookingLink}>
+                                        <Button type="primary" className="h-auto min-h-10 whitespace-normal">Click here to copy link and send on WhatsApp</Button>
                                     </CopyToClipboard>
                                 </div>
                             </Card>

@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Button, Checkbox, Form, Input, Modal } from 'antd';
+import { Button, Checkbox, Form, Input, Modal, Select } from 'antd';
 import { UpdateBooking } from '../../api/Bookings';
 import { useDispatch } from 'react-redux';
 import { fetchIncomeAndExpenses } from '../../features/Expense/ExpenseSlice';
@@ -19,6 +19,7 @@ const UpdatePayment = ({ showModel, handleCancel, selectedRecord }) => {
                 amount: selectedRecord.amount,
                 advance: selectedRecord.advance,
                 pending: selectedRecord.pending,
+                paymentMethod: selectedRecord.paymentMethod || 'not_specified',
             });
         }
     }, [selectedRecord, form]);
@@ -28,11 +29,12 @@ const UpdatePayment = ({ showModel, handleCancel, selectedRecord }) => {
             advance: values.advance,
             pending: values.pending,
             amount: values.amount,
+            paymentMethod: values.paymentMethod,
             fullyPaid: values.fullyPaid
         }
 
         const response = await UpdateBooking(formData, selectedRecord.key)
-        if (response) {
+        if (response?.success) {
             handleCancel()
             dispatch(fetchIncomeAndExpenses({ month: null }));
         }
@@ -72,6 +74,20 @@ const UpdatePayment = ({ showModel, handleCancel, selectedRecord }) => {
                         <Input
                             type="number"
                             placeholder="Enter amount"
+                        />
+                    </Item>
+                    <Item
+                        name="paymentMethod"
+                        label="Payment Method"
+                        rules={[{ required: true, message: 'Please select payment method!' }]}
+                    >
+                        <Select
+                            placeholder="Select payment method"
+                            options={[
+                                { value: 'not_specified', label: 'Not Specified' },
+                                { value: 'cash', label: 'Cash' },
+                                { value: 'online_transfer', label: 'Online Transfer' },
+                            ]}
                         />
                     </Item>
                     <Item

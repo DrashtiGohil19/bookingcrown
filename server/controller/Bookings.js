@@ -12,7 +12,7 @@ dayjs.extend(timezone);
 exports.createBookings = async (req, res) => {
     try {
         const userId = req.user.id;
-        const { customerName, mobilenu, date, time, totalHours, amount, advance, pending, session, item } = req.body;
+        const { customerName, mobilenu, date, time, totalHours, amount, advance, pending, session, item, paymentMethod } = req.body;
         
         // Debug log to see what we're receiving
         console.log('=== CREATE BOOKING REQUEST ===');
@@ -208,6 +208,7 @@ exports.createBookings = async (req, res) => {
             mobilenu,
             date,
             item,
+            paymentMethod: paymentMethod || "not_specified",
         };
 
         if (time && time.start && time.end) {
@@ -320,6 +321,7 @@ exports.updateBookingDetails = async (req, res) => {
             pending,
             session,
             item,
+            paymentMethod,
             fullyPaid
         } = req.body;
 
@@ -536,6 +538,7 @@ exports.updateBookingDetails = async (req, res) => {
         if (amount !== undefined) booking.amount = amount;
         if (advance !== undefined) booking.advance = advance;
         if (pending !== undefined) booking.pending = pending;
+        if (paymentMethod !== undefined) booking.paymentMethod = paymentMethod || "not_specified";
 
         if (checkForConflict) {
             if (time) {
@@ -645,7 +648,7 @@ exports.getAllBookings = async (req, res) => {
     try {
         const userId = req.user.id;
 
-        const bookings = await Bookings.find({ userId: userId })
+        const bookings = await Bookings.find({ userId: userId }).sort({ createdAt: -1, date: -1 })
 
         if (!bookings.length) return res.status(400).json({ message: 'No bookings found' });
 

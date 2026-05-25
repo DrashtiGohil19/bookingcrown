@@ -97,6 +97,7 @@ function HourlyForm({ isEditing, userId }) {
                     totalAmount: data.amount,
                     advanceAmount: data.advance,
                     pendingAmount: data.pending,
+                    paymentMethod: data.paymentMethod || 'not_specified',
                 });
             }
         } catch (error) {
@@ -180,7 +181,8 @@ function HourlyForm({ isEditing, userId }) {
             totalHours: values.totalHours,
             amount: values.totalAmount,
             advance: values.advanceAmount || 0,
-            pending: values.pendingAmount
+            pending: values.pendingAmount,
+            paymentMethod: values.paymentMethod || 'not_specified',
         }
         
         // Debug log to verify what's being sent
@@ -205,7 +207,7 @@ function HourlyForm({ isEditing, userId }) {
                 onValuesChange={handleAmountChange}
             >
                 <Row gutter={16}>
-                    <Col xs={12} sm={12} lg={8}>
+                    <Col xs={24} sm={12} lg={8}>
                         <Item
                             name="customerName"
                             label="Customer name"
@@ -219,7 +221,7 @@ function HourlyForm({ isEditing, userId }) {
                         </Item>
                     </Col>
 
-                    <Col xs={12} sm={12} lg={8}>
+                    <Col xs={24} sm={12} lg={8}>
                         <Item
                             name="mobileNumber"
                             label="Mobile Number"
@@ -239,7 +241,7 @@ function HourlyForm({ isEditing, userId }) {
                         </Item>
                     </Col>
 
-                    <Col xs={12} sm={12} lg={8}>
+                    <Col xs={24} sm={12} lg={8}>
                         <Item
                             name="item"
                             label="Select Turf"
@@ -259,7 +261,7 @@ function HourlyForm({ isEditing, userId }) {
                         </Item>
                     </Col>
 
-                    <Col xs={12} sm={12} lg={8}>
+                    <Col xs={24} sm={12} lg={8}>
                         <Item
                             name="date"
                             label="Booking Date"
@@ -274,7 +276,7 @@ function HourlyForm({ isEditing, userId }) {
                         </Item>
                     </Col>
 
-                    <Col xs={12} sm={12} lg={8}>
+                    <Col xs={24} sm={12} lg={8}>
                         <Item
                             name="startTime"
                             label="Start Time"
@@ -290,7 +292,7 @@ function HourlyForm({ isEditing, userId }) {
                         </Item>
                     </Col>
 
-                    <Col xs={12} sm={12} lg={8}>
+                    <Col xs={24} sm={12} lg={8}>
                         <Item
                             name="endTime"
                             label="End Time"
@@ -308,7 +310,7 @@ function HourlyForm({ isEditing, userId }) {
                         </Item>
                     </Col>
 
-                    <Col xs={12} sm={12} lg={8}>
+                    <Col xs={24} sm={12} lg={8}>
                         <Item
                             name="totalHours"
                             label="Total Hours"
@@ -323,7 +325,7 @@ function HourlyForm({ isEditing, userId }) {
                         </Item>
                     </Col>
 
-                    <Col xs={12} sm={12} lg={8}>
+                    <Col xs={24} sm={12} lg={8}>
                         <Item
                             name="totalAmount"
                             label="Total Amount"
@@ -337,7 +339,7 @@ function HourlyForm({ isEditing, userId }) {
                         </Item>
                     </Col>
 
-                    <Col xs={12} sm={12} lg={8}>
+                    <Col xs={24} sm={12} lg={8}>
                         <Item
                             name="advanceAmount"
                             label="Advance Amount"
@@ -353,7 +355,7 @@ function HourlyForm({ isEditing, userId }) {
                         </Item>
                     </Col>
 
-                    <Col xs={12} sm={12} lg={8}>
+                    <Col xs={24} sm={12} lg={8}>
                         <Item
                             name="pendingAmount"
                             label="Pending Amount"
@@ -367,11 +369,29 @@ function HourlyForm({ isEditing, userId }) {
                             />
                         </Item>
                     </Col>
+                    <Col xs={24} sm={12} lg={8}>
+                        <Item
+                            name="paymentMethod"
+                            label="Payment Method"
+                            initialValue="not_specified"
+                            rules={[{ required: true, message: 'Please select payment method!' }]}
+                        >
+                            <Select
+                                placeholder="Select Payment Method"
+                                className='h-10'
+                                options={[
+                                    { value: 'not_specified', label: 'Not Specified' },
+                                    { value: 'cash', label: 'Cash' },
+                                    { value: 'online_transfer', label: 'Online Transfer' },
+                                ]}
+                            />
+                        </Item>
+                    </Col>
                 </Row>
                 <Button
                     type="primary"
                     htmlType="submit"
-                    className='h-10'
+                    className='h-10 w-full sm:w-auto'
                 >
                     Save
                 </Button>
