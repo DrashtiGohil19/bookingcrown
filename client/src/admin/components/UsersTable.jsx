@@ -209,7 +209,7 @@ function UsersTable({ activeKey }) {
 
     return (
         <div>
-            <div className="mb-4 flex space-x-4">
+            <div className="mb-4 flex flex-col sm:flex-row sm:space-x-4 space-y-2 sm:space-y-0">
                 <Input
                     placeholder="Search..."
                     value={searchText}

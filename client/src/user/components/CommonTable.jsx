@@ -133,7 +133,7 @@ const actionColumns = (handleEdit, navigateDetailPage, showModal) => [
         dataIndex: 'paymentMethod',
         key: 'paymentMethod',
         align: 'center',
-        responsive: ['sm'],
+        responsive: ['xs', 'sm'],
         render: (text, record) => {
             if (record.key === 'total') return null;
             return paymentMethodLabels[text] || paymentMethodLabels.not_specified;

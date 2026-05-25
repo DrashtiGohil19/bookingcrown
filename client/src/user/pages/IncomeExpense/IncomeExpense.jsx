@@ -119,6 +119,7 @@ function IncomeExpense() {
                                 bordered
                                 size='middle'
                                 rowKey={record => record.id}
+                                scroll={{ x: 'max-content' }}
                                 footer={() => <div>Total Income: ₹ {totalIncome}</div>}
                                 className='border border-gray-300 rounded-lg w-full'
                             />
@@ -132,6 +133,7 @@ function IncomeExpense() {
                                 bordered
                                 size='middle'
                                 rowKey={record => record.id}
+                                scroll={{ x: 'max-content' }}
                                 footer={() => <div>Total Expenses: ₹ {totalExpense}</div>}
                                 className='border border-gray-300 rounded-lg w-full'
                             />

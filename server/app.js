@@ -11,6 +11,21 @@ const app = express();
 const PORT = process.env.PORT || 4000;
 const cors = require("cors");
 
+const allowedOrigins = process.env.CORS_ORIGINS
+    ? process.env.CORS_ORIGINS.split(',').map(s => s.trim())
+    : [process.env.CLIENT_BASEURL || 'http://localhost:3000'];
+
+const corsOptions = {
+    origin: (origin, callback) => {
+        if (!origin || allowedOrigins.includes(origin)) {
+            callback(null, true);
+        } else {
+            callback(new Error('Not allowed by CORS'));
+        }
+    },
+    credentials: true
+};
+
 db();
 
 const server = http.createServer(app);
@@ -18,14 +33,10 @@ const { Server } = require("socket.io");
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-app.use(cors());
+app.use(cors(corsOptions));
 
 const io = new Server(server, {
-    cors: {
-        origin: process.env.CLIENT_BASEURL,
-        methods: ['GET', 'POST'],
-        credentials: true
-    }
+    cors: corsOptions
 });
 
 app.use('/api', UserRouter);

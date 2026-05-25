@@ -214,7 +214,7 @@ function Profile() {
                         >
                             <Card title="Personal Information" className="mb-4 border-gray-100 shadow-lg">
                                 <Row gutter={16}>
-                                    <Col xs={12} sm={12} lg={8}>
+                                    <Col xs={24} sm={12} lg={8}>
                                         <Item
                                             name="name"
                                             label="Name"
@@ -228,7 +228,7 @@ function Profile() {
                                         </Item>
                                     </Col>
 
-                                    <Col xs={12} sm={12} lg={8}>
+                                    <Col xs={24} sm={12} lg={8}>
                                         <Item
                                             label="Your Email"
                                             name="email"
@@ -244,7 +244,7 @@ function Profile() {
                                         </Item>
                                     </Col>
 
-                                    <Col xs={12} sm={12} lg={8}>
+                                    <Col xs={24} sm={12} lg={8}>
                                         <Item
                                             name="mobileNumber"
                                             label="Mobile Number"
@@ -264,7 +264,7 @@ function Profile() {
                                         </Item>
                                     </Col>
 
-                                    <Col xs={12} sm={12} lg={8}>
+                                    <Col xs={24} sm={12} lg={8}>
                                         <Item
                                             name="address"
                                             label="Address"
@@ -284,7 +284,7 @@ function Profile() {
 
                             <Card title="Business Information" className="mb-4 border-gray-100 shadow-lg">
                                 <Row gutter={16}>
-                                    <Col xs={12} sm={12} lg={12}>
+                                    <Col xs={24} sm={12} lg={12}>
                                         <Item
                                             name="businessType"
                                             label="Business Type"
@@ -300,7 +300,7 @@ function Profile() {
                                         </Item>
                                     </Col>
 
-                                    <Col xs={12} sm={12} lg={12}>
+                                    <Col xs={24} sm={12} lg={12}>
                                         <Item
                                             name="businessName"
                                             label="Business Name"
@@ -319,7 +319,7 @@ function Profile() {
                                     {/* {user?.data?.businessType !== "Box Cricket" && renderSessionList()} */}
 
                                     {user?.data?.businessType === "Box Cricket" ? (
-                                        <Col xs={12} sm={12} lg={8}>
+                                        <Col xs={24} sm={12} lg={8}>
                                             <Item
                                                 name="tableTurfList"
                                                 label="Add Number Of Turf"
