@@ -33,6 +33,7 @@ function IncomeExpense() {
     const [open, setOpen] = useState(false);
     const [editRecord, setEditRecord] = useState(null);
     const [selectedMonth, setSelectedMonth] = useState(null);
+    const [selectedMonthObj, setSelectedMonthObj] = useState(null);
     const dispatch = useDispatch();
     const { incomeData, expenseData, totalIncome, totalExpense, profitOrLoss, status } = useSelector(state => state.expenses);
 
@@ -56,9 +57,11 @@ function IncomeExpense() {
         if (date) {
             const formattedMonth = dayjs(date).format("YYYY-MM")
             setSelectedMonth(formattedMonth);
+            setSelectedMonthObj(date);
             dispatch(fetchIncomeAndExpenses({ month: formattedMonth }))
         } else {
             setSelectedMonth(null);
+            setSelectedMonthObj(null);
             dispatch(fetchIncomeAndExpenses({ month: null }))
         }
     };
@@ -141,12 +144,19 @@ function IncomeExpense() {
                                 <h1 className="text-xl font-semibold text-start">Income/Expense</h1>
                             </div>
                             <div className="flex w-full gap-4 sm:w-auto items-center">
+                                {selectedMonthObj && (
+                                    <span className="text-sm font-semibold text-gray-600 whitespace-nowrap">
+                                        {dayjs(selectedMonthObj).format('MMMM YYYY')}
+                                    </span>
+                                )}
                                 <DatePicker
                                     picker="month"
+                                    value={selectedMonthObj}
                                     onChange={onMonthChange}
                                     placeholder="Select month"
                                     format="MM-YYYY"
                                     inputMode={false}
+                                    allowClear
                                     className="w-full sm:w-auto lg:w-48"
                                 />
                                 <Button
