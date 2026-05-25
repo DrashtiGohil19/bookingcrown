@@ -32,8 +32,8 @@ const incomeColumns = [
 function IncomeExpense() {
     const [open, setOpen] = useState(false);
     const [editRecord, setEditRecord] = useState(null);
-    const [selectedMonth, setSelectedMonth] = useState(null);
-    const [selectedMonthObj, setSelectedMonthObj] = useState(null);
+    const [selectedMonth, setSelectedMonth] = useState(dayjs().format("YYYY-MM"));
+    const [selectedMonthObj, setSelectedMonthObj] = useState(dayjs());
     const dispatch = useDispatch();
     const { incomeData, expenseData, totalIncome, totalExpense, profitOrLoss, status } = useSelector(state => state.expenses);
 
