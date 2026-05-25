@@ -85,12 +85,14 @@ const DailyBookingDetail = () => {
                                                 <Text>{new Date(booking.date).toLocaleDateString("en-GB")}</Text>
                                             </div>
                                         </Col>
-                                        <Col xs={24} sm={12} md={8} lg={8}>
-                                            <div className="flex gap-4 mb-1 md:mb-5">
-                                                <Text className='font-semibold'>Booking For:</Text>
-                                                <Text>{booking.session}</Text>
-                                            </div>
-                                        </Col>
+                                        {booking.session ? (
+                                            <Col xs={24} sm={12} md={8} lg={8}>
+                                                <div className="flex gap-4 mb-1 md:mb-3">
+                                                    <Text className='font-semibold'>Booking For:</Text>
+                                                    <Text>{booking.session}</Text>
+                                                </div>
+                                            </Col>
+                                        ) : null}
                                         <Col xs={24} sm={12} md={8} lg={8}>
                                             <div className="flex gap-4 mb-1 md:mb-5">
                                                 <Text className='font-semibold'>Booking Item:</Text>

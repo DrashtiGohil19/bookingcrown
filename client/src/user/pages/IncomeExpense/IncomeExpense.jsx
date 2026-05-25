@@ -1,11 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import Sidebar from '../../components/Sidebar';
-import { Button, Table, Row, Col, DatePicker } from 'antd';
-import { FaPlus } from 'react-icons/fa6';
+import { Button, Table, Row, Col, DatePicker, Modal, Tooltip } from 'antd';
+import { FaPlus, FaEdit, FaTrash } from 'react-icons/fa6';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchIncomeAndExpenses } from '../../../features/Expense/ExpenseSlice';
 import ExpenseModel from '../../model/ExpenseModel';
+import { DeleteExpense } from '../../../api/Expenses';
 import dayjs from 'dayjs';
+
+const { confirm } = Modal;
 
 const incomeColumns = [
     {
@@ -20,33 +23,15 @@ const incomeColumns = [
         key: 'customerName',
     },
     {
-        title: 'Amount(₹)',
+        title: 'Amount (₹)',
         dataIndex: 'amount',
         key: 'amount',
     }
 ];
 
-const expenseColumns = [
-    {
-        title: 'Date',
-        dataIndex: 'date',
-        key: 'date',
-        render: (date) => new Date(date).toLocaleDateString("en-GB"),
-    },
-    {
-        title: 'Description',
-        dataIndex: 'description',
-        key: 'description',
-    },
-    {
-        title: 'Amount(₹)',
-        dataIndex: 'amount',
-        key: 'amount',
-    },
-];
-
 function IncomeExpense() {
     const [open, setOpen] = useState(false);
+    const [editRecord, setEditRecord] = useState(null);
     const [selectedMonth, setSelectedMonth] = useState(null);
     const dispatch = useDispatch();
     const { incomeData, expenseData, totalIncome, totalExpense, profitOrLoss, status } = useSelector(state => state.expenses);
@@ -57,9 +42,14 @@ function IncomeExpense() {
         }
     }, [dispatch, status, selectedMonth]);
 
+    const refreshData = () => {
+        dispatch(fetchIncomeAndExpenses({ month: selectedMonth }));
+    };
+
     const handleCancel = () => {
         setOpen(false);
-        dispatch(fetchIncomeAndExpenses({ month: selectedMonth }));
+        setEditRecord(null);
+        refreshData();
     };
 
     const onMonthChange = (date) => {
@@ -73,11 +63,72 @@ function IncomeExpense() {
         }
     };
 
+    const handleEdit = (record) => {
+        setEditRecord(record);
+        setOpen(true);
+    };
+
+    const handleDelete = (record) => {
+        confirm({
+            title: 'Delete Expense',
+            content: `Are you sure you want to delete "${record.description}"?`,
+            okText: 'Yes, Delete',
+            okType: 'danger',
+            cancelText: 'Cancel',
+            async onOk() {
+                const response = await DeleteExpense(record._id);
+                if (response && response.success) {
+                    refreshData();
+                }
+            }
+        });
+    };
+
     useEffect(() => {
         return () => {
             dispatch(fetchIncomeAndExpenses({ month: null }));
         };
     }, [dispatch]);
+
+    const expenseColumns = [
+        {
+            title: 'Date',
+            dataIndex: 'date',
+            key: 'date',
+            render: (date) => new Date(date).toLocaleDateString("en-GB"),
+        },
+        {
+            title: 'Description',
+            dataIndex: 'description',
+            key: 'description',
+        },
+        {
+            title: 'Amount (₹)',
+            dataIndex: 'amount',
+            key: 'amount',
+        },
+        {
+            title: 'Actions',
+            key: 'actions',
+            align: 'center',
+            render: (_, record) => (
+                <div className="flex justify-center gap-3">
+                    <Tooltip title="Edit">
+                        <FaEdit
+                            onClick={() => handleEdit(record)}
+                            className="text-blue-500 cursor-pointer text-[18px] hover:text-blue-700"
+                        />
+                    </Tooltip>
+                    <Tooltip title="Delete">
+                        <FaTrash
+                            onClick={() => handleDelete(record)}
+                            className="text-red-500 cursor-pointer text-[18px] hover:text-red-700"
+                        />
+                    </Tooltip>
+                </div>
+            ),
+        },
+    ];
 
     return (
         <div>
@@ -108,46 +159,53 @@ function IncomeExpense() {
                         </div>
                     </div>
 
-
                     <Row gutter={[16, 16]}>
                         <Col lg={12} md={12} sm={24} xs={24}>
-                            <h2 className="mb-2">Income</h2>
+                            <h2 className="mb-2 font-bold text-lg">Income</h2>
                             <Table
                                 columns={incomeColumns}
                                 dataSource={incomeData}
                                 pagination={false}
                                 bordered
                                 size='middle'
-                                rowKey={record => record.id}
+                                rowKey={record => record._id}
                                 scroll={{ x: 'max-content' }}
-                                footer={() => <div>Total Income: ₹ {totalIncome}</div>}
+                                footer={() => (
+                                    <div className="font-semibold text-base">
+                                        Total Income: <span className="text-themeColor">₹ {totalIncome}</span>
+                                    </div>
+                                )}
                                 className='border border-gray-300 rounded-lg w-full'
                             />
                         </Col>
                         <Col lg={12} md={12} sm={24} xs={24}>
-                            <h2 className="mb-2">Expenses</h2>
+                            <h2 className="mb-2 font-bold text-lg">Expenses</h2>
                             <Table
                                 columns={expenseColumns}
                                 dataSource={expenseData}
                                 pagination={false}
                                 bordered
                                 size='middle'
-                                rowKey={record => record.id}
+                                rowKey={record => record._id}
                                 scroll={{ x: 'max-content' }}
-                                footer={() => <div>Total Expenses: ₹ {totalExpense}</div>}
+                                footer={() => (
+                                    <div className="font-semibold text-base">
+                                        Total Expenses: <span className="text-red-500">₹ {totalExpense}</span>
+                                    </div>
+                                )}
                                 className='border border-gray-300 rounded-lg w-full'
                             />
                         </Col>
                     </Row>
-                    <div className="mt-4 p-4 border-gray-300 rounded-sm border w-fit">
-                        <h3 className={`text-lg font-semibold ${profitOrLoss >= 0 ? "text-themeColor" : "text-red-600"}`}>
+                    <div className="mt-4 p-4 border border-gray-300 rounded-lg w-fit bg-white shadow-sm">
+                        <h3 className={`text-lg font-bold ${profitOrLoss >= 0 ? "text-themeColor" : "text-red-600"}`}>
                             {profitOrLoss >= 0 ? "Profit" : "Loss"}:
                             <span className="ml-2">₹ {Math.abs(profitOrLoss)}</span>
                         </h3>
                     </div>
                 </div>
             </main>
-            <ExpenseModel showModel={open} handleCancel={handleCancel} />
+            <ExpenseModel showModel={open} handleCancel={handleCancel} editRecord={editRecord} />
         </div>
     );
 }

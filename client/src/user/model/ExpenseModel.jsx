@@ -1,12 +1,28 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Button, DatePicker, Form, Input, Modal } from 'antd';
 import dayjs from 'dayjs';
-import { AddExpenses } from '../../api/Expenses';
+import { AddExpenses, UpdateExpense } from '../../api/Expenses';
 
 const { Item } = Form;
 
-function ExpenseModel({ showModel, handleCancel }) {
+function ExpenseModel({ showModel, handleCancel, editRecord }) {
     const [form] = Form.useForm();
+    const isEditing = !!editRecord;
+
+    useEffect(() => {
+        if (showModel) {
+            if (editRecord) {
+                form.setFieldsValue({
+                    date: dayjs(editRecord.date),
+                    description: editRecord.description,
+                    amount: editRecord.amount,
+                });
+            } else {
+                form.resetFields();
+            }
+        }
+    }, [showModel, editRecord, form]);
+
     const handleOk = () => {
         form.submit();
     };
@@ -17,8 +33,13 @@ function ExpenseModel({ showModel, handleCancel }) {
             description: values.description,
             date: dayjs(values.date).format('YYYY-MM-DD')
         }
-        const response = await AddExpenses(formData)
-        if (response) {
+        let response;
+        if (isEditing) {
+            response = await UpdateExpense(editRecord._id, formData);
+        } else {
+            response = await AddExpenses(formData);
+        }
+        if (response && response.success !== false) {
             handleCancel()
             form.resetFields()
         }
@@ -26,7 +47,7 @@ function ExpenseModel({ showModel, handleCancel }) {
 
     return (
         <Modal
-            title="Update Payment Details"
+            title={isEditing ? "Edit Expense" : "Add Expense"}
             open={showModel}
             onCancel={handleCancel}
             centered
