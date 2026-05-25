@@ -119,7 +119,7 @@ function IncomeExpense() {
                     <Tooltip title="Edit">
                         <FaPenToSquare
                             onClick={() => handleEdit(record)}
-                            className="text-blue-500 cursor-pointer text-[18px] hover:text-blue-700"
+                            className="text-themeColor cursor-pointer text-[18px] hover:text-teal-700"
                         />
                     </Tooltip>
                     <Tooltip title="Delete">
@@ -144,11 +144,6 @@ function IncomeExpense() {
                                 <h1 className="text-xl font-semibold text-start">Income/Expense</h1>
                             </div>
                             <div className="flex w-full gap-4 sm:w-auto items-center">
-                                {selectedMonthObj && (
-                                    <span className="text-sm font-semibold text-gray-600 whitespace-nowrap">
-                                        {dayjs(selectedMonthObj).format('MMMM YYYY')}
-                                    </span>
-                                )}
                                 <DatePicker
                                     picker="month"
                                     value={selectedMonthObj}
