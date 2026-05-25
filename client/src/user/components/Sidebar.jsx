@@ -78,8 +78,8 @@ export default function Sidebar() {
                                 <div className="flex h-16 shrink-0 items-center border-b border-white/10 select-none" onClick={() => navigate("/user/dashboard")}>
                                     <img
                                         alt="Company"
-                                        src={require("../../assets/Logo3.jpg")}
-                                        className="h-12 w-auto"
+                                        src={require("../../assets/Logo.png")}
+                                        className="h-12 w-auto drop-shadow-lg"
                                     />
                                     <h1 className='ms-3 cursor-pointer font-bold text-white text-[20px]'>Booking Crown</h1>
                                 </div>
@@ -125,8 +125,8 @@ export default function Sidebar() {
                         <div className="flex h-16 shrink-0 items-center border-b border-white/10 select-none" onClick={() => navigate("/user/dashboard")}>
                             <img
                                 alt="Company"
-                                src={require("../../assets/Logo3.jpg")}
-                                className="h-12 w-auto"
+                                src={require("../../assets/Logo.png")}
+                                className="h-12 w-auto drop-shadow-lg"
                             />
                             <h1 className='ms-3 cursor-pointer font-bold text-white text-[20px]'>Booking Crown</h1>
                         </div>
@@ -173,7 +173,7 @@ export default function Sidebar() {
                             <img
                                 src={require("../../assets/Logo.png")}
                                 alt="logo"
-                                className='h-10 w-10 sm:h-12 sm:w-12 md:h-16 md:w-16'
+                                className='h-10 w-10 sm:h-12 sm:w-12 md:h-16 md:w-16 drop-shadow'
                             />
                             <h1 className='ml-2 sm:ml-3 cursor-pointer font-bold text-themeColor text-base sm:text-lg md:text-xl'>
                                 Booking Crown
