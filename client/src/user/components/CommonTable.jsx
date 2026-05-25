@@ -307,13 +307,13 @@ function CommonTable({ filter }) {
     return (
         <div>
             <div className="mb-4">
-                <Row gutter={14}>
+                <Row gutter={[14, 12]}>
                     <Col xs={24} sm={12} md={8}>
                         <Input
                             placeholder="Search by Name or Mobile Number"
                             value={searchText}
                             onChange={(e) => setSearchText(e.target.value)}
-                            className="w-full h-8 mb-2 md:mb-0"
+                            className="w-full h-8"
                         />
                     </Col>
                     <Col xs={24} sm={12} md={8}>

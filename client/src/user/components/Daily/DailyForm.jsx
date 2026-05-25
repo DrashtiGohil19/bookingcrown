@@ -87,7 +87,7 @@ function DailyForm({ isEditing, userId }) {
                 onFinish={onFinish}
                 onValuesChange={handleAmountChange}
             >
-                <Row gutter={16}>
+                <Row gutter={[16, 12]}>
                     <Col xs={24} sm={12} lg={8}>
                         <Item
                             name="customerName"
@@ -102,7 +102,7 @@ function DailyForm({ isEditing, userId }) {
                         </Item>
                     </Col>
 
-                    <Col xs={24} sm={12} lg={8}>
+                    <Col xs={12} sm={12} lg={8}>
                         <Item
                             name="mobileNumber"
                             label="Mobile Number"
@@ -122,7 +122,7 @@ function DailyForm({ isEditing, userId }) {
                         </Item>
                     </Col>
 
-                    <Col xs={24} sm={12} lg={8}>
+                    <Col xs={12} sm={12} lg={8}>
                         <Item
                             name="item"
                             label="Select Booking Item"
@@ -142,7 +142,7 @@ function DailyForm({ isEditing, userId }) {
                         </Item>
                     </Col>
 
-                    <Col xs={24} sm={12} lg={8}>
+                    <Col xs={12} sm={12} lg={8}>
                         <Item
                             name="date"
                             label="Booking Date"
@@ -153,12 +153,11 @@ function DailyForm({ isEditing, userId }) {
                                 format="DD-MM-YYYY"
                                 inputReadOnly={true}
                                 value={(date) => date ? date.formate('DD-MM-YYYY') : null}
-                            // disabledDate={currentDate => currentDate && currentDate.isBefore(dayjs().startOf('day'))}
                             />
                         </Item>
                     </Col>
 
-                    <Col xs={24} sm={12} lg={8}>
+                    <Col xs={12} sm={12} lg={8}>
                         <Item
                             name="session"
                             label="Select Session"
@@ -177,7 +176,7 @@ function DailyForm({ isEditing, userId }) {
                         </Item>
                     </Col>
 
-                    <Col xs={24} sm={12} lg={8}>
+                    <Col xs={12} sm={12} lg={8}>
                         <Item
                             name="totalAmount"
                             label="Total Amount"
@@ -191,7 +190,7 @@ function DailyForm({ isEditing, userId }) {
                         </Item>
                     </Col>
 
-                    <Col xs={24} sm={12} lg={8}>
+                    <Col xs={12} sm={12} lg={8}>
                         <Item
                             name="advanceAmount"
                             label="Advance Amount"
@@ -204,7 +203,7 @@ function DailyForm({ isEditing, userId }) {
                         </Item>
                     </Col>
 
-                    <Col xs={24} sm={12} lg={8}>
+                    <Col xs={12} sm={12} lg={8}>
                         <Item
                             name="pendingAmount"
                             label="Pending Amount"
@@ -218,7 +217,7 @@ function DailyForm({ isEditing, userId }) {
                             />
                         </Item>
                     </Col>
-                    <Col xs={24} sm={12} lg={8}>
+                    <Col xs={12} sm={12} lg={8}>
                         <Item
                             name="paymentMethod"
                             label="Payment Method"

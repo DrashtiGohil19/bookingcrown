@@ -206,7 +206,7 @@ function HourlyForm({ isEditing, userId }) {
                 onFinish={onFinish}
                 onValuesChange={handleAmountChange}
             >
-                <Row gutter={16}>
+                <Row gutter={[16, 12]}>
                     <Col xs={24} sm={12} lg={8}>
                         <Item
                             name="customerName"
@@ -221,7 +221,7 @@ function HourlyForm({ isEditing, userId }) {
                         </Item>
                     </Col>
 
-                    <Col xs={24} sm={12} lg={8}>
+                    <Col xs={12} sm={12} lg={8}>
                         <Item
                             name="mobileNumber"
                             label="Mobile Number"
@@ -241,7 +241,7 @@ function HourlyForm({ isEditing, userId }) {
                         </Item>
                     </Col>
 
-                    <Col xs={24} sm={12} lg={8}>
+                    <Col xs={12} sm={12} lg={8}>
                         <Item
                             name="item"
                             label="Select Turf"
@@ -261,7 +261,7 @@ function HourlyForm({ isEditing, userId }) {
                         </Item>
                     </Col>
 
-                    <Col xs={24} sm={12} lg={8}>
+                    <Col xs={12} sm={12} lg={8}>
                         <Item
                             name="date"
                             label="Booking Date"
@@ -271,12 +271,11 @@ function HourlyForm({ isEditing, userId }) {
                                 className="h-10 w-full"
                                 format="DD-MM-YYYY"
                                 inputReadOnly={true}
-                            // disabledDate={currentDate => currentDate && currentDate.isBefore(moment().startOf('day'))}
                             />
                         </Item>
                     </Col>
 
-                    <Col xs={24} sm={12} lg={8}>
+                    <Col xs={12} sm={12} lg={8}>
                         <Item
                             name="startTime"
                             label="Start Time"
@@ -292,7 +291,7 @@ function HourlyForm({ isEditing, userId }) {
                         </Item>
                     </Col>
 
-                    <Col xs={24} sm={12} lg={8}>
+                    <Col xs={12} sm={12} lg={8}>
                         <Item
                             name="endTime"
                             label="End Time"
@@ -310,7 +309,7 @@ function HourlyForm({ isEditing, userId }) {
                         </Item>
                     </Col>
 
-                    <Col xs={24} sm={12} lg={8}>
+                    <Col xs={12} sm={12} lg={8}>
                         <Item
                             name="totalHours"
                             label="Total Hours"
@@ -325,7 +324,7 @@ function HourlyForm({ isEditing, userId }) {
                         </Item>
                     </Col>
 
-                    <Col xs={24} sm={12} lg={8}>
+                    <Col xs={12} sm={12} lg={8}>
                         <Item
                             name="totalAmount"
                             label="Total Amount"
@@ -339,13 +338,10 @@ function HourlyForm({ isEditing, userId }) {
                         </Item>
                     </Col>
 
-                    <Col xs={24} sm={12} lg={8}>
+                    <Col xs={12} sm={12} lg={8}>
                         <Item
                             name="advanceAmount"
                             label="Advance Amount"
-                        // rules={[
-                        //     { required: true, message: 'Please input advance amount!' },
-                        // ]}
                         >
                             <Input
                                 type='number'
@@ -355,7 +351,7 @@ function HourlyForm({ isEditing, userId }) {
                         </Item>
                     </Col>
 
-                    <Col xs={24} sm={12} lg={8}>
+                    <Col xs={12} sm={12} lg={8}>
                         <Item
                             name="pendingAmount"
                             label="Pending Amount"
@@ -369,7 +365,7 @@ function HourlyForm({ isEditing, userId }) {
                             />
                         </Item>
                     </Col>
-                    <Col xs={24} sm={12} lg={8}>
+                    <Col xs={12} sm={12} lg={8}>
                         <Item
                             name="paymentMethod"
                             label="Payment Method"
