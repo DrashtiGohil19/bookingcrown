@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Sidebar from '../../components/Sidebar';
 import { Button, Table, Row, Col, DatePicker, Modal, Tooltip } from 'antd';
-import { FaPlus, FaEdit, FaTrash } from 'react-icons/fa6';
+import { FaPlus, FaPenToSquare, FaTrash } from 'react-icons/fa6';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchIncomeAndExpenses } from '../../../features/Expense/ExpenseSlice';
 import ExpenseModel from '../../model/ExpenseModel';
@@ -114,7 +114,7 @@ function IncomeExpense() {
             render: (_, record) => (
                 <div className="flex justify-center gap-3">
                     <Tooltip title="Edit">
-                        <FaEdit
+                        <FaPenToSquare
                             onClick={() => handleEdit(record)}
                             className="text-blue-500 cursor-pointer text-[18px] hover:text-blue-700"
                         />
