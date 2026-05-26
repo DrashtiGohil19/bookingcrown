@@ -4,17 +4,6 @@ const paymentMethodLabels = {
   not_specified: 'Not Specified',
 };
 
-const paymentStatusLabels = {
-  paid: 'Paid',
-  partial: 'Partial',
-  pending: 'Pending',
-};
-
-const paymentColorMap = {
-  paid: '#38b000',
-  partial: '#ffbe0b',
-  pending: '#f94144',
-};
 
 export const handleCopy = (mobilenu, bookingId, booking = {}) => {
   const bookingLink = `${process.env.REACT_APP_BASE_URL}/customer/booking-details/${bookingId}`;
