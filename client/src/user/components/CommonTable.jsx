@@ -19,12 +19,6 @@ dayjs.extend(isSameOrAfter);
 
 const { Option } = Select;
 
-const paymentMethodLabels = {
-    cash: 'Cash',
-    online_transfer: 'Online Transfer',
-    not_specified: 'Not Specified',
-};
-
 const commonColumns = [
     {
         title: 'Name',
@@ -114,6 +108,17 @@ const dailyColumns = [
 
 const actionColumns = (handleEdit, navigateDetailPage, showModal) => [
     {
+        title: 'Amount',
+        dataIndex: 'amount',
+        key: 'amount',
+        align: 'center',
+        responsive: ['xs', 'sm'],
+        render: (text, record) => {
+            if (record.key === 'total') return null;
+            return `₹${text}`;
+        }
+    },
+    {
         title: 'Payment',
         dataIndex: 'payment',
         key: 'payment',
@@ -121,9 +126,10 @@ const actionColumns = (handleEdit, navigateDetailPage, showModal) => [
         responsive: ['xs', 'sm'],
         render: (text, record) => {
             if (record.key === 'total') return null;
+            const label = record.pending === 0 && record.advance > 0 ? 'paid' : text;
             return (
                 <div className='cursor-pointer'>
-                    <Tag color={record.payment === "pending" ? "#f94144" : record.payment === "partial" ? "#ffbe0b" : "#38b000"} onClick={() => showModal(record)} >{record.payment}</Tag>
+                    <Tag color={label === "pending" ? "#f94144" : label === "partial" ? "#ffbe0b" : "#38b000"} onClick={() => showModal(record)} >{label}</Tag>
                 </div>
             )
         }
@@ -136,8 +142,7 @@ const actionColumns = (handleEdit, navigateDetailPage, showModal) => [
         responsive: ['xs', 'sm'],
         render: (text, record) => {
             if (record.key === 'total') return null;
-            const method = paymentMethodLabels[record.advancePaymentMethod] || paymentMethodLabels.not_specified;
-            return `₹${text} (${method})`;
+            return text > 0 ? `₹${text}` : '-';
         }
     },
     {
@@ -148,8 +153,7 @@ const actionColumns = (handleEdit, navigateDetailPage, showModal) => [
         responsive: ['xs', 'sm'],
         render: (text, record) => {
             if (record.key === 'total') return null;
-            const method = paymentMethodLabels[record.paymentMethod] || paymentMethodLabels.not_specified;
-            return `₹${text} (${method})`;
+            return text > 0 ? `₹${text}` : '-';
         }
     },
     {
