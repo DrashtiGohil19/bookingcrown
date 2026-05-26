@@ -12,7 +12,7 @@ dayjs.extend(timezone);
 exports.createBookings = async (req, res) => {
     try {
         const userId = req.user.id;
-        const { customerName, mobilenu, date, time, totalHours, amount, advance, pending, session, item, paymentMethod } = req.body;
+        const { customerName, mobilenu, date, time, totalHours, amount, advance, pending, session, item, paymentMethod, advancePaymentMethod } = req.body;
         
         // Debug log to see what we're receiving
         console.log('=== CREATE BOOKING REQUEST ===');
@@ -209,6 +209,7 @@ exports.createBookings = async (req, res) => {
             date,
             item,
             paymentMethod: paymentMethod || "not_specified",
+            advancePaymentMethod: advancePaymentMethod || "not_specified",
         };
 
         if (time && time.start && time.end) {
@@ -322,6 +323,7 @@ exports.updateBookingDetails = async (req, res) => {
             session,
             item,
             paymentMethod,
+            advancePaymentMethod,
             fullyPaid
         } = req.body;
 
@@ -539,6 +541,7 @@ exports.updateBookingDetails = async (req, res) => {
         if (advance !== undefined) booking.advance = advance;
         if (pending !== undefined) booking.pending = pending;
         if (paymentMethod !== undefined) booking.paymentMethod = paymentMethod || "not_specified";
+        if (advancePaymentMethod !== undefined) booking.advancePaymentMethod = advancePaymentMethod || "not_specified";
 
         if (checkForConflict) {
             if (time) {

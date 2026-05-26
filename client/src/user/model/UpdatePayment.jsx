@@ -20,6 +20,7 @@ const UpdatePayment = ({ showModel, handleCancel, selectedRecord }) => {
                 advance: selectedRecord.advance,
                 pending: selectedRecord.pending,
                 paymentMethod: selectedRecord.paymentMethod || 'not_specified',
+                advancePaymentMethod: selectedRecord.advancePaymentMethod || 'not_specified',
             });
         }
     }, [selectedRecord, form]);
@@ -30,6 +31,7 @@ const UpdatePayment = ({ showModel, handleCancel, selectedRecord }) => {
             pending: values.pending,
             amount: values.amount,
             paymentMethod: values.paymentMethod,
+            advancePaymentMethod: values.advancePaymentMethod,
             fullyPaid: values.fullyPaid
         }
 
@@ -77,20 +79,6 @@ const UpdatePayment = ({ showModel, handleCancel, selectedRecord }) => {
                         />
                     </Item>
                     <Item
-                        name="paymentMethod"
-                        label="Payment Method"
-                        rules={[{ required: true, message: 'Please select payment method!' }]}
-                    >
-                        <Select
-                            placeholder="Select payment method"
-                            options={[
-                                { value: 'not_specified', label: 'Not Specified' },
-                                { value: 'cash', label: 'Cash' },
-                                { value: 'online_transfer', label: 'Online Transfer' },
-                            ]}
-                        />
-                    </Item>
-                    <Item
                         name="advance"
                         label="Advance Amount"
                         rules={[{ required: true, message: 'Please input advance amount!' }]}
@@ -101,6 +89,19 @@ const UpdatePayment = ({ showModel, handleCancel, selectedRecord }) => {
                         />
                     </Item>
                     <Item
+                        name="advancePaymentMethod"
+                        label="Advance Payment Method"
+                    >
+                        <Select
+                            placeholder="How advance was paid"
+                            options={[
+                                { value: 'not_specified', label: 'Not Specified' },
+                                { value: 'cash', label: 'Cash' },
+                                { value: 'online_transfer', label: 'Online Transfer' },
+                            ]}
+                        />
+                    </Item>
+                    <Item
                         name="pending"
                         label="Pending Amount"
                         rules={[{ required: true, message: 'Please input pending amount!' }]}
@@ -108,6 +109,19 @@ const UpdatePayment = ({ showModel, handleCancel, selectedRecord }) => {
                         <Input
                             type="number"
                             placeholder="Enter amount"
+                        />
+                    </Item>
+                    <Item
+                        name="paymentMethod"
+                        label="Remaining Payment Method"
+                    >
+                        <Select
+                            placeholder="How remaining will be paid"
+                            options={[
+                                { value: 'not_specified', label: 'Not Specified' },
+                                { value: 'cash', label: 'Cash' },
+                                { value: 'online_transfer', label: 'Online Transfer' },
+                            ]}
                         />
                     </Item>
                     <Item

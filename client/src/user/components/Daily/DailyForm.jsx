@@ -31,6 +31,7 @@ function DailyForm({ isEditing, userId }) {
                     pendingAmount: data.pending,
                     session: data.session,
                     paymentMethod: data.paymentMethod || 'not_specified',
+                    advancePaymentMethod: data.advancePaymentMethod || 'not_specified',
                 });
             }
         } catch (error) {
@@ -68,6 +69,7 @@ function DailyForm({ isEditing, userId }) {
             advance: values.advanceAmount || 0,
             pending: values.pendingAmount,
             paymentMethod: values.paymentMethod || 'not_specified',
+            advancePaymentMethod: values.advancePaymentMethod || 'not_specified',
         }
         if (isEditing) {
             response = await UpdateBooking(formData, userId)
@@ -219,8 +221,25 @@ function DailyForm({ isEditing, userId }) {
                     </Col>
                     <Col xs={12} sm={12} lg={8}>
                         <Item
+                            name="advancePaymentMethod"
+                            label="Advance Payment Method"
+                            initialValue="not_specified"
+                        >
+                            <Select
+                                placeholder="How advance was paid"
+                                className='h-10'
+                                options={[
+                                    { value: 'not_specified', label: 'Not Specified' },
+                                    { value: 'cash', label: 'Cash' },
+                                    { value: 'online_transfer', label: 'Online Transfer' },
+                                ]}
+                            />
+                        </Item>
+                    </Col>
+                    <Col xs={12} sm={12} lg={8}>
+                        <Item
                             name="paymentMethod"
-                            label="Payment Method"
+                            label="Remaining Payment Method"
                             initialValue="not_specified"
                             rules={[{ required: true, message: 'Please select payment method!' }]}
                         >

@@ -181,6 +181,9 @@ function CustomerDetail() {
               <DetailRow label="Advance Amount" value={`₹ ${booking.advance}`} />
             </Col>
             <Col xs={24} sm={12} lg={8}>
+              <DetailRow label="Advance Via" value={paymentMethodLabels[booking.advancePaymentMethod] || paymentMethodLabels.not_specified} />
+            </Col>
+            <Col xs={24} sm={12} lg={8}>
               <DetailRow label="Pending Amount" value={`₹ ${booking.pending}`} />
             </Col>
             <Col xs={24} sm={12} lg={8}>
@@ -195,7 +198,7 @@ function CustomerDetail() {
             </Col>
             <Col xs={24} sm={12} lg={8}>
               <DetailRow
-                label="Payment Method"
+                label="Remaining Payment"
                 value={paymentMethodLabels[booking.paymentMethod] || paymentMethodLabels.not_specified}
               />
             </Col>

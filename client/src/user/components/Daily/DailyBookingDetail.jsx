@@ -113,6 +113,12 @@ const DailyBookingDetail = () => {
                                         </Col>
                                         <Col xs={24} sm={12} md={8} lg={8}>
                                             <div className="flex gap-4 mb-1 md:mb-5">
+                                                <Text className='font-semibold'>Advance Via:</Text>
+                                                <Text>{paymentMethodLabels[booking.advancePaymentMethod] || paymentMethodLabels.not_specified}</Text>
+                                            </div>
+                                        </Col>
+                                        <Col xs={24} sm={12} md={8} lg={8}>
+                                            <div className="flex gap-4 mb-1 md:mb-5">
                                                 <Text className='font-semibold'>Pending Amount:</Text>
                                                 <Text>₹ {booking.pending}</Text>
                                             </div>
@@ -125,7 +131,7 @@ const DailyBookingDetail = () => {
                                         </Col>
                                         <Col xs={24} sm={12} md={8} lg={8}>
                                             <div className="flex gap-4 mb-1 md:mb-5">
-                                                <Text className='font-semibold'>Payment Method:</Text>
+                                                <Text className='font-semibold'>Remaining Payment:</Text>
                                                 <Text>{paymentMethodLabels[booking.paymentMethod] || paymentMethodLabels.not_specified}</Text>
                                             </div>
                                         </Col>

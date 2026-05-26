@@ -129,14 +129,27 @@ const actionColumns = (handleEdit, navigateDetailPage, showModal) => [
         }
     },
     {
-        title: 'Payment Method',
-        dataIndex: 'paymentMethod',
-        key: 'paymentMethod',
+        title: 'Advance',
+        dataIndex: 'advance',
+        key: 'advance',
         align: 'center',
         responsive: ['xs', 'sm'],
         render: (text, record) => {
             if (record.key === 'total') return null;
-            return paymentMethodLabels[text] || paymentMethodLabels.not_specified;
+            const method = paymentMethodLabels[record.advancePaymentMethod] || paymentMethodLabels.not_specified;
+            return `₹${text} (${method})`;
+        }
+    },
+    {
+        title: 'Pending',
+        dataIndex: 'pending',
+        key: 'pending',
+        align: 'center',
+        responsive: ['xs', 'sm'],
+        render: (text, record) => {
+            if (record.key === 'total') return null;
+            const method = paymentMethodLabels[record.paymentMethod] || paymentMethodLabels.not_specified;
+            return `₹${text} (${method})`;
         }
     },
     {
@@ -238,6 +251,7 @@ function CommonTable({ filter }) {
             session: booking.session,
             payment: booking.payment,
             paymentMethod: booking.paymentMethod || 'not_specified',
+            advancePaymentMethod: booking.advancePaymentMethod || 'not_specified',
             amount: booking.amount,
             advance: booking.advance,
             pending: booking.pending,

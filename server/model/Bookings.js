@@ -37,6 +37,7 @@ const bookingSchema = new mongoose.Schema({
     pending: { type: Number, default: function () { return this.amount - (this.advance || 0); } },
     payment: { type: String, required: true, default: "pending", enum: ["paid", "partial", "pending"] },
     paymentMethod: { type: String, default: "not_specified", enum: ["cash", "online_transfer", "not_specified"] },
+    advancePaymentMethod: { type: String, default: "not_specified", enum: ["cash", "online_transfer", "not_specified"] },
     session: {
         type: String
     }
