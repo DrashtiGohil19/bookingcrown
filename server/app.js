@@ -11,9 +11,11 @@ const app = express();
 const PORT = process.env.PORT || 4000;
 const cors = require("cors");
 
-const allowedOrigins = process.env.CORS_ORIGINS
-    ? process.env.CORS_ORIGINS.split(',').map(s => s.trim())
-    : [process.env.CLIENT_BASEURL || 'http://localhost:3000'];
+const allowedOrigins = [
+    'http://localhost:3000',
+    ...(process.env.CLIENT_BASEURL ? [process.env.CLIENT_BASEURL] : []),
+    ...(process.env.CORS_ORIGINS ? process.env.CORS_ORIGINS.split(',').map(s => s.trim()) : []),
+];
 
 const corsOptions = {
     origin: (origin, callback) => {
