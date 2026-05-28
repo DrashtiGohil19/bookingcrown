@@ -115,20 +115,20 @@ function Header() {
             {publicLinks.map((item) => renderNavItem(item))}
           </div>
 
-          <div className="hidden sm:flex items-center gap-2">
+          <div className="flex items-center gap-1 sm:gap-2">
             {token && role ? (
               <>
                 <button
                   type="button"
                   onClick={() => navigate(`/${role}/dashboard`)}
-                  className="rounded-full border border-themeColor px-4 py-2 text-sm font-semibold text-themeColor transition-colors hover:bg-themeLight"
+                  className="rounded-full border border-themeColor px-2 sm:px-4 py-1 sm:py-2 text-xs sm:text-sm font-semibold text-themeColor transition-colors hover:bg-themeLight"
                 >
                   Dashboard
                 </button>
                 <button
                   type="button"
                   onClick={handleLogOut}
-                  className="rounded-full bg-themeColor px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-themeDark"
+                  className="rounded-full bg-themeColor px-2 sm:px-4 py-1 sm:py-2 text-xs sm:text-sm font-semibold text-white transition-colors hover:bg-themeDark"
                 >
                   Log out
                 </button>
@@ -138,14 +138,14 @@ function Header() {
                 <button
                   type="button"
                   onClick={() => navigate('/login')}
-                  className="rounded-full border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700 transition-colors hover:border-themeColor hover:text-themeColor"
+                  className="rounded-full border border-slate-300 px-2 sm:px-4 py-1 sm:py-2 text-xs sm:text-sm font-semibold text-slate-700 transition-colors hover:border-themeColor hover:text-themeColor"
                 >
                   Log in
                 </button>
                 <button
                   type="button"
                   onClick={() => navigate('/signup')}
-                  className="rounded-full bg-themeColor px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-themeDark"
+                  className="rounded-full bg-themeColor px-2 sm:px-4 py-1 sm:py-2 text-xs sm:text-sm font-semibold text-white transition-colors hover:bg-themeDark"
                 >
                   Get started
                 </button>
@@ -157,43 +157,6 @@ function Header() {
         <DisclosurePanel className="border-t border-slate-200 bg-white px-4 py-4 sm:hidden">
           <div className="space-y-2">
             {publicLinks.map((item) => renderNavItem(item, true))}
-          </div>
-          <div className="mt-4 border-t border-slate-100 pt-4 space-y-2">
-            {token && role ? (
-              <>
-                <button
-                  type="button"
-                  onClick={() => { navigate(`/${role}/dashboard`); document.activeElement?.click(); }}
-                  className="block w-full rounded-xl bg-themeColor px-4 py-3 text-center text-base font-semibold text-white transition-colors hover:bg-themeDark"
-                >
-                  Dashboard
-                </button>
-                <button
-                  type="button"
-                  onClick={handleLogOut}
-                  className="block w-full rounded-xl border border-slate-300 px-4 py-3 text-center text-base font-semibold text-slate-700 transition-colors hover:border-themeColor hover:text-themeColor"
-                >
-                  Log out
-                </button>
-              </>
-            ) : (
-              <>
-                <button
-                  type="button"
-                  onClick={() => navigate('/login')}
-                  className="block w-full rounded-xl bg-themeColor px-4 py-3 text-center text-base font-semibold text-white transition-colors hover:bg-themeDark"
-                >
-                  Log in
-                </button>
-                <button
-                  type="button"
-                  onClick={() => navigate('/signup')}
-                  className="block w-full rounded-xl border border-slate-300 px-4 py-3 text-center text-base font-semibold text-slate-700 transition-colors hover:border-themeColor hover:text-themeColor"
-                >
-                  Get started
-                </button>
-              </>
-            )}
           </div>
         </DisclosurePanel>
       </Disclosure>
