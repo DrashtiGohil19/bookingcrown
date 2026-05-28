@@ -20,9 +20,19 @@ exports.createUser = async (req, res) => {
             return res.status(400).json({ message: 'Invalid email format' });
         }
 
+        const mobileRegex = /^[0-9]{10}$/;
+        if (!mobileRegex.test(String(mobilenu))) {
+            return res.status(400).json({ message: 'Mobile number must be exactly 10 digits' });
+        }
+
         let user = await User.findOne({ email });
         if (user) {
             return res.status(400).json({ message: `User with the email ${email} already exists. Please provide another email` });
+        }
+
+        user = await User.findOne({ mobilenu });
+        if (user) {
+            return res.status(400).json({ message: `User with mobile number ${mobilenu} already exists. Please provide another mobile number` });
         }
 
         user = new User({
@@ -38,6 +48,10 @@ exports.createUser = async (req, res) => {
         res.status(200).json({ success: true, message: 'Your account has been successfully created.' });
     } catch (err) {
         console.error(err.message);
+        if (err.code === 11000) {
+            const field = Object.keys(err.keyPattern)[0];
+            return res.status(400).json({ message: `A user with this ${field} already exists.` });
+        }
         res.status(500).send({ err: err.message, message: "An error occurred while creating the user" });
     }
 }
@@ -61,6 +75,16 @@ exports.updateUser = async (req, res) => {
             return res.status(404).json({ message: 'User not found' });
         }
 
+        const existingMobile = await User.findOne({ mobilenu, _id: { $ne: userId } });
+        if (existingMobile) {
+            return res.status(400).json({ message: `Mobile number ${mobilenu} is already in use by another account` });
+        }
+
+        const existingEmail = await User.findOne({ email, _id: { $ne: userId } });
+        if (existingEmail) {
+            return res.status(400).json({ message: `Email ${email} is already in use by another account` });
+        }
+
         user.name = name;
         user.email = email;
         user.mobilenu = mobilenu;
@@ -74,6 +98,10 @@ exports.updateUser = async (req, res) => {
         res.status(200).json({ success: true, message: 'Your details updated successfully!' });
     } catch (err) {
         console.error(err.message);
+        if (err.code === 11000) {
+            const field = Object.keys(err.keyPattern)[0];
+            return res.status(400).json({ message: `A user with this ${field} already exists.` });
+        }
         res.status(500).send({ message: 'Server error' });
     }
 };

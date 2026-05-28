@@ -13,7 +13,7 @@ const UserSchema = new mongoose.Schema({
     },
     mobilenu: {
         type: Number,
-        require: true,
+        required: true,
         unique: true
     },
     password: {
