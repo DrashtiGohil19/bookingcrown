@@ -31,7 +31,6 @@ const CreatePlan = ({ showModel, handleCancel, selectedId }) => {
     const onFinish = async (values) => {
         setLoading(true)
         const planData = {
-            userId: selectedId,
             planType: values.plan,
             startDate: dayjs(values.startDate).format('YYYY-MM-DD'),
             endDate: dayjs(values.endDate).format('YYYY-MM-DD'),

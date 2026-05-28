@@ -11,7 +11,7 @@ export const createPlanData = async (values, id) => {
         }
         return response.data.plan
     } catch (error) {
-        Notification.error(error.response.data.error)
+        Notification.error(error.response?.data?.error || error.message)
         return error
     }
 }

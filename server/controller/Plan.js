@@ -36,7 +36,7 @@ exports.createPlan = async (req, res) => {
         if (!user.password) {
             password = generateStrongPassword();
             user.password = password
-            user.save()
+            await user.save()
         }
 
         const emailText = await getEmailText(user, plan, password);

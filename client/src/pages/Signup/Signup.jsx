@@ -133,7 +133,7 @@ function Signup() {
                       <Select
                         className="h-10"
                         placeholder="Business Type"
-                        suffixIcon={<RiExpandUpDownFill className="text-gray-400" />}
+                        suffixIcon={<RiExpandUpDownFill className="text-gray-400 flex items-center" />}
                       >
                         {business.map((person) => (
                           <Option key={person.id} value={person.name}>
