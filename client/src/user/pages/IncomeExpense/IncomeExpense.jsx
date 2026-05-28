@@ -202,7 +202,7 @@ function IncomeExpense() {
                             />
                         </Col>
                     </Row>
-                    <div className="mt-4 p-4 border border-gray-300 rounded-lg w-fit bg-white shadow-sm">
+                    <div className="mt-4 p-4 border border-gray-300 rounded-lg w-full sm:w-fit bg-white shadow-sm">
                         <h3 className={`text-lg font-bold ${profitOrLoss >= 0 ? "text-themeColor" : "text-red-600"}`}>
                             {profitOrLoss >= 0 ? "Profit" : "Loss"}:
                             <span className="ml-2">₹ {Math.abs(profitOrLoss)}</span>

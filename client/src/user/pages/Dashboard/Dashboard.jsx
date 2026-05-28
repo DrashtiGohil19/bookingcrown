@@ -27,7 +27,7 @@ function Dashboard() {
             <main className="py-4 w-full lg:w-[calc(100%-16rem)] ms-auto">
                 <div className="px-4 sm:px-6 lg:px-6">
                     <div className="mb-3">
-                        <div className="w-full flex flex-row justify-between items-center mb-3">
+                        <div className="w-full flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 mb-3">
                             <div>
                                 <h1 className="text-xl font-semibold">Dashboard</h1>
                             </div>

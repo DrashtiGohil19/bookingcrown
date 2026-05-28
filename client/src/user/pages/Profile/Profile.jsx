@@ -188,7 +188,7 @@ function Profile() {
                         ))}
                     </Form.Item>
                 </Col>
-                <Button type="primary" className="ml-[7px] md:mt-[30px] h-10" onClick={addField}>
+                <Button type="primary" className="mt-2 sm:ml-[7px] sm:mt-0 md:mt-[30px] h-10" onClick={addField}>
                     Add More
                 </Button>
             </>
