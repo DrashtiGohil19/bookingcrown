@@ -2,52 +2,88 @@ import React from 'react';
 import Footer from '../../../common/Footer';
 import { Button } from 'antd';
 import { useNavigate } from 'react-router-dom';
-import Contact from '../../../common/Contact';
+import { FaCheckCircle, FaArrowRight, FaMobileAlt, FaLock, FaClipboardList } from 'react-icons/fa';
 import Seo from '../../../common/Seo';
 
 function ThankYou() {
     const navigate = useNavigate();
 
     return (
-        <section className='bg-[#f1fafb]'>
+        <section className='bg-gray-50 min-h-screen flex flex-col'>
             <Seo
-                title="Signup Confirmation"
-                description="BookingCrown signup confirmation."
+                title="Registration Successful"
+                description="Your BookingCrown account has been created successfully."
                 path="/signup-confirmation"
                 robots="noindex,nofollow"
             />
-            <main className='min-h-screen flex flex-col justify-center items-center py-8 px-4'>
-                <div className='max-w-2xl w-full text-center'>
-                    <h1 className='font-semibold text-3xl md:text-4xl text-themeColor mb-4'>
-                        Registration Successful!
-                    </h1>
-                    <p className='text-slate-400 mb-6'>
-                        Your account has been created successfully. You can now login using your mobile number and the password you set.
-                        An admin will assign a plan to your account shortly to grant you full access.
-                    </p>
+            <main className='flex-1 flex items-center justify-center px-4 py-12'>
+                <div className='w-full max-w-lg'>
+                    <div className='bg-white rounded-xl shadow-lg p-8 text-center'>
+                        <div className='flex justify-center mb-4'>
+                            <div className='bg-green-100 rounded-full p-3'>
+                                <FaCheckCircle className='text-4xl text-green-500' />
+                            </div>
+                        </div>
 
-                    <div className='bg-blue-50 border border-blue-200 rounded-lg p-6 mb-6 text-left'>
-                        <h2 className='text-lg font-semibold text-blue-800 mb-2'>Next Steps</h2>
-                        <ul className='text-blue-700 space-y-2 text-left list-disc list-inside'>
-                            <li>Login with your mobile number and password</li>
-                            <li>Wait for admin to activate your plan</li>
-                            <li>Once activated, you can start managing bookings</li>
-                        </ul>
-                        <p className='text-sm text-blue-600 mt-3'>
-                            Login at: <span className='font-medium'>https://www.bookingcrown.com/login</span>
+                        <h1 className='text-2xl font-bold text-gray-900 mb-2'>
+                            Registration Successful!
+                        </h1>
+                        <p className='text-gray-500 mb-8'>
+                            Your account has been created. You can log in anytime using your mobile number and password.
                         </p>
-                    </div>
 
-                    <Contact />
-                    <div className='text-center mt-6 text-slate-400'>
-                        <p>Feel free to contact us anytime, and we'll get back to you as soon as possible.</p>
+                        <div className='bg-blue-50 rounded-lg p-5 mb-6 text-left space-y-3'>
+                            <h2 className='font-semibold text-blue-800 text-sm uppercase tracking-wide'>How to Get Started</h2>
+                            <div className='flex items-start gap-3'>
+                                <div className='bg-blue-100 rounded-full p-2 mt-0.5'>
+                                    <FaMobileAlt className='text-blue-600 text-sm' />
+                                </div>
+                                <div>
+                                    <p className='text-sm font-medium text-gray-800'>Step 1: Log In</p>
+                                    <p className='text-sm text-gray-500'>Use your mobile number and password to sign in.</p>
+                                </div>
+                            </div>
+                            <div className='flex items-start gap-3'>
+                                <div className='bg-blue-100 rounded-full p-2 mt-0.5'>
+                                    <FaLock className='text-blue-600 text-sm' />
+                                </div>
+                                <div>
+                                    <p className='text-sm font-medium text-gray-800'>Step 2: Wait for Plan Activation</p>
+                                    <p className='text-sm text-gray-500'>An admin will assign a plan to your account.</p>
+                                </div>
+                            </div>
+                            <div className='flex items-start gap-3'>
+                                <div className='bg-blue-100 rounded-full p-2 mt-0.5'>
+                                    <FaClipboardList className='text-blue-600 text-sm' />
+                                </div>
+                                <div>
+                                    <p className='text-sm font-medium text-gray-800'>Step 3: Start Managing Bookings</p>
+                                    <p className='text-sm text-gray-500'>Once your plan is active, you can add and manage bookings.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <Button
+                            type='primary'
+                            size='large'
+                            className='w-full h-12 text-base font-medium !bg-themeColor'
+                            onClick={() => navigate('/login')}
+                        >
+                            Go to Login <FaArrowRight className='ml-2' />
+                        </Button>
+
+                        <div className='mt-4'>
+                            <Button
+                                type='link'
+                                className='text-gray-400 hover:text-gray-600'
+                                onClick={() => navigate('/')}
+                            >
+                                Back to Home
+                            </Button>
+                        </div>
                     </div>
-                    <Button type='primary' className='h-10 mt-5' onClick={() => navigate("/")}>
-                        Go Back To Home
-                    </Button>
                 </div>
             </main>
-
             <Footer />
         </section>
     );
