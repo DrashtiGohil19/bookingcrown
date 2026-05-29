@@ -48,7 +48,7 @@ function ForgetPassword() {
                                     Forgot Your Password
                                 </h3>
                                 <p className="text-slate-400 max-w-xl mx-auto">
-                                    Lost your password? Please enter your registered email address. You will receive new strong password via email.
+                                    Lost your password? Please enter your registered email or mobile number.
                                 </p>
                             </div>
                             <div className="bg-white rounded-md p-6">
@@ -59,15 +59,14 @@ function ForgetPassword() {
                                     className="max-w-lg mx-auto"
                                 >
                                     <Form.Item
-                                        label="Your Email"
+                                        label="Email or Mobile"
                                         name="email"
                                         rules={[
-                                            { required: true, message: 'Please input your email!' },
-                                            { type: 'email', message: 'The input is not valid E-mail!' }
+                                            { required: true, message: 'Please input your email or mobile number!' },
                                         ]}
                                     >
                                         <Input
-                                            placeholder="Email"
+                                            placeholder="Email or Mobile"
                                             className="h-10"
                                         />
                                     </Form.Item>

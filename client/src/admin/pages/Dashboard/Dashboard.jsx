@@ -49,7 +49,7 @@ function Dashboard() {
             key: '2',
             label: (
                 <span>
-                    Set Plan
+                    Build
                     <Badge
                         size='small'
                         count={filteredUsers.length}

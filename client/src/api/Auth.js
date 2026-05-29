@@ -8,7 +8,7 @@ export const signup = async (name, mobilenu, email, businessType, businessName, 
         const response = await axios.post(baseUrl + "/signup", {
             name: name,
             mobilenu: mobilenu,
-            email: email,
+            email: email || undefined,
             businessType: businessType,
             businessName: businessName,
             address: address

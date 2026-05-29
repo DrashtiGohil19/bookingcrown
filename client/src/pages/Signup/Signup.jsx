@@ -37,7 +37,7 @@ function Signup() {
       const data = await signup(
         values.name,
         values.mobilenu,
-        values.email,
+        values.email || '',
         values.businessType,
         values.businessName,
         values.address
@@ -96,14 +96,13 @@ function Signup() {
                   </Col>
                   <Col xs={24} sm={12} md={12}>
                     <Form.Item
-                      label="Email"
+                      label="Email (Optional)"
                       name="email"
                       rules={[
-                        { required: true, message: 'Please input your email!' },
                         { type: 'email', message: 'The input is not valid E-mail!' },
                       ]}
                     >
-                      <Input placeholder="Email" className="h-10" />
+                      <Input placeholder="Email (Optional)" className="h-10" />
                     </Form.Item>
                   </Col>
                 </Row>

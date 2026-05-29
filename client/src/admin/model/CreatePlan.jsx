@@ -8,7 +8,7 @@ import dayjs from 'dayjs';
 
 const { Item } = Form;
 
-const CreatePlan = ({ showModel, handleCancel, selectedId }) => {
+const CreatePlan = ({ showModel, handleCancel, selectedId, selectedUser }) => {
     const [form] = Form.useForm();
     const dispatch = useDispatch();
     const [startDate, setStartDate] = useState()
@@ -42,13 +42,19 @@ const CreatePlan = ({ showModel, handleCancel, selectedId }) => {
             setLoading(false)
             handleCancel()
             form.resetFields()
+            const mobilenu = selectedUser?.mobilenu
+            if (mobilenu) {
+                const message = `Hello ${selectedUser?.name || ''}, your ${values.plan} plan has been activated from ${dayjs(values.startDate).format('DD-MM-YYYY')} to ${dayjs(values.endDate).format('DD-MM-YYYY')}. Amount: ₹${values.amount}. Thank you for choosing BookingCrown!`
+                const whatsappUrl = `https://wa.me/91${mobilenu}?text=${encodeURIComponent(message)}`
+                window.open(whatsappUrl, '_blank')
+            }
         }
     };
 
     return (
         <>
             <Modal
-                title="Create Plan For User"
+                title="Build Plan"
                 open={showModel}
                 onCancel={handleCancel}
                 centered

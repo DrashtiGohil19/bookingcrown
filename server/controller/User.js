@@ -3,21 +3,15 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require("bcryptjs");
 const Plan = require("../model/Plan");
 const dayjs = require('dayjs');
-const { generateStrongPassword, generateNewPasswordText } = require("../utils/helper");
-const { sendEmail } = require("../utils/emailTranspoter");
+const { generateStrongPassword } = require("../utils/helper");
 const JWT_SECRET = process.env.JWT_SECRET
 
 exports.createUser = async (req, res) => {
     const { name, email, mobilenu, businessType, businessName, address } = req.body;
 
     try {
-        if (!name || !email || !mobilenu || !businessType || !businessName || !address) {
-            return res.status(400).json({ message: 'name, email, business type, businessName, address all fields are required' });
-        }
-
-        const emailRegex = /^[a-z][^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailRegex.test(email)) {
-            return res.status(400).json({ message: 'Invalid email format' });
+        if (!name || !mobilenu || !businessType || !businessName || !address) {
+            return res.status(400).json({ message: 'name, mobile number, business type, businessName, address all fields are required' });
         }
 
         const mobileRegex = /^[0-9]{10}$/;
@@ -25,48 +19,31 @@ exports.createUser = async (req, res) => {
             return res.status(400).json({ message: 'Mobile number must be exactly 10 digits' });
         }
 
-        let user = await User.findOne({ email });
-        if (user) {
-            return res.status(400).json({ message: `User with the email ${email} already exists. Please provide another email` });
+        if (email) {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                return res.status(400).json({ message: 'Invalid email format' });
+            }
         }
 
-        user = await User.findOne({ mobilenu });
+        let user = await User.findOne({ mobilenu });
         if (user) {
             return res.status(400).json({ message: `User with mobile number ${mobilenu} already exists. Please provide another mobile number` });
         }
 
+        const password = generateStrongPassword();
+
         user = new User({
             name,
-            email,
+            email: email || undefined,
             mobilenu,
             businessType,
             businessName,
-            address
+            address,
+            password
         });
 
         await user.save()
-
-        sendEmail({
-            from: process.env.SMTP_USER,
-            to: email,
-            subject: 'Registration Successful - BookingCrown',
-            text: `Dear ${name},
-
-Thank you for registering with BookingCrown. Your account has been created successfully.
-
-Your registration details:
-- Name: ${name}
-- Email: ${email}
-- Business Name: ${businessName}
-- Business Type: ${businessType}
-
-Your account is currently pending admin approval. You will receive an email with your login credentials once an admin assigns a plan to your account.
-
-If you have any questions, please contact our support team at +91 99988 83603.
-
-Best regards,
-The BookingCrown Team`
-        });
 
         res.status(200).json({ success: true, message: 'Your account has been successfully created.' });
     } catch (err) {
@@ -84,13 +61,15 @@ exports.updateUser = async (req, res) => {
     const { name, email, mobilenu, businessType, businessName, address, itemList } = req.body;
 
     try {
-        if (!name || !email || !mobilenu || !businessType || !businessName || !address) {
-            return res.status(400).json({ message: 'All fields are required' });
+        if (!name || !mobilenu || !businessType || !businessName || !address) {
+            return res.status(400).json({ message: 'All required fields must be provided' });
         }
 
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailRegex.test(email)) {
-            return res.status(400).json({ message: 'Invalid email format' });
+        if (email) {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                return res.status(400).json({ message: 'Invalid email format' });
+            }
         }
 
         let user = await User.findById(userId);
@@ -103,13 +82,8 @@ exports.updateUser = async (req, res) => {
             return res.status(400).json({ message: `Mobile number ${mobilenu} is already in use by another account` });
         }
 
-        const existingEmail = await User.findOne({ email, _id: { $ne: userId } });
-        if (existingEmail) {
-            return res.status(400).json({ message: `Email ${email} is already in use by another account` });
-        }
-
         user.name = name;
-        user.email = email;
+        user.email = email || undefined;
         user.mobilenu = mobilenu;
         user.businessType = businessType;
         user.businessName = businessName;
@@ -133,16 +107,23 @@ exports.loginUser = async (req, res) => {
     const { email, password } = req.body;
 
     try {
-        const emailLowerFirst = email.charAt(0).toLowerCase() + email.slice(1);
+        let user;
+        if (email && email.includes('@')) {
+            const emailLowerFirst = email.charAt(0).toLowerCase() + email.slice(1);
+            user = await User.findOne({ email: emailLowerFirst });
+        } else if (email) {
+            user = await User.findOne({ mobilenu: Number(email) });
+        } else {
+            return res.status(400).json({ message: 'Email or mobile number is required' });
+        }
 
-        let user = await User.findOne({ email: emailLowerFirst });
         if (!user) {
-            return res.status(400).json({ message: 'Invalid email or password. Please try again later' });
+            return res.status(400).json({ message: 'Invalid credentials. Please try again later' });
         }
 
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) {
-            return res.status(400).json({ message: 'Invalid email or password. Please try again later', success: false });
+            return res.status(400).json({ message: 'Invalid credentials. Please try again later', success: false });
         }
 
         let planExpired = false;
@@ -252,7 +233,12 @@ exports.changePassword = async (req, res) => {
 exports.forgetPassword = async (req, res) => {
     try {
         const { email } = req.body
-        const user = await User.findOne({ email })
+        let user;
+        if (email && email.includes('@')) {
+            user = await User.findOne({ email });
+        } else if (email) {
+            user = await User.findOne({ mobilenu: Number(email) });
+        }
         if (!user) {
             return res.status(404).json({ message: 'User not found' });
         }
@@ -260,14 +246,7 @@ exports.forgetPassword = async (req, res) => {
         user.password = newGeneratedPassword
         await user.save()
 
-        sendEmail({
-            from: process.env.SMTP_USER,
-            to: user.email,
-            subject: 'Your new password',
-            text: generateNewPasswordText(user.name, newGeneratedPassword)
-        });
-
-        res.status(200).json({ message: 'New password sent to your email address', success: true });
+        res.status(200).json({ message: 'Password reset successfully', success: true });
     } catch (error) {
         console.error('Error during password reset:', error);
         res.status(500).json({ message: 'An error occurred while resetting the password' });

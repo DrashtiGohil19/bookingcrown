@@ -22,7 +22,7 @@ function ThankYou() {
                     </h1>
                     <p className='text-slate-400 mb-6'>
                         We appreciate your interest and will review your profile promptly.
-                        You will receive an email with your password once your profile has been reviewed.
+                        An admin will assign a plan to your account shortly.
                         Should you have any questions in the meantime, please do not hesitate to contact Booking Crown.
                     </p>
                     <Contact />

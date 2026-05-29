@@ -81,7 +81,6 @@ function Profile() {
 
     const requiredFields = [
         'name',
-        'email',
         'mobileNumber',
         'address',
         'businessType',
@@ -127,7 +126,7 @@ function Profile() {
         // sessionList = sessionListKeys || [];
         const formData = {
             name: values.name,
-            email: values.email,
+            email: values.email || undefined,
             mobilenu: values.mobileNumber,
             businessType: values.businessType,
             businessName: values.businessName,
@@ -230,15 +229,14 @@ function Profile() {
 
                                     <Col xs={24} sm={12} lg={8}>
                                         <Item
-                                            label="Your Email"
+                                            label="Email (Optional)"
                                             name="email"
                                             rules={[
-                                                { required: true, message: 'Please input your email!' },
                                                 { type: 'email', message: 'The input is not valid E-mail!' }
                                             ]}
                                         >
                                             <Input
-                                                placeholder="Email"
+                                                placeholder="Email (Optional)"
                                                 className="h-10 w-full"
                                             />
                                         </Item>

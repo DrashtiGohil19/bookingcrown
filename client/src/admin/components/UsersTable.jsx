@@ -121,13 +121,16 @@ function UsersTable({ activeKey }) {
     const dispatch = useDispatch();
     const [open, setOpen] = useState(false);
     const [selectedId, setSelectedId] = useState(null);
+    const [selectedUser, setSelectedUser] = useState(null);
     const [searchText, setSearchText] = useState('');
     const [selectedDate, setSelectedDate] = useState(null);
     const [editRecord, setEditRecord] = useState(null);
     const [loading, setLoading] = useState(true);
 
     const showModal = (record) => {
+        const user = allUsers.find(u => u._id === record);
         setSelectedId(record);
+        setSelectedUser(user);
         setOpen(true);
     };
 
@@ -238,7 +241,7 @@ function UsersTable({ activeKey }) {
                 className='border border-gray-300 rounded-lg'
             />
 
-            <CreatePlan showModel={open} handleCancel={handleCancel} selectedId={selectedId} />
+            <CreatePlan showModel={open} handleCancel={handleCancel} selectedId={selectedId} selectedUser={selectedUser} />
         </div>
     );
 }
