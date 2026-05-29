@@ -4,7 +4,7 @@ const bcrypt = require("bcryptjs");
 const Plan = require("../model/Plan");
 const dayjs = require('dayjs');
 const { generateStrongPassword, generateNewPasswordText } = require("../utils/helper");
-const { emailTransporter } = require("../utils/emailTranspoter");
+const { sendEmail } = require("../utils/emailTranspoter");
 const JWT_SECRET = process.env.JWT_SECRET
 
 exports.createUser = async (req, res) => {
@@ -46,9 +46,11 @@ exports.createUser = async (req, res) => {
 
         await user.save()
 
-        try {
-            const transporter = await emailTransporter();
-            const signupEmailText = `Dear ${name},
+        sendEmail({
+            from: process.env.SMTP_USER,
+            to: email,
+            subject: 'Registration Successful - BookingCrown',
+            text: `Dear ${name},
 
 Thank you for registering with BookingCrown. Your account has been created successfully.
 
@@ -63,17 +65,8 @@ Your account is currently pending admin approval. You will receive an email with
 If you have any questions, please contact our support team at +91 99988 83603.
 
 Best regards,
-The BookingCrown Team`;
-
-            await transporter.sendMail({
-                from: process.env.SMTP_USER,
-                to: email,
-                subject: 'Registration Successful - BookingCrown',
-                text: signupEmailText
-            });
-        } catch (emailErr) {
-            console.error('Failed to send signup confirmation email:', emailErr.message);
-        }
+The BookingCrown Team`
+        });
 
         res.status(200).json({ success: true, message: 'Your account has been successfully created.' });
     } catch (err) {
@@ -267,9 +260,7 @@ exports.forgetPassword = async (req, res) => {
         user.password = newGeneratedPassword
         await user.save()
 
-        const transporter = await emailTransporter();
-
-        await transporter.sendMail({
+        sendEmail({
             from: process.env.SMTP_USER,
             to: user.email,
             subject: 'Your new password',

@@ -1,16 +1,7 @@
-const nodemailer = require('nodemailer');
 const User = require('../model/User');
 const { generateStrongPassword, getEmailText } = require('../utils/helper');
 const Plan = require('../model/Plan');
-
-// Configure the email transporter
-const transporter = nodemailer.createTransport({
-    service: 'gmail',
-    auth: {
-        user: process.env.SMTP_USER,
-        pass: process.env.SMTP_PASSWORD
-    }
-});
+const { sendEmail } = require('../utils/emailTranspoter');
 
 exports.createPlan = async (req, res) => {
     try {
@@ -36,22 +27,18 @@ exports.createPlan = async (req, res) => {
             password = generateStrongPassword();
         }
 
-        const emailText = await getEmailText(user, plan, password);
-
-        const mailOptions = {
-            from: process.env.SMTP_USER,
-            to: user.email,
-            subject: password ? 'Welcome to BookingCrown!' : 'Plan Assignment Details',
-            text: emailText
-        };
-
-        await transporter.sendMail(mailOptions);
-
         if (password) {
             user.password = password;
             await user.save();
         }
         await plan.save();
+
+        sendEmail({
+            from: process.env.SMTP_USER,
+            to: user.email,
+            subject: password ? 'Welcome to BookingCrown!' : 'Plan Assignment Details',
+            text: await getEmailText(user, plan, password)
+        });
 
         res.status(200).json({ plan, message: `Plan added successfully for ${user.name}`, success: true });
     } catch (error) {
