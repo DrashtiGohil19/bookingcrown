@@ -8,7 +8,7 @@ import Seo from '../../../common/Seo';
 function ThankYou() {
     const navigate = useNavigate();
     const location = useLocation();
-    const { password, mobilenu, name } = location.state || {};
+    const { password, mobilenu } = location.state || {};
 
     return (
         <section className='bg-[#f1fafb]'>
