@@ -45,6 +45,36 @@ exports.createUser = async (req, res) => {
         });
 
         await user.save()
+
+        try {
+            const transporter = await emailTransporter();
+            const signupEmailText = `Dear ${name},
+
+Thank you for registering with BookingCrown. Your account has been created successfully.
+
+Your registration details:
+- Name: ${name}
+- Email: ${email}
+- Business Name: ${businessName}
+- Business Type: ${businessType}
+
+Your account is currently pending admin approval. You will receive an email with your login credentials once an admin assigns a plan to your account.
+
+If you have any questions, please contact our support team at +91 99988 83603.
+
+Best regards,
+The BookingCrown Team`;
+
+            await transporter.sendMail({
+                from: process.env.SMTP_USER,
+                to: email,
+                subject: 'Registration Successful - BookingCrown',
+                text: signupEmailText
+            });
+        } catch (emailErr) {
+            console.error('Failed to send signup confirmation email:', emailErr.message);
+        }
+
         res.status(200).json({ success: true, message: 'Your account has been successfully created.' });
     } catch (err) {
         console.error(err.message);

@@ -30,13 +30,10 @@ exports.createPlan = async (req, res) => {
             endDate,
             amount
         });
-        await plan.save();
 
         let password = null;
         if (!user.password) {
             password = generateStrongPassword();
-            user.password = password
-            await user.save()
         }
 
         const emailText = await getEmailText(user, plan, password);
@@ -48,8 +45,14 @@ exports.createPlan = async (req, res) => {
             text: emailText
         };
 
-        // Send the email
         await transporter.sendMail(mailOptions);
+
+        if (password) {
+            user.password = password;
+            await user.save();
+        }
+        await plan.save();
+
         res.status(200).json({ plan, message: `Plan added successfully for ${user.name}`, success: true });
     } catch (error) {
         res.status(400).json({ error: error.message });
