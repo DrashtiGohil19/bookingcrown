@@ -44,7 +44,30 @@ const CreatePlan = ({ showModel, handleCancel, selectedId, selectedUser }) => {
             form.resetFields()
             const mobilenu = selectedUser?.mobilenu
             if (mobilenu) {
-                const message = `Hello ${selectedUser?.name || ''}, your ${values.plan} plan has been activated from ${dayjs(values.startDate).format('DD-MM-YYYY')} to ${dayjs(values.endDate).format('DD-MM-YYYY')}. Amount: ₹${values.amount}. Thank you for choosing BookingCrown!`
+                const message = [
+                    `*Plan Activated - BookingCrown*`,
+                    ``,
+                    `Dear ${selectedUser?.name || 'Valued Customer'},`,
+                    ``,
+                    `Your *${values.plan}* plan has been successfully activated.`,
+                    ``,
+                    `📋 *Plan Details*`,
+                    `━━━━━━━━━━━━━━━`,
+                    `Plan: ${values.plan}`,
+                    `Amount: ₹${values.amount}`,
+                    `Start Date: ${dayjs(values.startDate).format('DD-MM-YYYY')}`,
+                    `End Date: ${dayjs(values.endDate).format('DD-MM-YYYY')}`,
+                    ``,
+                    `🔑 *Login Access*`,
+                    `━━━━━━━━━━━━━━━`,
+                    `Website: https://www.bookingcrown.com/login`,
+                    `Mobile: ${mobilenu}`,
+                    `Password: (Use the password provided at registration)`,
+                    ``,
+                    `For any assistance, contact support at +91 99988 83603.`,
+                    ``,
+                    `Thank you for choosing BookingCrown!`
+                ].join('\n')
                 const whatsappUrl = `https://wa.me/91${mobilenu}?text=${encodeURIComponent(message)}`
                 window.open(whatsappUrl, '_blank')
             }
@@ -54,7 +77,7 @@ const CreatePlan = ({ showModel, handleCancel, selectedId, selectedUser }) => {
     return (
         <>
             <Modal
-                title="Build Plan"
+                title="Assign Plan"
                 open={showModel}
                 onCancel={handleCancel}
                 centered

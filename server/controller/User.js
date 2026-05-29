@@ -45,7 +45,7 @@ exports.createUser = async (req, res) => {
 
         await user.save()
 
-        res.status(200).json({ success: true, message: 'Your account has been successfully created.' });
+        res.status(200).json({ success: true, message: 'Your account has been successfully created.', password });
     } catch (err) {
         console.error(err.message);
         if (err.code === 11000) {

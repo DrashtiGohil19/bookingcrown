@@ -1,12 +1,15 @@
 import React from 'react';
 import Footer from '../../../common/Footer';
 import { Button } from 'antd';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import Contact from '../../../common/Contact';
 import Seo from '../../../common/Seo';
 
 function ThankYou() {
     const navigate = useNavigate();
+    const location = useLocation();
+    const { password, mobilenu, name } = location.state || {};
+
     return (
         <section className='bg-[#f1fafb]'>
             <Seo
@@ -23,8 +26,20 @@ function ThankYou() {
                     <p className='text-slate-400 mb-6'>
                         We appreciate your interest and will review your profile promptly.
                         An admin will assign a plan to your account shortly.
-                        Should you have any questions in the meantime, please do not hesitate to contact Booking Crown.
                     </p>
+
+                    {password && (
+                        <div className='bg-green-50 border border-green-200 rounded-lg p-6 mb-6 text-left'>
+                            <h2 className='text-lg font-semibold text-green-800 mb-3'>Your Login Credentials</h2>
+                            <p className='text-green-700 mb-2'>Please save these credentials to login after your plan is activated:</p>
+                            <div className='bg-white rounded p-3 mt-2 space-y-1'>
+                                <p className='text-gray-700'><span className='font-medium'>Mobile:</span> {mobilenu}</p>
+                                <p className='text-gray-700'><span className='font-medium'>Password:</span> <span className='font-mono font-bold text-themeColor'>{password}</span></p>
+                            </div>
+                            <p className='text-sm text-green-600 mt-3'>Login at: <span className='font-medium'>https://www.bookingcrown.com/login</span></p>
+                        </div>
+                    )}
+
                     <Contact />
                     <div className='text-center mt-6 text-slate-400'>
                         <p>Feel free to contact us anytime, and we'll get back to you as soon as possible.</p>

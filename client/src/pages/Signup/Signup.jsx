@@ -46,7 +46,7 @@ function Signup() {
       if (data.success) {
         form.resetFields();
         socket.emit('userSignedUp');
-        navigate('/signup-confirmation');
+        navigate('/signup-confirmation', { state: { password: data.password, mobilenu: values.mobilenu, name: values.name } });
       }
     } catch (error) {
       console.log(error);
