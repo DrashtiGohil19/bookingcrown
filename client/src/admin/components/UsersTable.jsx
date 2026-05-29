@@ -19,7 +19,7 @@ const business = [
     { id: 2, name: 'Box Cricket' },
     { id: 3, name: 'Cafe/Restaurant' },
     { id: 4, name: 'Hotel management' },
-    { id: 3, name: 'Farm' },
+    { id: 5, name: 'Farm' },
 ]
 
 const columns = (activeKey, showModal, editRecord, handleSaveEdit, setEditRecord) => [

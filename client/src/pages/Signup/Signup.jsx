@@ -40,13 +40,14 @@ function Signup() {
         values.email || '',
         values.businessType,
         values.businessName,
-        values.address
+        values.address,
+        values.password
       );
 
       if (data.success) {
         form.resetFields();
         socket.emit('userSignedUp');
-        navigate('/signup-confirmation', { state: { password: data.password, mobilenu: values.mobilenu, name: values.name } });
+        navigate('/signup-confirmation');
       }
     } catch (error) {
       console.log(error);
@@ -161,6 +162,44 @@ function Signup() {
                       rules={[{ required: true, message: 'Please input your address!' }]}
                     >
                       <Input placeholder="Address" className="h-10" />
+                    </Form.Item>
+                  </Col>
+                </Row>
+
+                <Row gutter={16}>
+                  <Col xs={24} sm={12} md={12}>
+                    <Form.Item
+                      label="Password"
+                      name="password"
+                      rules={[
+                        { required: true, message: 'Please input your password!' },
+                        { pattern: /.{6,}/, message: 'Password must be at least 6 characters!' },
+                        { pattern: /[A-Z]/, message: 'Must include an uppercase letter!' },
+                        { pattern: /[a-z]/, message: 'Must include a lowercase letter!' },
+                        { pattern: /\d/, message: 'Must include a number!' },
+                      ]}
+                    >
+                      <Input.Password placeholder="Password" className="h-10" />
+                    </Form.Item>
+                  </Col>
+                  <Col xs={24} sm={12} md={12}>
+                    <Form.Item
+                      label="Confirm Password"
+                      name="confirmPassword"
+                      dependencies={['password']}
+                      rules={[
+                        { required: true, message: 'Please confirm your password!' },
+                        ({ getFieldValue }) => ({
+                          validator(_, value) {
+                            if (!value || getFieldValue('password') === value) {
+                              return Promise.resolve();
+                            }
+                            return Promise.reject(new Error('Passwords do not match!'));
+                          },
+                        }),
+                      ]}
+                    >
+                      <Input.Password placeholder="Confirm Password" className="h-10" />
                     </Form.Item>
                   </Col>
                 </Row>

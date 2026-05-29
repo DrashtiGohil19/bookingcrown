@@ -7,16 +7,34 @@ const { generateStrongPassword } = require("../utils/helper");
 const JWT_SECRET = process.env.JWT_SECRET
 
 exports.createUser = async (req, res) => {
-    const { name, email, mobilenu, businessType, businessName, address } = req.body;
+    const { name, email, mobilenu, businessType, businessName, address, password } = req.body;
 
     try {
-        if (!name || !mobilenu || !businessType || !businessName || !address) {
-            return res.status(400).json({ message: 'name, mobile number, business type, businessName, address all fields are required' });
+        if (!name || !mobilenu || !businessType || !businessName || !address || !password) {
+            return res.status(400).json({ message: 'name, mobile number, password, business type, businessName, address all fields are required' });
         }
 
         const mobileRegex = /^[0-9]{10}$/;
         if (!mobileRegex.test(String(mobilenu))) {
             return res.status(400).json({ message: 'Mobile number must be exactly 10 digits' });
+        }
+
+        const minLengthPattern = /.{6,}/;
+        const uppercasePattern = /[A-Z]/;
+        const lowercasePattern = /[a-z]/;
+        const numberPattern = /\d/;
+
+        if (!minLengthPattern.test(password)) {
+            return res.status(400).json({ message: 'Password must be at least 6 characters long' });
+        }
+        if (!uppercasePattern.test(password)) {
+            return res.status(400).json({ message: 'Password must include at least one uppercase letter' });
+        }
+        if (!lowercasePattern.test(password)) {
+            return res.status(400).json({ message: 'Password must include at least one lowercase letter' });
+        }
+        if (!numberPattern.test(password)) {
+            return res.status(400).json({ message: 'Password must include at least one number' });
         }
 
         if (email) {
@@ -31,8 +49,6 @@ exports.createUser = async (req, res) => {
             return res.status(400).json({ message: `User with mobile number ${mobilenu} already exists. Please provide another mobile number` });
         }
 
-        const password = generateStrongPassword();
-
         user = new User({
             name,
             email: email || undefined,
@@ -45,7 +61,7 @@ exports.createUser = async (req, res) => {
 
         await user.save()
 
-        res.status(200).json({ success: true, message: 'Your account has been successfully created.', password });
+        res.status(200).json({ success: true, message: 'Your account has been successfully created.' });
     } catch (err) {
         console.error(err.message);
         if (err.code === 11000) {

@@ -62,7 +62,7 @@ const CreatePlan = ({ showModel, handleCancel, selectedId, selectedUser }) => {
                     `━━━━━━━━━━━━━━━`,
                     `Website: https://www.bookingcrown.com/login`,
                     `Mobile: ${mobilenu}`,
-                    `Password: (Use the password provided at registration)`,
+                    `Password: (Use the password you set during registration)`,
                     ``,
                     `For any assistance, contact support at +91 99988 83603.`,
                     ``,
